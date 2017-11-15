@@ -46,10 +46,55 @@
                 android:maxLines="1"
                 android:shadowRadius="1" />
 
+            <TextView
+                android:id="@+id/txtmessagecode"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_toStartOf="@+id/sendButton"
+
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/txttick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/txtmessagecode"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/txtmessagecode"
+                android:text=""
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/txtdatetime"
+                android:layout_width="150dp"
+                android:layout_height="30dp"
+
+
+                android:layout_alignEnd="@+id/txtname"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/txtmessagecode" />
+
+            <TextView
+                android:id="@+id/txtname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_alignParentEnd="true"
+
+                android:textSize="30sp"
+                android:layout_above="@+id/listMessage"
+                android:layout_toEndOf="@+id/txtmessagecode"
+                android:layout_below="@+id/txtdatetime"
+                android:layout_alignParentStart="true" />
+
+
             <ListView
                 android:id="@+id/listMessage"
                 android:layout_width="wrap_content"
-                android:layout_height="200dp"
+                android:layout_height="250dp"
                 android:layout_above="@+id/sendButton"
                 android:layout_alignParentStart="true"></ListView>
 
@@ -65,46 +110,6 @@
                 android:text="Punch"
                 android:textColor="@android:color/holo_green_dark" />
 
-            <TextView
-                android:id="@+id/txtmessagecode"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_alignParentStart="true"
-                android:layout_toStartOf="@+id/sendButton"
-                android:textSize="22sp"
-                android:layout_above="@+id/txtdatetime"
-                android:layout_alignParentTop="true" />
-
-            <TextView
-                android:id="@+id/txttick"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentTop="true"
-                android:layout_toEndOf="@+id/txtmessagecode"
-                android:text=""
-                android:textSize="30sp"
-                android:layout_alignBottom="@+id/txtmessagecode" />
-
-            <TextView
-                android:id="@+id/txtdatetime"
-                android:layout_width="150dp"
-                android:layout_height="80dp"
-
-
-                android:layout_above="@+id/listMessage"
-                android:layout_alignParentStart="true" />
-
-            <TextView
-                android:id="@+id/txtname"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/listMessage"
-                android:layout_alignParentEnd="true"
-                android:textSize="30sp"
-                android:layout_alignTop="@+id/txtdatetime"
-                android:layout_toEndOf="@+id/txtdatetime"
-                />
 
         </RelativeLayout>
     </LinearLayout>

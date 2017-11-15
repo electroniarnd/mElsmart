@@ -27,6 +27,7 @@ package com.nordicsemi.nrfUARTv2;
 
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -90,6 +91,9 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     private static final int STATE_OFF = 10;
     private static int a = 0;
     private static  int VisibleMode = 0;
+    private  static int bytcount=0;
+    private  static int framesize=0;
+    private  static int autostartvalue=1;
 
 
 
@@ -202,7 +206,8 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     private TextView txttick;
     private TextView  txtdatetime;
     private TextView txtname;
-
+    private static final String fileRegistrationVerify = "BadgeIMEI.txt";
+    private static final String Datafile = "mytextfile.txt";
     TextView  txtmessagecode;
 
     @Override
@@ -225,21 +230,19 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         btnConnectDisconnect = (Button) findViewById(R.id.btn_select);
         btnSend = (Button) findViewById(R.id.sendButton);
         edtMessage = (EditText) findViewById(R.id.sendText);
-        txttick= (TextView) findViewById(R.id.txttick);
+        txttick = (TextView) findViewById(R.id.txttick);
 
-         txtdatetime=(TextView) findViewById(R.id.txtdatetime);
-         txtname=(TextView) findViewById(R.id.txtname);
+        txtdatetime = (TextView) findViewById(R.id.txtdatetime);
+        txtname = (TextView) findViewById(R.id.txtname);
 
-        txtmessagecode=(TextView) findViewById(R.id.txtmessagecode);
+        txtmessagecode = (TextView) findViewById(R.id.txtmessagecode);
         edtMessage.setVisibility(View.GONE);
-
+       // btnSend.setVisibility(View.GONE);
         messageListView.setVisibility(View.GONE);
-
+        btnConnectDisconnect.setBackgroundColor(Color.parseColor("#ABBD48"));
 
 
         service_init();
-
-
 
 
         // Handle Disconnect & Connect button
@@ -257,6 +260,10 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
                         Intent newIntent = new Intent(MainActivity.this, DeviceListActivity.class);
                         startActivityForResult(newIntent, REQUEST_SELECT_DEVICE);
+
+                        autostartvalue=0;
+
+
                     } else {
                         //Disconnect button pressed
                         if (mDevice != null) {
@@ -268,6 +275,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
             }
         });
         // Handle Send button
+
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -275,10 +283,12 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                 String message = editText.getText().toString();
                 byte[] value;
                 try {
+
+
                     //send data to service
                     value = message.getBytes("UTF-8");
-                    sendCommandToTerminal((byte)0x88);
-                  //  mService.writeRXCharacteristic(value);
+                    sendCommandToTerminal((byte) 0x88);
+                    //  mService.writeRXCharacteristic(value);
                     //Update the log with time stamp
                     String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
                     //listAdapter.add("[" + currentDateTimeString + "] TX: " + message);
@@ -291,8 +301,11 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
             }
         });
+      //  if (autostartvalue == 0) {
+       //     btnSend.performClick();
+       //     autostartvalue =1;
 
-
+      //  }
 
 
 
@@ -397,6 +410,8 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                         btnConnectDisconnect.setText("Disconnect");
                         edtMessage.setEnabled(true);
                         btnSend.setEnabled(true);
+                        btnSend.setBackgroundColor(Color.GREEN);
+                        btnConnectDisconnect.setBackgroundColor(Color.GREEN);
 
 
                         ((TextView) findViewById(R.id.deviceName)).setText(mDevice.getName() + " - ready");
@@ -417,6 +432,8 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                         btnConnectDisconnect.setText("Connect");
                         edtMessage.setEnabled(false);
                         btnSend.setEnabled(false);
+                        btnConnectDisconnect.setBackgroundColor(Color.parseColor("#ABBD48"));
+                        btnSend.setBackgroundColor(Color.LTGRAY);
                         ((TextView) findViewById(R.id.deviceName)).setText("Not Connected");
                         listAdapter.add("[" + currentDateTimeString + "] Disconnected to: " + mDevice.getName());
                         mState = UART_PROFILE_DISCONNECTED;
@@ -432,7 +449,15 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
             //*********************//
             if (action.equals(UartService.ACTION_GATT_SERVICES_DISCOVERED)) {
                 mService.enableTXNotification();
-                 // sendCommandToTerminal((byte)0x88);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+               if(autostartvalue==0) {
+                sendCommandToTerminal((byte) 0x88);
+                  autostartvalue=1;
+                }
             }
             //*********************//
             if (action.equals(UartService.ACTION_DATA_AVAILABLE)) {
@@ -452,16 +477,21 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                             int byteRead= txValue.length;
 
                             processRxPacket(txValue,  byteRead);
-                           // if(txValue.length>9) {
-                                //if (txValue[9] == (byte) 0x53) {
-                                  //  if (mDevice != null){
 
+                            if(bytcount==0 && txValue.length>9)
+                                framesize=txValue[9]&0xff;
+                           if (framesize == (byte) 0x53) {
+                               bytcount++;
+                               if(bytcount==4)
+                               {
+                         if (mDevice != null) {
 
-                            //   mService.disconnect();
-                                //        mService.close();
-                                   // }
-                               // }
-                          //  }
+                             bytcount=0;
+                             mService.disconnect();
+                         }
+                            }
+                               }
+
                         } catch (Exception e) {
                             Log.e(TAG, e.toString());
                         }
@@ -557,6 +587,24 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
             case REQUEST_SELECT_DEVICE:
                 //When the DeviceListActivity return, with the selected device address
+
+                File Registrationfile = new File(getFilesDir() + File.separator + fileRegistrationVerify);
+
+                File Valuefile = new File(getFilesDir() + File.separator + Datafile);
+                if ((!(Registrationfile.exists())) && data != null) {
+                    popup("Registration  does not exist");
+
+
+                    return;
+                }
+                if ((!(Valuefile.exists())) && data != null) {
+
+                    popup("Registration data file does not exist");
+
+                    return;
+                }
+
+
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     String deviceAddress = data.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
                     mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(deviceAddress);
@@ -567,6 +615,14 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
 
                 }
+
+
+                txtmessagecode.setText("");
+                txtdatetime.setText("");
+                txtname.setText("");
+                txttick.setText("");
+                txtmessagecode.setBackgroundColor(Color.TRANSPARENT);
+
                 break;
             case REQUEST_ENABLE_BT:
                 // When the request to enable Bluetooth returns
@@ -1098,7 +1154,8 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
 
 
-                String  strdate = (rxBuff[date++])+2000+"/"+rxBuff[date++] +"/"+rxBuff[date++]+" "+ rxBuff[date++]+":"+rxBuff[date++]+":"+ rxBuff[date++];
+                String  strdate = (rxBuff[date++])+2000+"/"+rxBuff[date++] +"/"+rxBuff[date++]+" " +
+                        ""+ rxBuff[date++]+":"+rxBuff[date++]+":"+ rxBuff[date++];
 
 
 
@@ -1107,8 +1164,9 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                  SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                 try {
                     Date date1 = format.parse(strdate);
-
-                    txtdatetime.setText(date1.toString());
+                    DateFormat df = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
+                    String requiredDate = df.format(date1).toString();
+                    txtdatetime.setText(requiredDate.toString());
 
                 } catch (ParseException e) {
                     // TODO Auto-generated catch block
@@ -1155,98 +1213,98 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
                         case IN_OUT_Punch:
                             txtmessagecode.setText("Invalid IN/Out");//  Toast.makeText(this,"Invalid IN/Out",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case InvalidDoor:
                             txtmessagecode.setText("Invalid Door");// Toast.makeText(this,"Invalid Door",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case SystemLocked:
                             txtmessagecode.setText("System Locked");// Toast.makeText(this,"System Locked",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case ExitEntryMissed:
                             txtmessagecode.setText("Exit Entry Missed");//  Toast.makeText(this,"Exit Entry Missed",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case ExpiredCard:
                             txtmessagecode.setText("Card Expired");// Toast.makeText(this,"Card Expired",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
 
                         case CardType1:
                             txtmessagecode.setText("CardType1");// Toast.makeText(this,"CardType1",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case CardType2:
                             txtmessagecode.setText("CardType2");//  Toast.makeText(this,"CardType2",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case BlackListedCard:
                             txtmessagecode.setText("BlackListed Card");//   Toast.makeText(this,"BlackListed Card",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case READER_ERROR_SET:
                             txtmessagecode.setText("READER ERROR SET");//  Toast.makeText(this,"READER ERROR SET",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case READER_ERROR_CLEAR:
                             txtmessagecode.setText("READER ERROR CLEAR");//  Toast.makeText(this,"READER ERROR CLEAR",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case DOOR_KEPT_OPEN_ALARM:
                             txtmessagecode.setText("DOOR KEPT OPEN ALARM");//  Toast.makeText(this,"DOOR KEPT OPEN ALARM",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case DOOR_FORCED_OPEN_ALARM:
                             txtmessagecode.setText("DOOR FORCED OPEN ALARM");//  Toast.makeText(this,"DOOR FORCED OPEN ALARM",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case EPB_ALARM:
                             txtmessagecode.setText("EPB ALARM");//   Toast.makeText(this,"EPB ALARM",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case EMBU_ALARM:
                             txtmessagecode.setText("EMBU ALARM");//   Toast.makeText(this,"EMBU ALARM",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case DOOR_OPENED_BY_COMMAND:
                             txtmessagecode.setText("DOOR OPENED BY COMMAND");//  Toast.makeText(this,"DOOR OPENED BY COMMAND",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case BIOMETRIC_ERROR_SET:
                             txtmessagecode.setText("BIOMETRIC ERROR SET");//  Toast.makeText(this,"BIOMETRIC ERROR SET",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case BIOMETRIC_ERROR_CLEAR:
                             txtmessagecode.setText("BIOMETRIC ERROR CLEAR");//  Toast.makeText(this,"BIOMETRIC ERROR CLEAR",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case DATE_TIME_ALARM_SET:
                             txtmessagecode.setText("DATE TIME ALARM SET");// Toast.makeText(this,"DATE TIME ALARM SET",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case DATE_TIME_ALARM_CLEAR:
                             txtmessagecode.setText("DATE TIME ALARM CLEAR");//  Toast.makeText(this,"DATE TIME ALARM CLEAR",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
 
@@ -1270,83 +1328,83 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
                         case OK:
                             txtmessagecode.setText("Punched Successfully");//   Toast.makeText(this,"Punched Successfully",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.GREEN);
+                            txtmessagecode.setBackgroundColor(Color.CYAN);
                             txttick.setText("\u2713");
                             break;
                         case BLACKLISTED:
                             txtmessagecode.setText("CARD BLACKLISTED");// Toast.makeText(this,"CARD BLACKLISTED",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case ACCESSDENIED:
                             txtmessagecode.setText("ACCESS DENIED");// Toast.makeText(this,"ACCESS DENIED",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case CARDEXPIRED:
                             txtmessagecode.setText("CARD EXPIRED");//   Toast.makeText(this,"CARD EXPIRED",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case ANTIPASSBKERROR:
                             txtmessagecode.setText("ANTIPASS BACK ERROR");// Toast.makeText(this,"ANTIPASS BACK ERROR",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
 
                         case ACCLOCK:
                             txtmessagecode.setText("ACCESS DURING LOCK");// Toast.makeText(this,"ACCESS DURING LOCK",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case ACCHOLIDAY:
                             txtmessagecode.setText("ACCESS DURING HOLIDAY");//  Toast.makeText(this,"ACCESS DURING HOLIDAY",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case ACCLEAVE:
                             txtmessagecode.setText("ACCESS DURING LEAVE");//  Toast.makeText(this,"ACCESS DURING LEAVE",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case PINFAIL:
                             txtmessagecode.setText("PIN FAIL");//  Toast.makeText(this,"PIN FAIL",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case BIOFAIL:
                             txtmessagecode.setText("BIO FAIL");// Toast.makeText(this,"BIO FAIL",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case DURESSCODE:
                             txtmessagecode.setText("DURESS CODE");// Toast.makeText(this,"DURESS CODE",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case ACCSCHEDULE:
                             txtmessagecode.setText("ACCESS SCHEDULE");//  Toast.makeText(this,"ACCESS SCHEDULE",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case FREE12:
                             txtmessagecode.setText("FREE12");//  Toast.makeText(this,"FREE12",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case FREE13:
                             txtmessagecode.setText("FREE13");//  Toast.makeText(this,"FREE13",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case ACCESCORT:
                             txtmessagecode.setText("ACCESS SCORT");//  Toast.makeText(this,"ACCESS SCORT",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
                         case CARDTWING:
                             txtmessagecode.setText("CARDTWING");
-                            txtmessagecode.setTextColor(Color.RED);
+                            txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
 
                             //  Toast.makeText(this,"CARDTWING",Toast.LENGTH_LONG).show();
@@ -1395,6 +1453,14 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                 byte[] c = filename.getBytes();
 
                 m=0;
+
+                if (c.length==0) {
+
+                    Toast.makeText(MainActivity.this, "Registration data  does not exist",
+                            Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                 while(m<16) {
 
 
@@ -1420,4 +1486,19 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         }
     }
 
+public void popup(String message)
+{
+
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+builder.setMessage(message)
+        .setCancelable(false)
+       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int id) {
+            dialog.cancel();
+        }
+    });
+    AlertDialog alert = builder.create();
+alert.show();
+
+}
 }

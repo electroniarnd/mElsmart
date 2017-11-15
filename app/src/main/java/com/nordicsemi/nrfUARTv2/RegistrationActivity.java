@@ -33,6 +33,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,10 +59,12 @@ public class RegistrationActivity extends ActionBarActivity {
     private Button btnunregistered;
     private TextView txtunregistered;
     Context context;
-   private static final String  fileRegistrationVerify="BadgeIMEI.txt";
-    private static final String  Datafile= "mytextfile.txt";
+    private static final String fileRegistrationVerify = "BadgeIMEI.txt";
+    private static final String Datafile = "mytextfile.txt";
+    final String model = Build.MODEL;
+    final String serial = Build.SERIAL;
 
-    private  static  String EMPLOYEE_SERVICE_URI;// = "http://93.95.24.25/EmployeService/Service1.svc/GetEmployee/?key=1";
+    private static String EMPLOYEE_SERVICE_URI;// = "http://93.95.24.25/EmployeService/Service1.svc/GetEmployee/?key=1";
 
 
     @Override
@@ -71,11 +74,11 @@ public class RegistrationActivity extends ActionBarActivity {
 
 
         btnregistration = (Button) findViewById(R.id.btnregistration);
-        btnunregistered=(Button) findViewById(R.id.btnunregistered);
+        btnunregistered = (Button) findViewById(R.id.btnunregistered);
         edtMessage = (EditText) findViewById(R.id.editImei);
         txtImei = (TextView) findViewById(R.id.txtimei);
         edtURL = (EditText) findViewById(R.id.txturl);
-        txtunregistered=(TextView) findViewById(R.id.txtunregistered);
+        txtunregistered = (TextView) findViewById(R.id.txtunregistered);
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         txtImei.setText(telephonyManager.getDeviceId().toString());
         EMPLOYEE_SERVICE_URI = "http://93.95.24.25/Emobile/Service1.svc";
@@ -83,166 +86,133 @@ public class RegistrationActivity extends ActionBarActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
 
+
+
+
         StrictMode.setThreadPolicy(policy);
         txtunregistered.setText("");
 
 
         try {
-            File file = new File(getFilesDir() + File.separator + fileRegistrationVerify);
 
 
-            if (file.exists()) {
+
+            if (Filecheck()) {
                 txtunregistered.setText("Registered");
-                txtunregistered.setTextColor(Color.GREEN);
+                txtunregistered.setBackgroundColor(Color.GREEN);
                 btnunregistered.setEnabled(true);
-            }
-            else {
+                edtMessage.setEnabled(false);
+
+
+            } else {
                 txtunregistered.setText("UnRegistered");
-                txtunregistered.setTextColor(Color.RED);
+                txtunregistered.setBackgroundColor(Color.RED);
                 btnunregistered.setEnabled(false);
+                edtMessage.setEnabled(true);
             }
 
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-         catch(Exception e){
-        e.printStackTrace();
-    }
 
 
-                    btnregistration.setOnClickListener(new View.OnClickListener() {
+        btnregistration.setOnClickListener(new View.OnClickListener() {
             @TargetApi(Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View v) {
 
 
+                try {
+                    if (checkCondition()) {
+                        return;
+                    }
 
-                    try {
-                       if(checkCondition()) {
-                           return;
-                       }
-
-                        File file = new File(getFilesDir() + File.separator + fileRegistrationVerify);
-
-
-                        if (file.exists()) {
-
-                            try {
-                             //   Toast.makeText(this, "", Toast.LENGTH_LONG).show();
+                    File file = new File(getFilesDir() + File.separator + fileRegistrationVerify);
 
 
-                                FileInputStream fileIn = openFileInput(fileRegistrationVerify);
+                    if (Filecheck()) {
+
+                        try {
+                            //   Toast.makeText(this, "", Toast.LENGTH_LONG).show();
 
 
-                                if (fileIn != null) {
-                                    FileChannel ch = null;
+                            AlertDialog.Builder builder = new AlertDialog.Builder(RegistrationActivity.this);
+                            builder.setTitle("Confirm");
+                            builder.setMessage("Are you sure to do Registration Again?");
+                            builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
-                                    ch = fileIn.getChannel();
-
-                                    int size = (int) ch.size();
-
-                                    MappedByteBuffer buf = ch.map(FileChannel.MapMode.READ_ONLY, 0, size);
-                                    byte[] bytes = new byte[size];
-                                    int lnth = 0;
-                                    lnth = bytes.length;
-                                    buf.get(bytes);
-                                    String s = new String(bytes);
-                                    fileIn.close();
-                                } else {
-
-                                    Toast.makeText(RegistrationActivity.this, "Empty File",
-                                            Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
+                                public void onClick(DialogInterface dialog, int which) {
+                                    try {
+                                        if (connectionurl()) {
+                                            FileOutputStream fileout = openFileOutput(fileRegistrationVerify, MODE_PRIVATE);
+                                            // OutputStreamWriter outputWriter=new OutputStreamWriter(fileout);
 
 
-                                AlertDialog.Builder builder = new AlertDialog.Builder(RegistrationActivity.this);
-
-                                builder.setTitle("Confirm");
-                                builder.setMessage("Are you sure to do Registration Again?");
-
-                                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        try
-                                       {
-                                          if(connectionurl()) {
-                                              FileOutputStream fileout = openFileOutput(fileRegistrationVerify, MODE_PRIVATE);
-                                              // OutputStreamWriter outputWriter=new OutputStreamWriter(fileout);
-
-
-                                              OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileout);
-                                              String BadgeIMEI = edtMessage.getText().toString() + "," + txtImei.getText().toString() + "," + EMPLOYEE_SERVICE_URI + "/GetCardholderData/" + "/'" + edtMessage.getText().toString() + "'/'" + txtImei.getText().toString() + "'";
-                                              ;
-                                              outputStreamWriter.write(BadgeIMEI);
-                                              outputStreamWriter.close();
-                                              btnunregistered.setEnabled(true);
-                                          }
+                                            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileout);
+                                            String BadgeIMEI = edtMessage.getText().toString() + "," + txtImei.getText().toString() + "," + EMPLOYEE_SERVICE_URI + "/GetCardholderData/" + "/'" + edtMessage.getText().toString() + "'/'" + txtImei.getText().toString() + "'/'" +model + "'/'" +serial+"',"+txtImei.getText().toString()+","+model+","+serial;
+                                            outputStreamWriter.write(BadgeIMEI);
+                                            outputStreamWriter.close();
+                                            btnunregistered.setEnabled(true);
+                                        }
 
                                     } catch (IOException e) {
                                         Log.e("Exception", "File write failed: " + e.toString());
                                     }
 
-                                        dialog.dismiss();
-                                    }
-                                });
-
-                                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-
-                                        // Do nothing
-                                        dialog.dismiss();
-                                    }
-                                });
-
-                                AlertDialog alert = builder.create();
-                                alert.show();
-
-
-                            } catch(Exception e){
-                                e.printStackTrace();
-                            }
-                        }
-                        else {
-
-
-                            try {
-
-                                if(connectionurl()) {
-
-                                    FileOutputStream fileout = openFileOutput(fileRegistrationVerify, MODE_PRIVATE);
-                                    // OutputStreamWriter outputWriter=new OutputStreamWriter(fileout);
-
-
-                                    OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileout);
-                                    String BadgeIMEI = edtMessage.getText().toString() + "," + txtImei.getText().toString() + "," + EMPLOYEE_SERVICE_URI + "/GetCardholderData/" + "/'" + edtMessage.getText().toString() + "'/'" + txtImei.getText().toString() + "'";
-                                    ;
-                                    outputStreamWriter.write(BadgeIMEI);
-                                    outputStreamWriter.close();
-
-
-                                    btnunregistered.setEnabled(true);
+                                    dialog.dismiss();
                                 }
+                            });
 
-                            } catch (IOException e) {
-                                Log.e("Exception", "File write failed: " + e.toString());
-                            }
+                            builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    // Do nothing
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            AlertDialog alert = builder.create();
+                            alert.show();
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } catch (Exception e) {
-                        String error = "";
-                        error = e.getMessage();
-                        Toast.makeText(RegistrationActivity.this, e.getMessage(),
-                                Toast.LENGTH_SHORT).show();
+                    } else {
+
+
+                        try {
+
+                            if (connectionurl()) {
+
+                                FileOutputStream fileout = openFileOutput(fileRegistrationVerify, MODE_PRIVATE);
+                                // OutputStreamWriter outputWriter=new OutputStreamWriter(fileout);
+
+
+                                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileout);
+                                String BadgeIMEI = edtMessage.getText().toString() + "," + txtImei.getText().toString() + "," + EMPLOYEE_SERVICE_URI + "/GetCardholderData/" + "/'" + edtMessage.getText().toString() + "'/'" + txtImei.getText().toString() + "'";
+
+                                outputStreamWriter.write(BadgeIMEI);
+                                outputStreamWriter.close();
+
+
+                                btnunregistered.setEnabled(true);
+                            }
+
+                        } catch (IOException e) {
+                            Log.e("Exception", "File write failed: " + e.toString());
+                        }
                     }
+                } catch (Exception e) {
+                    String error = "";
+                    error = e.getMessage();
+                    Toast.makeText(RegistrationActivity.this, e.getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         });
-
-
-
-
-
-
-
 
 
         btnunregistered.setOnClickListener(new View.OnClickListener() {
@@ -270,74 +240,57 @@ public class RegistrationActivity extends ActionBarActivity {
                     }
 
 
-
                     boolean deleted = Registrationfile.delete();
                     boolean deleted1 = Valuefile.delete();
-                    if(deleted&&deleted1) {
+                    if (deleted && deleted1) {
                         Toast.makeText(RegistrationActivity.this, "Your Registration  are deleted Successfully",
                                 Toast.LENGTH_LONG).show();
                         btnunregistered.setEnabled(false);
-                    }
-                    else
-                    {
+                        edtMessage.setEnabled(true);
+
+                    } else {
                         Toast.makeText(RegistrationActivity.this, "Your Registration are not  deleted.",
                                 Toast.LENGTH_LONG).show();
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     String error = "";
                     error = e.getMessage();
                     Toast.makeText(RegistrationActivity.this, e.getMessage(),
                             Toast.LENGTH_LONG).show();
                 }
-            }});
+            }
+        });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        }
-
+    }
 
 
     public byte[] parseHexBinary(String s) {
         final int len = s.length();
 
         // "111" is not a valid hex encoding.
-        if( len%2 != 0 )
-            throw new IllegalArgumentException("hexBinary needs to be even-length: "+s);
+        if (len % 2 != 0)
+            throw new IllegalArgumentException("hexBinary needs to be even-length: " + s);
 
-        byte[] out = new byte[len/2];
+        byte[] out = new byte[len / 2];
 
-        for( int i=0; i<len; i+=2 ) {
-            int h = hexToBin(s.charAt(i  ));
-            int l = hexToBin(s.charAt(i+1));
-            if( h==-1 || l==-1 )
-                throw new IllegalArgumentException("contains illegal character for hexBinary: "+s);
+        for (int i = 0; i < len; i += 2) {
+            int h = hexToBin(s.charAt(i));
+            int l = hexToBin(s.charAt(i + 1));
+            if (h == -1 || l == -1)
+                throw new IllegalArgumentException("contains illegal character for hexBinary: " + s);
 
-            out[i/2] = (byte)(h*16+l);
+            out[i / 2] = (byte) (h * 16 + l);
         }
 
         return out;
     }
 
 
-    private static int hexToBin( char ch ) {
-        if( '0'<=ch && ch<='9' )    return ch-'0';
-        if( 'A'<=ch && ch<='F' )    return ch-'A'+10;
-        if( 'a'<=ch && ch<='f' )    return ch-'a'+10;
+    private static int hexToBin(char ch) {
+        if ('0' <= ch && ch <= '9') return ch - '0';
+        if ('A' <= ch && ch <= 'F') return ch - 'A' + 10;
+        if ('a' <= ch && ch <= 'f') return ch - 'a' + 10;
         return -1;
     }
 
@@ -362,133 +315,178 @@ public class RegistrationActivity extends ActionBarActivity {
     }
 
 
+    public boolean connectionurl() {
 
-    public boolean connectionurl()
-    {
-
-     try {
+        try {
 
 
-         String badgeno=  edtMessage.getText().toString();
-         String imei=  txtImei.getText().toString();
-
-         EMPLOYEE_SERVICE_URI = edtURL.getText().toString()+"/GetCardholderData/"+"/'"+badgeno+"'/'" +imei+"'";
-
-    URL url = new URL(EMPLOYEE_SERVICE_URI);
-
-    URLConnection conexion = url.openConnection();
-    conexion.connect();
-
-    int lenghtOfFile = conexion.getContentLength();
-    Log.d("download", "Lenght of file: " + lenghtOfFile);
+            String badgeno = edtMessage.getText().toString();
+            String imei = txtImei.getText().toString();
 
 
-    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-    InputStream input = new BufferedInputStream(url.openStream());
+            EMPLOYEE_SERVICE_URI = edtURL.getText().toString() + "/GetCardholderData/" + "/'" + badgeno + "'/'" + imei + "'/'" + model + "'/'" + serial + "'";
+
+            URL url = new URL(EMPLOYEE_SERVICE_URI);
+
+            URLConnection conexion = url.openConnection();
+            conexion.connect();
+
+            int lenghtOfFile = conexion.getContentLength();
+            Log.d("download", "Lenght of file: " + lenghtOfFile);
 
 
-    byte data[] = new byte[lenghtOfFile];
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            InputStream input = new BufferedInputStream(url.openStream());
 
 
-    int count = -1;
-
-    while ((count = input.read(data)) != -1) {
-        buffer.write(data, 0, count);
-    }
-
-    input.close();
-
-    String json = new String(buffer.toString());
+            byte data[] = new byte[lenghtOfFile];
 
 
-    if (json.contains("`")) {
-        String getstring = json;
-        int iend = getstring.indexOf("`");
+            int count = -1;
 
-        if (iend != -1)
-            getstring = json.substring(iend, json.length()); //this will give abc
+            while ((count = input.read(data)) != -1) {
+                buffer.write(data, 0, count);
+            }
 
+            input.close();
 
-        Toast.makeText(getBaseContext(), getstring,
-                Toast.LENGTH_SHORT).show();
-        return false;
-    }
+            String json = new String(buffer.toString());
 
 
-    int lnth = json.length();
-    String json1 = json.substring(1, lnth - 1);
+            if (json.contains("`")) {
+                String getstring = json;
+                int iend = getstring.indexOf("`");
 
-    int len = json1.length();
-    byte[] data1 = new byte[len / 2];
-
-    for (int i = 0; i < len; i += 2) {
-        data1[i / 2] = (byte) ((Character.digit(json1.charAt(i), 16) << 4) + Character.digit(json1.charAt(i + 1), 16));
-    }
+                if (iend != -1)
+                    getstring = json.substring(iend, json.length()); //this will give abc
 
 
-    FileOutputStream fileout = openFileOutput( Datafile, MODE_PRIVATE);
-    // OutputStreamWriter outputWriter=new OutputStreamWriter(fileout);
+                Toast.makeText(getBaseContext(), getstring,
+                        Toast.LENGTH_SHORT).show();
+                return false;
+            }
 
 
-    fileout.write(data1);
-    fileout.close();
-    //outputWriter.close();
+            int lnth = json.length();
+            String json1 = json.substring(1, lnth - 1);
 
-    //display file saved message
-    Toast.makeText(getBaseContext(), "Registered successfully!",
-            Toast.LENGTH_SHORT).show();
+            int len = json1.length();
+            byte[] data1 = new byte[len / 2];
 
-}
-      catch (Exception e) {
-      e.printStackTrace();
-      Toast.makeText(getBaseContext(), e.getMessage(),
-            Toast.LENGTH_SHORT).show();
-          return false;
-}
+            for (int i = 0; i < len; i += 2) {
+                data1[i / 2] = (byte) ((Character.digit(json1.charAt(i), 16) << 4) + Character.digit(json1.charAt(i + 1), 16));
+            }
+
+
+            FileOutputStream fileout = openFileOutput(Datafile, MODE_PRIVATE);
+            // OutputStreamWriter outputWriter=new OutputStreamWriter(fileout);
+
+
+            fileout.write(data1);
+            fileout.close();
+            //outputWriter.close();
+
+            //display file saved message
+            Toast.makeText(getBaseContext(), "Registered successfully!",
+                    Toast.LENGTH_SHORT).show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getBaseContext(), e.getMessage(),
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
 
     }
 
 
+    public boolean checkCondition() {
+        String str = edtMessage.getText().toString();
 
 
-     public boolean checkCondition()
-             {
-             String str=   edtMessage.getText().toString();
+        try {
+
+            if (!(checkConnection())) {
+                Toast.makeText(RegistrationActivity.this, "No Internet Connection Found",
+                        Toast.LENGTH_SHORT).show();
+                return true;
+            }
+
+            if (str == null || str.isEmpty() || str.equals("")) {
+                Toast.makeText(RegistrationActivity.this, "Badge No should not be blank",
+                        Toast.LENGTH_SHORT).show();
+                return true;
+            }
+            str = "";
+            str = edtURL.getText().toString();
+
+            if (str == null || str.isEmpty() || str.equals("")) {
+                Toast.makeText(RegistrationActivity.this, "Service URL should not be blank",
+                        Toast.LENGTH_SHORT).show();
+                return true;
+
+            }
+
+        } catch (Exception e) {
+            String error = "";
+            error = e.getMessage();
+            return true;
+        }
+        return false;
+    }
 
 
+    public boolean Filecheck() {
 
 
-             try {
+        try {
+            File file = new File(getFilesDir() + File.separator + fileRegistrationVerify);
 
-                 if (!(checkConnection())) {
-                     Toast.makeText(RegistrationActivity.this, "No Internet Connection Found",
-                             Toast.LENGTH_SHORT).show();
-                     return true;
-                 }
 
-                 if (str == null || str.isEmpty() || str.equals("")) {
-                     Toast.makeText(RegistrationActivity.this, "Badge No should not be blank",
-                             Toast.LENGTH_SHORT).show();
-                     return true;
-                 }
-                 str = "";
-                 str = edtURL.getText().toString();
+            if (file.exists()) {
 
-                 if (str == null || str.isEmpty() || str.equals("")) {
-                     Toast.makeText(RegistrationActivity.this, "Service URL should not be blank",
-                             Toast.LENGTH_SHORT).show();
-                     return true;
+                FileInputStream fileIn = openFileInput(fileRegistrationVerify);
 
-                 }
 
-             }
-             catch(Exception e){
-                     String error = "";
-                     error = e.getMessage();
-                 return true;
-                 }
-                   return false;
-             }
+                if (fileIn != null) {
+                    FileChannel ch = null;
 
+                    ch = fileIn.getChannel();
+
+                    int size = (int) ch.size();
+
+                    MappedByteBuffer buf = ch.map(FileChannel.MapMode.READ_ONLY, 0, size);
+                    byte[] bytes = new byte[size];
+                    int lnth = 0;
+                    lnth = bytes.length;
+                    buf.get(bytes);
+                    String s = new String(bytes);
+                    fileIn.close();
+                    String[] separated = s.split(",");
+                    String badgeno = separated[0]; // this will contain "Fruit"
+                    edtMessage.setText(badgeno);
+
+                }
+                else {
+
+                    Toast.makeText(RegistrationActivity.this, "Empty File",
+                            Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+               return true;
+    }
 }
