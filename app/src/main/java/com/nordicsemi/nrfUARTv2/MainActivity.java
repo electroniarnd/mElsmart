@@ -237,7 +237,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
         txtmessagecode = (TextView) findViewById(R.id.txtmessagecode);
         edtMessage.setVisibility(View.GONE);
-       // btnSend.setVisibility(View.GONE);
+        //btnSend.setVisibility(View.GONE);
         messageListView.setVisibility(View.GONE);
         btnConnectDisconnect.setBackgroundColor(Color.parseColor("#ABBD48"));
 

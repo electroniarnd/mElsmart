@@ -7,10 +7,20 @@
     tools:context="com.nordicsemi.nrfUARTv2.AboutActivity">
 
     <TextView
-        android:id="@+id/textView2"
-        android:layout_width="224dp"
-        android:layout_height="145dp"
+        android:id="@+id/txtabout"
+        android:layout_width="90dp"
+        android:layout_height="33dp"
         android:text="TextView"
         tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="34dp" />
+        tools:layout_editor_absoluteY="34dp"
+        tools:text="Version:" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="190dp"
+        android:layout_height="44dp"
+        android:text="TextView"
+        tools:layout_editor_absoluteX="163dp"
+        tools:layout_editor_absoluteY="34dp"
+        tools:text="mEmart 1.0 Beta" />
 </android.support.constraint.ConstraintLayout>
