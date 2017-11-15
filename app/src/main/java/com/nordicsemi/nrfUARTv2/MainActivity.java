@@ -437,7 +437,11 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                         ((TextView) findViewById(R.id.deviceName)).setText("Not Connected");
                         listAdapter.add("[" + currentDateTimeString + "] Disconnected to: " + mDevice.getName());
                         mState = UART_PROFILE_DISCONNECTED;
-
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         mService.close();
                         //setUiState();
 
