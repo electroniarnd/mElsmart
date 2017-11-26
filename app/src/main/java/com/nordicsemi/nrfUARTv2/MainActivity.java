@@ -438,7 +438,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                         listAdapter.add("[" + currentDateTimeString + "] Disconnected to: " + mDevice.getName());
                         mState = UART_PROFILE_DISCONNECTED;
                         try {
-                            Thread.sleep(2000);
+                            Thread.sleep(1000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -453,15 +453,15 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
             //*********************//
             if (action.equals(UartService.ACTION_GATT_SERVICES_DISCOVERED)) {
                 mService.enableTXNotification();
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-               if(autostartvalue==0) {
-                sendCommandToTerminal((byte) 0x88);
-                  autostartvalue=1;
-                }
+               // try {
+                 //   Thread.sleep(1000);
+              //  } catch (InterruptedException e) {
+               // //    e.printStackTrace();
+                //}
+               //if(autostartvalue==0) {
+              //  sendCommandToTerminal((byte) 0x88);
+               //   autostartvalue=1;
+                //}
             }
             //*********************//
             if (action.equals(UartService.ACTION_DATA_AVAILABLE)) {
@@ -1485,6 +1485,12 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                 tmpBuff[1] = (byte)(i>>8);
                 sendCommandToTerminal(rxBuff[rxb-1]);
 
+
+                try {
+                    Thread.sleep(800);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
                 break;
         }
