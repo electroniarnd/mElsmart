@@ -56,10 +56,12 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.os.Vibrator;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -175,11 +177,12 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         WAITDATA,
         WAITFrameProcess,
         ReadyForNextCmd;
-
-
-
     }
+    public static class myVirator {
 
+        public static int sclick =200;
+        public static int longclick = 500;
+    }
 
   // public enum EACS_AlarmNo {OK, BLACKLISTED,ACCESSDENIED,CARDEXPIRED,ANTIPASSBKERROR,ACCLOCK,ACCHOLIDAY, ACCLEAVE,PINFAIL,BIOFAIL, DURESSCODE,ACCSCHEDULE,FREE12,FREE13,ACCESCORT,CARDTWING };
 
@@ -284,7 +287,8 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                 byte[] value;
                 try {
 
-
+                    shakeIt(1, myVirator.sclick);
+                    SoundIt();
                     //send data to service
                     value = message.getBytes("UTF-8");
                     sendCommandToTerminal((byte) 0x88);
@@ -1496,19 +1500,31 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         }
     }
 
-public void popup(String message)
-{
+    public void popup(String message)
+    {
 
-    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-builder.setMessage(message)
-        .setCancelable(false)
-       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int id) {
-            dialog.cancel();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setMessage(message)
+            .setCancelable(false)
+           .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alert = builder.create();
+    alert.show();
+
+    }
+    public void shakeIt(int repeat, int duration) {
+        if (getSystemService(VIBRATOR_SERVICE) != null) {
+            long[] pattern = {0, duration};
+            ((Vibrator) getApplicationContext().getSystemService(VIBRATOR_SERVICE)).vibrate(pattern, repeat);
+
         }
-    });
-    AlertDialog alert = builder.create();
-alert.show();
+    }
+    private void SoundIt()
+    {
+        final MediaPlayer mp = MediaPlayer.create(this, R.raw.click2);
 
-}
+    }
 }

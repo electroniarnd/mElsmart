@@ -108,7 +108,8 @@
                 android:enabled="false"
                 android:gravity="center_horizontal"
                 android:text="Punch"
-                android:textColor="@android:color/holo_green_dark" />
+                android:textColor="@android:color/holo_green_dark"
+                android:layout_alignTop="@+id/sendText" />
 
 
         </RelativeLayout>

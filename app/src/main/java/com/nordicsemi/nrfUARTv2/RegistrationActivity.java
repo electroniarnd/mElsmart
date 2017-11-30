@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.StrictMode;
+import android.os.Vibrator;
 import android.provider.SyncStateContract;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -86,15 +87,11 @@ public class RegistrationActivity extends ActionBarActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
 
-
-
-
         StrictMode.setThreadPolicy(policy);
         txtunregistered.setText("");
 
 
         try {
-
 
 
             if (Filecheck()) {
@@ -123,6 +120,7 @@ public class RegistrationActivity extends ActionBarActivity {
 
 
                 try {
+                    shakeIt(1, MainActivity.myVirator.sclick);
                     if (checkCondition()) {
                         return;
                     }
@@ -144,12 +142,13 @@ public class RegistrationActivity extends ActionBarActivity {
                                 public void onClick(DialogInterface dialog, int which) {
                                     try {
                                         if (connectionurl()) {
+                                            shakeIt(1, MainActivity.myVirator.sclick);
                                             FileOutputStream fileout = openFileOutput(fileRegistrationVerify, MODE_PRIVATE);
                                             // OutputStreamWriter outputWriter=new OutputStreamWriter(fileout);
 
 
                                             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileout);
-                                            String BadgeIMEI = edtMessage.getText().toString() + "," + txtImei.getText().toString() + "," + EMPLOYEE_SERVICE_URI + "/GetCardholderData/" + "/'" + edtMessage.getText().toString() + "'/'" + txtImei.getText().toString() + "'/'" +model + "'/'" +serial+"',"+txtImei.getText().toString()+","+model+","+serial;
+                                            String BadgeIMEI = edtMessage.getText().toString() + "," + txtImei.getText().toString() + "," + EMPLOYEE_SERVICE_URI + "/GetCardholderData/" + "/'" + edtMessage.getText().toString() + "'/'" + txtImei.getText().toString() + "'/'" + model + "'/'" + serial + "'," + txtImei.getText().toString() + "," + model + "," + serial;
                                             outputStreamWriter.write(BadgeIMEI);
                                             outputStreamWriter.close();
                                             btnunregistered.setEnabled(true);
@@ -210,6 +209,7 @@ public class RegistrationActivity extends ActionBarActivity {
                     error = e.getMessage();
                     Toast.makeText(RegistrationActivity.this, e.getMessage(),
                             Toast.LENGTH_SHORT).show();
+
                 }
             }
         });
@@ -220,6 +220,8 @@ public class RegistrationActivity extends ActionBarActivity {
             public void onClick(View v) {
 
                 try {
+                    shakeIt(1, MainActivity.myVirator.sclick);
+
                     if (checkCondition()) {
                         return;
                     }
@@ -243,20 +245,25 @@ public class RegistrationActivity extends ActionBarActivity {
                     boolean deleted = Registrationfile.delete();
                     boolean deleted1 = Valuefile.delete();
                     if (deleted && deleted1) {
-                        Toast.makeText(RegistrationActivity.this, "Your Registration  are deleted Successfully",
-                                Toast.LENGTH_LONG).show();
+//                        Toast.makeText(RegistrationActivity.this, "Your Registration  are deleted Successfully",
+//                                Toast.LENGTH_LONG).show();
                         btnunregistered.setEnabled(false);
                         edtMessage.setEnabled(true);
+                        PAlertDialog("Information", "Registration deleted Successfully");
 
                     } else {
-                        Toast.makeText(RegistrationActivity.this, "Your Registration are not  deleted.",
-                                Toast.LENGTH_LONG).show();
+//                        Toast.makeText(RegistrationActivity.this, "Your Registration are not  deleted.",
+//                                Toast.LENGTH_LONG).show();
+                        PAlertDialog("Information", "Registration not deleted");
+
                     }
                 } catch (Exception e) {
                     String error = "";
                     error = e.getMessage();
-                    Toast.makeText(RegistrationActivity.this, e.getMessage(),
-                            Toast.LENGTH_LONG).show();
+//                    Toast.makeText(RegistrationActivity.this, e.getMessage(),
+//                            Toast.LENGTH_LONG).show();
+                    PAlertDialog("ERROR", e.getMessage());
+
                 }
             }
         });
@@ -317,12 +324,13 @@ public class RegistrationActivity extends ActionBarActivity {
 
     public boolean connectionurl() {
 
+        String msg = "";
         try {
 
 
             String badgeno = edtMessage.getText().toString();
             String imei = txtImei.getText().toString();
-
+            msg = ("Badgeno: " + badgeno +"\n" + "IMEI: " + imei);
 
             EMPLOYEE_SERVICE_URI = edtURL.getText().toString() + "/GetCardholderData/" + "/'" + badgeno + "'/'" + imei + "'/'" + model + "'/'" + serial + "'";
 
@@ -387,13 +395,16 @@ public class RegistrationActivity extends ActionBarActivity {
             //outputWriter.close();
 
             //display file saved message
-            Toast.makeText(getBaseContext(), "Registered successfully!",
-                    Toast.LENGTH_SHORT).show();
+            //rsd
+//            Toast.makeText(getBaseContext(), "Registered successfully!",
+//                    Toast.LENGTH_SHORT).show();
+            PAlertDialog("Information", "Registration successfull" + "\n\n" + msg);
 
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(getBaseContext(), e.getMessage(),
-                    Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getBaseContext(), e.getMessage(),
+//                    Toast.LENGTH_SHORT).show();
+            PAlertDialog("ERROR", e.getMessage());
             return false;
         }
         return true;
@@ -408,22 +419,25 @@ public class RegistrationActivity extends ActionBarActivity {
         try {
 
             if (!(checkConnection())) {
-                Toast.makeText(RegistrationActivity.this, "No Internet Connection Found",
-                        Toast.LENGTH_SHORT).show();
+//                Toast.makeText(RegistrationActivity.this, "No Internet Connection Found",
+//                        Toast.LENGTH_SHORT).show();
+                PAlertDialog("Information", "No Internet Connection Found" );
                 return true;
             }
 
             if (str == null || str.isEmpty() || str.equals("")) {
-                Toast.makeText(RegistrationActivity.this, "Badge No should not be blank",
-                        Toast.LENGTH_SHORT).show();
+//                Toast.makeText(RegistrationActivity.this, "Badge No should not be blank",
+//                        Toast.LENGTH_SHORT).show();
+                PAlertDialog("Information", "Please enter badge number" );
                 return true;
             }
             str = "";
             str = edtURL.getText().toString();
 
             if (str == null || str.isEmpty() || str.equals("")) {
-                Toast.makeText(RegistrationActivity.this, "Service URL should not be blank",
-                        Toast.LENGTH_SHORT).show();
+//                Toast.makeText(RegistrationActivity.this, "Service URL should not be blank",
+//                        Toast.LENGTH_SHORT).show();
+                PAlertDialog("Information", "Please enter service url" );
                 return true;
 
             }
@@ -431,6 +445,7 @@ public class RegistrationActivity extends ActionBarActivity {
         } catch (Exception e) {
             String error = "";
             error = e.getMessage();
+            PAlertDialog("Error", (e.getMessage() + "Registration Failed"));
             return true;
         }
         return false;
@@ -467,26 +482,51 @@ public class RegistrationActivity extends ActionBarActivity {
                     String badgeno = separated[0]; // this will contain "Fruit"
                     edtMessage.setText(badgeno);
 
-                }
-                else {
+                } else {
 
                     Toast.makeText(RegistrationActivity.this, "Empty File",
                             Toast.LENGTH_SHORT).show();
                     return false;
                 }
                 return true;
-            }
-            else
-            {
+            } else {
                 return false;
             }
 
-        }
-        catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
+            PAlertDialog("Error", (e.getMessage() + "Registration Failed"));
         } catch (IOException e) {
+            PAlertDialog("Error", (e.getMessage() + "Registration Failed"));
             e.printStackTrace();
         }
-               return true;
+        return true;
     }
-}
+    private void shakeIt(int repeat, int duration) {
+
+        if (getSystemService(VIBRATOR_SERVICE) != null) {
+            long[] pattern = {0, duration};
+            ((Vibrator) getApplicationContext().getSystemService(VIBRATOR_SERVICE)).vibrate(pattern, repeat);
+
+        }
+    }
+    //Use the following alertdialog function to display information which require user aciton (pressing of a button)
+    //Only one button case - no specific action required
+    private void PAlertDialog(String title, String msg)
+    {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(RegistrationActivity.this);
+        builder.setTitle(title);
+        builder.setMessage(msg);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+
+    }
+
+ }
