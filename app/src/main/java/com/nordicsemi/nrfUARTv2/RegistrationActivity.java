@@ -152,6 +152,8 @@ public class RegistrationActivity extends ActionBarActivity {
                                             outputStreamWriter.write(BadgeIMEI);
                                             outputStreamWriter.close();
                                             btnunregistered.setEnabled(true);
+                                            edtMessage.setEnabled(false);
+
                                         }
 
                                     } catch (IOException e) {
@@ -202,13 +204,15 @@ public class RegistrationActivity extends ActionBarActivity {
 
                         } catch (IOException e) {
                             Log.e("Exception", "File write failed: " + e.toString());
+                            PAlertDialog("Error", e.getMessage() );
                         }
                     }
                 } catch (Exception e) {
                     String error = "";
                     error = e.getMessage();
-                    Toast.makeText(RegistrationActivity.this, e.getMessage(),
-                            Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(RegistrationActivity.this, e.getMessage(),
+//                            Toast.LENGTH_SHORT).show();
+                    PAlertDialog("Error", e.getMessage() );
 
                 }
             }
@@ -232,12 +236,15 @@ public class RegistrationActivity extends ActionBarActivity {
 
                         Toast.makeText(RegistrationActivity.this, "Registration  does not exist",
                                 Toast.LENGTH_LONG).show();
+                        PAlertDialog("Error", "No registration information found on the device" );
                         return;
                     }
                     if (!(Valuefile.exists())) {
 
-                        Toast.makeText(RegistrationActivity.this, "Registration Data file does not exist",
-                                Toast.LENGTH_LONG).show();
+//                        Toast.makeText(RegistrationActivity.this, "Registration Data file does not exist",
+//                                Toast.LENGTH_LONG).show();
+                        PAlertDialog("Error", "Registration file doesn't exists" );
+
                         return;
                     }
 
@@ -332,7 +339,9 @@ public class RegistrationActivity extends ActionBarActivity {
             String imei = txtImei.getText().toString();
             msg = ("Badgeno: " + badgeno +"\n" + "IMEI: " + imei);
 
-            EMPLOYEE_SERVICE_URI = edtURL.getText().toString() + "/GetCardholderData/" + "/'" + badgeno + "'/'" + imei + "'/'" + model + "'/'" + serial + "'";
+            String s = edtURL.getText().toString() + "/GetCardholderData/" + "/'" + badgeno + "'/'" + imei + "'/'" + model + "'/'" + serial + "'";
+
+            EMPLOYEE_SERVICE_URI = s.replace(' ','-');
 
             URL url = new URL(EMPLOYEE_SERVICE_URI);
 
@@ -369,8 +378,10 @@ public class RegistrationActivity extends ActionBarActivity {
                     getstring = json.substring(iend, json.length()); //this will give abc
 
 
-                Toast.makeText(getBaseContext(), getstring,
-                        Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getBaseContext(), getstring,
+//                        Toast.LENGTH_SHORT).show();
+                PAlertDialog("Error", getstring);
+
                 return false;
             }
 
@@ -434,7 +445,8 @@ public class RegistrationActivity extends ActionBarActivity {
             str = "";
             str = edtURL.getText().toString();
 
-            if (str == null || str.isEmpty() || str.equals("")) {
+            if (str == null || str.isEmpty() || str.equals(""))
+            {
 //                Toast.makeText(RegistrationActivity.this, "Service URL should not be blank",
 //                        Toast.LENGTH_SHORT).show();
                 PAlertDialog("Information", "Please enter service url" );
@@ -484,8 +496,10 @@ public class RegistrationActivity extends ActionBarActivity {
 
                 } else {
 
-                    Toast.makeText(RegistrationActivity.this, "Empty File",
-                            Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(RegistrationActivity.this, "Empty File",
+//                            Toast.LENGTH_SHORT).show();
+                    PAlertDialog("Information", "File Empty" );
+
                     return false;
                 }
                 return true;

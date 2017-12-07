@@ -23,12 +23,12 @@
         android:id="@+id/textView2"
         android:layout_width="190dp"
         android:layout_height="44dp"
-        android:text="mEmart 1.0 Beta"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
         android:layout_marginEnd="31dp"
-        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="48dp"
         android:layout_marginTop="34dp"
+        android:text="mEmart 1.1 Beta"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginRight="48dp" />
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
 </android.support.constraint.ConstraintLayout>

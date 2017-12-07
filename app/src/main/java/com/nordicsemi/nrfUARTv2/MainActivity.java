@@ -83,6 +83,7 @@ import static android.R.attr.format;
 import static com.nordicsemi.nrfUARTv2.MainActivity.FRAMERXINGSTATE.WAITFrameProcess;
 import static com.nordicsemi.nrfUARTv2.MainActivity.FRAMERXINGSTATE.WAITSTX1;
 
+
 public class MainActivity extends Activity implements RadioGroup.OnCheckedChangeListener {
     private static final int REQUEST_SELECT_DEVICE = 1;
     private static final int REQUEST_ENABLE_BT = 2;
@@ -162,8 +163,6 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     public static final int cmdGetDateTime = 0x51;
     public static final int cmdSetTerID = 0x52;
 
-
-
     public int rxByteCnt = 0;
     public int rxFrameSize = 0;
     private short rxprIndex = 0;
@@ -185,16 +184,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     }
 
   // public enum EACS_AlarmNo {OK, BLACKLISTED,ACCESSDENIED,CARDEXPIRED,ANTIPASSBKERROR,ACCLOCK,ACCHOLIDAY, ACCLEAVE,PINFAIL,BIOFAIL, DURESSCODE,ACCSCHEDULE,FREE12,FREE13,ACCESCORT,CARDTWING };
-
-
-
-
     private FRAMERXINGSTATE frameProcessState= WAITSTX1;
-
-
-
-
-
 
     private TextView mRemoteRssiVal;
     RadioGroup mRg;
@@ -212,6 +202,9 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     private static final String fileRegistrationVerify = "BadgeIMEI.txt";
     private static final String Datafile = "mytextfile.txt";
     TextView  txtmessagecode;
+    MediaPlayer in = null;
+    MediaPlayer out = null;
+    MediaPlayer error= null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -244,10 +237,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         messageListView.setVisibility(View.GONE);
         btnConnectDisconnect.setBackgroundColor(Color.parseColor("#ABBD48"));
 
-
         service_init();
-
-
         // Handle Disconnect & Connect button
         btnConnectDisconnect.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -288,7 +278,6 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                 try {
 
                     shakeIt(1, myVirator.sclick);
-                    SoundIt();
                     //send data to service
                     value = message.getBytes("UTF-8");
                     sendCommandToTerminal((byte) 0x88);
@@ -316,6 +305,9 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
 
         // Set initial UI state
+    in = MediaPlayer.create(this,R.raw.in);
+    out = MediaPlayer.create(this,R.raw.out);
+    error = MediaPlayer.create(this,R.raw.error);
 
     }
 
@@ -489,16 +481,16 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                             if(bytcount==0 && txValue.length>9)
                                 framesize=txValue[9]&0xff;
                            if (framesize == (byte) 0x53) {
-                               bytcount++;
-                               if(bytcount==4)
-                               {
-                         if (mDevice != null) {
+                                bytcount++;
+                                if(bytcount==4)
+                                {
+                                    if (mDevice != null) {
 
-                             bytcount=0;
-                             mService.disconnect();
-                         }
-                            }
-                               }
+                                        bytcount=0;
+                                        mService.disconnect();
+                                    }
+                                }
+                           }
 
                         } catch (Exception e) {
                             Log.e(TAG, e.toString());
@@ -934,7 +926,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
         // calculate csum
         nSum = 0;
-        j = (short) (rxBuff[2] | (rxBuff[3] << 8));
+        j = (short) ((rxBuff[2] & 0xff) | ((rxBuff[3] & 0xff) << 8));
         for (i = 4; i < j; i++)
         {
             nSum += rxBuff[i] & 0xff;
@@ -1021,6 +1013,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     }
     private void    ProcessBLEFrame()
     {
+
         int rxb = 9;
         int name=40;
         int date=16;
@@ -1028,6 +1021,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         int j = 0;
         int l=0;
         int m=0;
+        int direction =0;
         String FullName="";
 
         char chr = ' ';
@@ -1080,13 +1074,6 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                 //filename="mytextfile.txt";
                 try {
                     FileInputStream fileIn=openFileInput(filename);
-                    //InputStreamReader InputRead= new InputStreamReader(fileIn);
-
-                   /// char[] inputBuffer= new char[READ_BLOCK_SIZE];
-                   /// String s="";
-                  ///  int charRead;
-
-
 
                     byte[] b = filename.getBytes();
                     ch = fileIn.getChannel();
@@ -1119,24 +1106,12 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                     tmpBuff[i++] = (byte)lnth;
                     tmpBuff[i++] = (byte)(lnth>>8);
 
-                 while(l<size)//size
-                 {
+                    while(l<size)//size
+                    {
                      tmpBuff[i++]=bytes[l];
                      l++;
 
-                 }
-
-
-
-                 //   while ((charRead=InputRead.read(inputBuffer))>0) {
-                        // char to string conversion
-                     ///   tmpBuff[i++]=(byte)(charRead);
-                     ///   String readstring=String.copyValueOf(inputBuffer,0,charRead);
-                     ///   s +=readstring;
-                  ///  }
-                   // InputRead.close();
-
-
+                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1159,15 +1134,8 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                 break;
 
             case 0x53: //Send file
-
-
-
                 String  strdate = (rxBuff[date++])+2000+"/"+rxBuff[date++] +"/"+rxBuff[date++]+" " +
                         ""+ rxBuff[date++]+":"+rxBuff[date++]+":"+ rxBuff[date++];
-
-
-
-
 
                  SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                 try {
@@ -1181,9 +1149,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                     e.printStackTrace();
                 }
                 txtdatetime.setTextColor(Color.BLUE);
-
-
-
+                //extract name
                 for (int k = 0; k < 16; k++)
                 {
                     if ((rxBuff[name+k]&0xff)== 0)
@@ -1192,7 +1158,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                     chr = (char)( rxBuff[name+k]&0xff);
                     FullName += chr;
                 }
-
+                direction = rxBuff[name+16];
                 FullName =FullName.trim();
                 txtname.setText(FullName);
                 txtname.setTextColor(Color.BLUE);
@@ -1214,10 +1180,6 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                     txttick.setText("");
 
                     switch(rxBuff[rxb+13]&0xff) {
-
-
-
-
 
                         case IN_OUT_Punch:
                             txtmessagecode.setText("Invalid IN/Out");//  Toast.makeText(this,"Invalid IN/Out",Toast.LENGTH_LONG).show();
@@ -1315,27 +1277,22 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                             txtmessagecode.setBackgroundColor(Color.RED);
                             txttick.setText("\u2715");
                             break;
-
-
-
-
                         default:
+                            break;
 
                     }
-
-
-
                     txtmessagecode.setText("");
                     txttick.setText("");
 
                     switch(rxBuff[rxb+14]&0xff) {
 
-
-
-
-
                         case OK:
-                            txtmessagecode.setText("Punched Successfully");//   Toast.makeText(this,"Punched Successfully",Toast.LENGTH_LONG).show();
+
+                            String s = "IN";
+                            if(direction == 0)
+                                s = "OUT";
+                            s = s + " - Punched Successfully";
+                            txtmessagecode.setText(s);//   Toast.makeText(this,"Punched Successfully",Toast.LENGTH_LONG).show();
                             txtmessagecode.setBackgroundColor(Color.CYAN);
                             txttick.setText("\u2713");
                             break;
@@ -1420,43 +1377,14 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                         default:
 
                     }
-
-
-
-
-
-
-
-
-
-
-
+                    SoundIt(direction);
 
                        tmpBuff[i++]=0;
-
-
-
                 }
                 catch(Exception e) {
                     tmpBuff[i++] = 1;
                 }
                    String files="";
-              //  int kk=22;
-                //    while(kk<(rxb+30))
-                  //  {
-                      //  files+=rxBuff[rxb+13];
-                  //  }
-
-
-                   //  if(files.equals(filename) && (rxBuff[rxb+13]==0) )
-                   //  {
-
-                     //    tmpBuff[i++]=0;
-                   //  }
-                   //  else
-                   //  {
-                   //      tmpBuff[i++]=1;
-                    // }
 
                 byte[] c = filename.getBytes();
 
@@ -1470,8 +1398,6 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                 }
 
                 while(m<16) {
-
-
                     if(m>=c.length)
                         tmpBuff[i++]=0;
                     else
@@ -1479,12 +1405,6 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                     m++;
 
                 }
-
-
-
-
-
-
                 tmpBuff[0] = (byte)i;
                 tmpBuff[1] = (byte)(i>>8);
                 sendCommandToTerminal(rxBuff[rxb-1]);
@@ -1522,9 +1442,21 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
         }
     }
-    private void SoundIt()
+    private void SoundIt(int index)
     {
-        final MediaPlayer mp = MediaPlayer.create(this, R.raw.click2);
+        switch(index)
+        {
+            case 0:
+                out.start();
+                break;
+            case 1:
+                in.start();
+                break;
+            case 2:
+                in.start();
+                break;
+
+        }
 
     }
 }
