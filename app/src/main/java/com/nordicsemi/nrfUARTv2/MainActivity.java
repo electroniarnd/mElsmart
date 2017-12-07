@@ -1057,6 +1057,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                 tmpBuff[1] = (byte)(i>>8);
              //   tmpBuff1 = new byte[i];
               //  System.arraycopy(tmpBuff, 0, tmpBuff1, 0, i);
+                btnSend.setBackgroundColor(Color.MAGENTA);
                 sendCommandToTerminal(rxBuff[rxb-1]);
                 break;
             case 0x52: //Send file
@@ -1130,10 +1131,12 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
                 tmpBuff[0] = (byte)i;
                 tmpBuff[1] = (byte)(i>>8);
+                btnSend.setBackgroundColor(Color.BLUE);
                 sendCommandToTerminal(rxBuff[rxb-1]);
                 break;
 
             case 0x53: //Send file
+                btnSend.setBackgroundColor(Color.GREEN);
                 String  strdate = (rxBuff[date++])+2000+"/"+rxBuff[date++] +"/"+rxBuff[date++]+" " +
                         ""+ rxBuff[date++]+":"+rxBuff[date++]+":"+ rxBuff[date++];
 
