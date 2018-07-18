@@ -10,14 +10,14 @@
         android:id="@+id/txtabout"
         android:layout_width="94dp"
         android:layout_height="33dp"
-        android:text="Version:"
-        tools:layout_constraintTop_creator="1"
-        android:layout_marginStart="16dp"
-        tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="34dp"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="Version:"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintTop_creator="1" />
 
     <TextView
         android:id="@+id/textView2"
@@ -26,7 +26,7 @@
         android:layout_marginEnd="31dp"
         android:layout_marginRight="48dp"
         android:layout_marginTop="34dp"
-        android:text="mEmart 1.1 Beta"
+        android:text="mElsmart 1.4"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_constraintRight_creator="1"
