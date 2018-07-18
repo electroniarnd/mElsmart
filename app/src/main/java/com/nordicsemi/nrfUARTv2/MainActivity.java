@@ -26,13 +26,12 @@ package com.nordicsemi.nrfUARTv2;
 
 
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
@@ -62,24 +61,21 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Vibrator;
+import android.support.v4.app.NotificationCompatSideChannelService;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioGroup;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import static android.R.attr.format;
 import static com.nordicsemi.nrfUARTv2.MainActivity.FRAMERXINGSTATE.WAITFrameProcess;
 import static com.nordicsemi.nrfUARTv2.MainActivity.FRAMERXINGSTATE.WAITSTX1;
 
@@ -93,56 +89,54 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     private static final int UART_PROFILE_DISCONNECTED = 21;
     private static final int STATE_OFF = 10;
     private static int a = 0;
-    private static  int VisibleMode = 0;
-    private  static int bytcount=0;
-    private  static int framesize=0;
-    private  static int autostartvalue=1;
+    private static int VisibleMode = 0;
+    private static int Vibrationmode = 0;
+    private static int bytcount = 0;
+    private static int framesize = 0;
+    private static int autostartvalue = 1;
 
 
-
-    private static final int IN_OUT_Punch=			0x01;
-    private static final int InvalidDoor=			0x02;
-    private static final int	SystemLocked=			0x04;
-    private static final int	ExitEntryMissed	=		0x08;
-    private static final int	ExpiredCard=				0x10;
-    private static final int CardType1=				0x20;
-    private static final int CardType2=				0x40;
-    private static final int	BlackListedCard		=	0x80;
-    private static final int	READER_ERROR_SET=		0x22;
-    private static final int	READER_ERROR_CLEAR	=	0x23;
-    private static final int	DOOR_KEPT_OPEN_ALARM=		0x24;
-    private static final int	DOOR_FORCED_OPEN_ALARM	=	0x25;
-    private static final int	EPB_ALARM	=		0x26;
-    private static final int	EMBU_ALARM	=		0x27;
-    private static final int	DOOR_OPENED_BY_COMMAND	=	0x28;
-    private static final int	BIOMETRIC_ERROR_SET	=	0x29;
-    private static final int	BIOMETRIC_ERROR_CLEAR=		0x2A;
-    private static final int	DATE_TIME_ALARM_SET=		0x2B;
-    private static final int	DATE_TIME_ALARM_CLEAR	=	0x2C;
+    //Elsmart
+    private static final int elsmartIN_OUT_Punch = 0x01;
+    private static final int elsmartInvalidDoor = 0x02;
+    private static final int elsmartSystemLocked = 0x04;
+    private static final int elsmartExitEntryMissed = 0x08;
+    private static final int elsmartExpiredCard = 0x10;
+    private static final int elsmartCardType1 = 0x20;
+    private static final int elsmartCardType2 = 0x40;
+    private static final int elsmartBlackListedCard = 0x80;
 
 
+    //eacs
+    private static final int eacsREADER_ERROR_SET = 0x22;
+    private static final int eacsREADER_ERROR_CLEAR = 0x23;
+    private static final int eacsDOOR_KEPT_OPEN_ALARM = 0x24;
+    private static final int eacsDOOR_FORCED_OPEN_ALARM = 0x25;
+    private static final int eacsEPB_ALARM = 0x26;
+    private static final int eacsEMBU_ALARM = 0x27;
+    private static final int eacsDOOR_OPENED_BY_COMMAND = 0x28;
+    private static final int eacsBIOMETRIC_ERROR_SET = 0x29;
+    private static final int eacsBIOMETRIC_ERROR_CLEAR = 0x2A;
+    private static final int eacsDATE_TIME_ALARM_SET = 0x2B;
+    private static final int eacsDATE_TIME_ALARM_CLEAR = 0x2C;
+    private static final String DirectionFile = "direction.txt";
 
-
-
-    private static final int OK=0;
-    public static final int BLACKLISTED=1;
-    public static final int ACCESSDENIED=2;
-    public static final int CARDEXPIRED=3;
-    public static final int ANTIPASSBKERROR=4;
-    public static final int ACCLOCK=5;
-    public static final int ACCHOLIDAY=6;
-    public static final int  ACCLEAVE=7;
-    public static final int   PINFAIL=8;
-    public static final int BIOFAIL=9;
-    public static final int  DURESSCODE=10;
-    public static final int  ACCSCHEDULE=11;
-    public static final int   FREE12=12;
-    public static final int   FREE13=13;
-    public static final int  ACCESCORT=14;
-    public static final int  CARDTWING=15;
-
-
-
+    private static final int OK = 0;
+    public static final int eacsBLACKLISTED = 1;
+    public static final int eacsACCESSDENIED = 2;
+    public static final int eacsCARDEXPIRED = 3;
+    public static final int eacsANTIPASSBKERROR = 4;
+    public static final int eacsACCLOCK = 5;
+    public static final int eacsACCHOLIDAY = 6;
+    public static final int eacsACCLEAVE = 7;
+    public static final int eacsPINFAIL = 8;
+    public static final int eacsBIOFAIL = 9;
+    public static final int eacsDURESSCODE = 10;
+    public static final int eacsACCSCHEDULE = 11;
+    public static final int eacsFREE12 = 12;
+    public static final int eacsFREE13 = 13;
+    public static final int eacsACCESCORT = 14;
+    public static final int eacsCARDTWING = 15;
 
 
     public static final int MAX_BUFF = 8096;      //includes tcpip buffer
@@ -166,10 +160,11 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     public int rxByteCnt = 0;
     public int rxFrameSize = 0;
     private short rxprIndex = 0;
-    int count=0;
-   public byte[] TXvalue1;
+    int count = 0;
+    public byte[] TXvalue1;
     public byte[] tmpBuff1;
-    public  enum FRAMERXINGSTATE {
+
+    public enum FRAMERXINGSTATE {
         NONE,
         WAITSTX1,
         WAITSTX2,
@@ -177,14 +172,15 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         WAITFrameProcess,
         ReadyForNextCmd;
     }
+
     public static class myVirator {
 
-        public static int sclick =200;
+        public static int sclick = 200;
         public static int longclick = 500;
     }
 
-  // public enum EACS_AlarmNo {OK, BLACKLISTED,ACCESSDENIED,CARDEXPIRED,ANTIPASSBKERROR,ACCLOCK,ACCHOLIDAY, ACCLEAVE,PINFAIL,BIOFAIL, DURESSCODE,ACCSCHEDULE,FREE12,FREE13,ACCESCORT,CARDTWING };
-    private FRAMERXINGSTATE frameProcessState= WAITSTX1;
+    // public enum EACS_AlarmNo {OK, BLACKLISTED,ACCESSDENIED,CARDEXPIRED,ANTIPASSBKERROR,ACCLOCK,ACCHOLIDAY, ACCLEAVE,PINFAIL,BIOFAIL, DURESSCODE,ACCSCHEDULE,FREE12,FREE13,ACCESCORT,CARDTWING };
+    private FRAMERXINGSTATE frameProcessState = WAITSTX1;
 
     private TextView mRemoteRssiVal;
     RadioGroup mRg;
@@ -196,15 +192,20 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     private ArrayAdapter<String> listAdapter;
     private Button btnConnectDisconnect, btnSend;
     private EditText edtMessage;
-    private TextView txttick;
-    private TextView  txtdatetime;
+    private TextView txttick, txtregistered, txtbadgeno1, textView4;
+    private TextView txtdatetime;
     private TextView txtname;
     private static final String fileRegistrationVerify = "BadgeIMEI.txt";
     private static final String Datafile = "mytextfile.txt";
-    TextView  txtmessagecode;
+    TextView txtmessagecode;
     MediaPlayer in = null;
     MediaPlayer out = null;
-    MediaPlayer error= null;
+    MediaPlayer error = null;
+    MediaPlayer Access_Denied = null;
+    MediaPlayer Card_Expired = null;
+    MediaPlayer Blacklisted = null;
+    MediaPlayer AntiPassBackError = null;
+    private String sysvalue="";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -219,6 +220,71 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
             finish();
             return;
         }
+
+
+        txtregistered = (TextView) findViewById(R.id.txtregistered);
+        txtbadgeno1 = (TextView) findViewById(R.id.txtbadgeno1);
+        textView4 = (TextView) findViewById(R.id.textView4);
+
+
+        File Registrationfile = new File(getFilesDir() + File.separator + fileRegistrationVerify);
+
+        File Valuefile = new File(getFilesDir() + File.separator + Datafile);
+        if ((Registrationfile.exists())) {
+
+
+            FileInputStream fileIn = null;
+            try {
+                fileIn = openFileInput(fileRegistrationVerify);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            InputStreamReader InputRead;
+            InputRead = new InputStreamReader(fileIn);
+
+            char[] inputBuffer = new char[READ_BLOCK_SIZE];
+            String s = "";
+            int charRead;
+
+            try {
+                while ((charRead = InputRead.read(inputBuffer)) > 0) {
+                    // char to string conversion
+                    String readstring = String.copyValueOf(inputBuffer, 0, charRead);
+                    s += readstring;
+                }
+
+
+                String[] urldata = s.split("~");
+
+
+                txtregistered.setText(R.string.Registered);
+                txtregistered.setBackgroundColor(Color.GREEN);
+                txtbadgeno1.setVisibility(View.VISIBLE);
+                textView4.setVisibility(View.VISIBLE);
+                txtbadgeno1.setText(urldata[0]);
+                textView4.setText(urldata[11]);
+                sysvalue=urldata[13].toLowerCase().toString();
+
+                InputRead.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            catch(Exception e) {
+                Toast.makeText(MainActivity.this, "Error",
+                           Toast.LENGTH_SHORT).show();
+                Log.e("",e.getMessage());
+            }
+
+        } else {
+            txtregistered.setText(R.string.UnRegistered);
+            txtregistered.setBackgroundColor(Color.RED);
+            txtbadgeno1.setVisibility(View.GONE);
+            textView4.setVisibility(View.GONE);
+
+
+        }
+
+
         messageListView = (ListView) findViewById(R.id.listMessage);
         listAdapter = new ArrayAdapter<String>(this, R.layout.message_detail);
         messageListView.setAdapter(listAdapter);
@@ -229,7 +295,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         txttick = (TextView) findViewById(R.id.txttick);
 
         txtdatetime = (TextView) findViewById(R.id.txtdatetime);
-        txtname = (TextView) findViewById(R.id.txtname);
+        txtname = (TextView) findViewById(R.id.txtname1);
 
         txtmessagecode = (TextView) findViewById(R.id.txtmessagecode);
         edtMessage.setVisibility(View.GONE);
@@ -254,7 +320,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                         Intent newIntent = new Intent(MainActivity.this, DeviceListActivity.class);
                         startActivityForResult(newIntent, REQUEST_SELECT_DEVICE);
 
-                        autostartvalue=0;
+                        autostartvalue = 0;
 
 
                     } else {
@@ -294,24 +360,23 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
             }
         });
-      //  if (autostartvalue == 0) {
-       //     btnSend.performClick();
-       //     autostartvalue =1;
+        //  if (autostartvalue == 0) {
+        //     btnSend.performClick();
+        //     autostartvalue =1;
 
-      //  }
-
-
-
+        //  }
 
 
         // Set initial UI state
-    in = MediaPlayer.create(this,R.raw.in);
-    out = MediaPlayer.create(this,R.raw.out);
-    error = MediaPlayer.create(this,R.raw.error);
+        in = MediaPlayer.create(this, R.raw.in);
+        out = MediaPlayer.create(this, R.raw.out);
+        error = MediaPlayer.create(this, R.raw.error);
+        Card_Expired = MediaPlayer.create(this,R.raw.cardexpired);
+        Blacklisted = MediaPlayer.create(this,R.raw.blacklisted);
+        AntiPassBackError = MediaPlayer.create(this,R.raw.antipassback);
+        Access_Denied = MediaPlayer.create(this, R.raw.accessdenied);
 
     }
-
-
 
 
     @Override
@@ -327,40 +392,45 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        switch(item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.Registration_id:
-                startActivity(new Intent(this,RegistrationActivity.class));
+                startActivity(new Intent(this, RegistrationActivity.class));
                 break;
             case R.id.About_id:
-                startActivity(new Intent(this,AboutActivity.class));
+                startActivity(new Intent(this, AboutActivity.class));
                 break;
-             case R.id.Debug_id:
-                if(VisibleMode==0) {
+            case R.id.Debug_id:
+                if (VisibleMode == 0) {
                     messageListView.setVisibility(View.VISIBLE);
-                   VisibleMode=1;
-               }
-                else
-                    if(VisibleMode==1) {
-                        messageListView.setVisibility(View.GONE);
-                       VisibleMode=0;
-                   }
+                    VisibleMode = 1;
+                } else if (VisibleMode == 1) {
+                    messageListView.setVisibility(View.GONE);
+                    VisibleMode = 0;
+                }
 
 
                 break;
 
-            default:  return super.onOptionsItemSelected(item);
+            case R.id.Vibration_id:
+                if (Vibrationmode == 0) {
+                    if (getSystemService(VIBRATOR_SERVICE) != null) {
+
+                        ((Vibrator) getApplicationContext().getSystemService(VIBRATOR_SERVICE)).cancel();
+                        Vibrationmode = 1;
+                    }
+                } else if ((Vibrationmode == 1)) {
+                    shakeIt(1, MainActivity.myVirator.sclick);
+                }
+                break;
+
+
+            default:
+                return super.onOptionsItemSelected(item);
 
         }
 
         return super.onOptionsItemSelected(item);
     }
-
-
-
-
-
-
 
 
     //UART service connected/disconnected
@@ -410,8 +480,8 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                         btnConnectDisconnect.setBackgroundColor(Color.GREEN);
 
 
-                        ((TextView) findViewById(R.id.deviceName)).setText(mDevice.getName() + " - ready");
-                        listAdapter.add("[" + currentDateTimeString + "] Connected to: " + mDevice.getName());
+                        ((TextView) findViewById(R.id.deviceName)).setText(mDevice.getName() + R.string.readyy);
+                        listAdapter.add("[" + currentDateTimeString + R.string.Connected_to + mDevice.getName());
                         messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
 
                         mState = UART_PROFILE_CONNECTED;
@@ -449,35 +519,36 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
             //*********************//
             if (action.equals(UartService.ACTION_GATT_SERVICES_DISCOVERED)) {
                 mService.enableTXNotification();
-               // try {
-                 //   Thread.sleep(1000);
-              //  } catch (InterruptedException e) {
-               // //    e.printStackTrace();
-                //}
-               //if(autostartvalue==0) {
-              //  sendCommandToTerminal((byte) 0x88);
-               //   autostartvalue=1;
-                //}
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    //    e.printStackTrace();
+                }
+                if (autostartvalue == 0) {
+                    sendCommandToTerminal((byte) 0x88);
+                    autostartvalue = 1;
+                }
             }
             //*********************//
             if (action.equals(UartService.ACTION_DATA_AVAILABLE)) {
 
-               final byte[] txValue = intent.getByteArrayExtra(UartService.EXTRA_DATA);
+                final byte[] txValue = intent.getByteArrayExtra(UartService.EXTRA_DATA);
                 // final  int[] txValue = intent.getIntArrayExtra(UartService.EXTRA_DATA);
                 runOnUiThread(new Runnable() {
                     public void run() {
                         try {
-                          //  String text = new String(txValue, "UTF-8");
+                            //  String text = new String(txValue, "UTF-8");
 
-                          //  String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
-                          //  listAdapter.add("[" + currentDateTimeString + "] RX: " + text);
-                           // messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
+                            //  String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
+                            //  listAdapter.add("[" + currentDateTimeString + "] RX: " + text);
+                            // messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
 
 
-                            int byteRead= txValue.length;
+                            int byteRead = txValue.length;
 
-                            processRxPacket(txValue,  byteRead);
-
+                            processRxPacket(txValue, byteRead);
+//disconnect is issued from last command 0x53 response.
+/*
                             if(bytcount==0 && txValue.length>9)
                                 framesize=txValue[9]&0xff;
                            if (framesize == (byte) 0x53) {
@@ -491,7 +562,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                                     }
                                 }
                            }
-
+*/
                         } catch (Exception e) {
                             Log.e(TAG, e.toString());
                         }
@@ -627,7 +698,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
             case REQUEST_ENABLE_BT:
                 // When the request to enable Bluetooth returns
                 if (resultCode == Activity.RESULT_OK) {
-                    Toast.makeText(this, "Bluetooth has turned on ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.Bluetooth_has_turned_on, Toast.LENGTH_SHORT).show();
 
                 } else {
                     // User did not enable Bluetooth or an error occurred
@@ -680,21 +751,22 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
     int sessionid = 0x12345678;
     byte terno = 1;
-    byte pollsourceid =(byte) 0x84;
+    byte pollsourceid = (byte) 0x84;
     int customerID = 1;
 
-    public class Comparameters
-    {
-        public byte termo=1;
+    public class Comparameters {
+        public byte termo = 1;
         public byte siteno;
         public long sessionidrx;
-        public Date dtrx= new Date();
+        public Date dtrx = new Date();
         public short custid;
-        public  byte [] mac = new byte[6];
+        public byte[] mac = new byte[6];
         public byte language;
         public byte reserved;
     }
+
     public Comparameters compara = new Comparameters();
+
     public void sendCommandToTerminal(byte cmdid) {
         byte[] txBuff = new byte[MAX_BUFF];
         short addr = 0;
@@ -718,21 +790,20 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
             //Prepare command specific data
             // CmdResponseEventArgs ev1 = new CmdResponseEventArgs();
             txBuff[i++] = cmdid;
-        //    ter.txcmdid = (byte) cmdid;
+            //    ter.txcmdid = (byte) cmdid;
             switch (cmdid) {
                 case (byte) 0x88: //who ami
 
                     txBuff[i++] = (byte) sessionid;
                     txBuff[i++] = (byte) (sessionid >> 8);
-                    txBuff[i++] = (byte) (sessionid >>16);
+                    txBuff[i++] = (byte) (sessionid >> 16);
                     txBuff[i++] = (byte) (sessionid >> 24);
 
                     break;
                 case (byte) 0x4F: //DirectMobileCmd
-                    int i1 = tmpBuff[0] &0xff;
-                    i1 |= ((tmpBuff[1]& 0xff)<<8);
-                    for(int k = 2;k<i1;k++)
-                    {
+                    int i1 = tmpBuff[0] & 0xff;
+                    i1 |= ((tmpBuff[1] & 0xff) << 8);
+                    for (int k = 2; k < i1; k++) {
                         txBuff[i++] = tmpBuff[k];
                     }
 
@@ -756,13 +827,13 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
             int checkSum = 0;
 
             for (i = 4; i < byteCount - 3; i++)
-                checkSum += txBuff[i]&0xff;
+                checkSum += txBuff[i] & 0xff;
 
             i = (short) (byteCount - 3);
             txBuff[2] = (byte) i;
             txBuff[3] = (byte) (i >> 8);
-            txBuff[byteCount - 3] = (byte) ((checkSum & 0xffff)>>8);
-            txBuff[byteCount - 2] = (byte) ((checkSum &0xff));
+            txBuff[byteCount - 3] = (byte) ((checkSum & 0xffff) >> 8);
+            txBuff[byteCount - 2] = (byte) ((checkSum & 0xff));
 
             //string str = "";
             //for (int x = 0; x < byteCount; x++)
@@ -770,15 +841,15 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
             //System.Windows.Forms.MessageBox.Show(str);
 
-            frameProcessState =  WAITSTX1;
+            frameProcessState = WAITSTX1;
 
-            byte [] arr = new byte[byteCount];
+            byte[] arr = new byte[byteCount];
             System.arraycopy(txBuff, 0, arr, 0, byteCount);
 
 
             mService.writeRXCharacteristic(arr);
 
-            displaytxCommandMsg(cmdid,tmpBuff[2]);
+            displaytxCommandMsg(cmdid, tmpBuff[2]);
 
         } catch (Exception ex) {
 //                ter.displayErrorMsg(string.Format("***///???cmd:{0} : tmpl_out_ptr = {1}", ter.td.biocmdtx, ter.td.tmpl_out_ptr));
@@ -792,36 +863,27 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     void displaytxCommandMsg() {
 
 
-
     }
 
-    void displaytxCommandMsg(byte cmdid,byte comid1)
-    {
+    void displaytxCommandMsg(byte cmdid, byte comid1) {
         String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
 
-       if((cmdid&0xff)==0x88)
-        {
-            listAdapter.add("[" + currentDateTimeString + "] TX: " + cmdid+"  Connection message has sent");
+        if ((cmdid & 0xff) == 0x88) {
+            listAdapter.add("[" + currentDateTimeString + "] TX: " + cmdid + "  Connection message has sent");
+        } else if ((cmdid & 0xff) == 0x4F) {
+
+            if ((comid1 & 0xff) == 0x51) {
+                listAdapter.add("[" + currentDateTimeString + "] TX: " + comid1 + "  IMEI  has sent");
+            }
+            if ((comid1 & 0xff) == 0x52) {
+                listAdapter.add("[" + currentDateTimeString + "] TX: " + comid1 + "  file  has sent");
+            }
+
+            if ((comid1 & 0xff) == 0x53) {
+                listAdapter.add("[" + currentDateTimeString + "] TX: " + comid1 + " Opearation Status has sent and mobile disconnected ");
+            }
+
         }
-        else  if((cmdid&0xff)==0x4F)
-       {
-
-           if((comid1&0xff)==0x51)
-           {
-               listAdapter.add("[" + currentDateTimeString + "] TX: " + comid1+"  IMEI  has sent");
-           }
-           if((comid1&0xff)==0x52)
-           {
-               listAdapter.add("[" + currentDateTimeString + "] TX: " + comid1+"  file  has sent");
-           }
-
-           if((comid1&0xff)==0x53)
-           {
-               listAdapter.add("[" + currentDateTimeString + "] TX: " + comid1+" Opearation Status has sent and mobile disconnected ");
-           }
-
-       }
-
 
 
         messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
@@ -829,20 +891,17 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     }
 
 
-    void displaytxCommandMsgRX(byte cmdid)
-    {
+    void displaytxCommandMsgRX(byte cmdid) {
         String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
-        if((cmdid&0xff)==0x51) {
-            listAdapter.add("[" + currentDateTimeString + "] RX: " + cmdid+" Request for IMEI frame has recieved");
+        if ((cmdid & 0xff) == 0x51) {
+            listAdapter.add("[" + currentDateTimeString + "] RX: " + cmdid + " Request for IMEI frame has recieved");
         }
-        if((cmdid&0xff)==0x52) {
-            listAdapter.add("[" + currentDateTimeString + "] RX: " + cmdid+" Request for File frame has recieved");
+        if ((cmdid & 0xff) == 0x52) {
+            listAdapter.add("[" + currentDateTimeString + "] RX: " + cmdid + " Request for File frame has recieved");
         }
-        if((cmdid&0xff)==0x53) {
-            listAdapter.add("[" + currentDateTimeString + "] RX: " + cmdid+" Request for Opeartion status frame has recieved");
+        if ((cmdid & 0xff) == 0x53) {
+            listAdapter.add("[" + currentDateTimeString + "] RX: " + cmdid + " Request for Opeartion status frame has recieved");
         }
-
-
 
 
         messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
@@ -850,68 +909,51 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     }
 
 
-
-
-
-
-    public boolean processRxPacket(byte[] buffer, int byteRead)
-    {
+    public boolean processRxPacket(byte[] buffer, int byteRead) {
         int k;
         int i = 0;
         boolean bRet = false;
-        while (i < byteRead)
-        {
+        while (i < byteRead) {
             k = buffer[i++];
-            k= (int) (k&0xFF);
-            switch (frameProcessState)
-            {
+            k = (int) (k & 0xFF);
+            switch (frameProcessState) {
                 case WAITSTX1:
-                    if (k == STX1)
-                    {
+                    if (k == STX1) {
                         rxByteCnt = 0;
-                        rxFrameSize = (int)MAXRXFRAMESize;
-                        rxBuff[rxByteCnt++] =(byte) k;
+                        rxFrameSize = (int) MAXRXFRAMESize;
+                        rxBuff[rxByteCnt++] = (byte) k;
                         frameProcessState = FRAMERXINGSTATE.WAITSTX2;
                     }
                     break;
                 case WAITSTX2:
-                    if (k == STX2)
-                    {
+                    if (k == STX2) {
                         frameProcessState = FRAMERXINGSTATE.WAITDATA;
-                        rxBuff[rxByteCnt++] = (byte)k;
-                    }
-                    else
-                    {
+                        rxBuff[rxByteCnt++] = (byte) k;
+                    } else {
                         frameProcessState = WAITSTX1;
                     }
                     break;
                 case WAITDATA:
-                    rxBuff[rxByteCnt++] =(byte) k;
-                    if (rxByteCnt == 4)
-                    {
+                    rxBuff[rxByteCnt++] = (byte) k;
+                    if (rxByteCnt == 4) {
                         rxFrameSize = rxBuff[2] & 0xff;
                         rxFrameSize |= (k << 8) & 0xff;
                     }
-                    if (k == ETX && rxByteCnt == rxFrameSize + 3)
-                    {
-                        if (validateRxFrame() == 0)
-                        {
-                              //   Toast.makeText(this,rxFrameSize,Toast.LENGTH_LONG).show();
-                                frameProcessState = WAITFrameProcess;
-                                processAndActRxFrame();
-                               /// ter.displayMsg("Frame Received");///change with toast
-                                frameProcessState = WAITSTX1;
-                                bRet = true;
+                    if (k == ETX && rxByteCnt == rxFrameSize + 3) {
+                        if (validateRxFrame() == 0) {
+                            //   Toast.makeText(this,rxFrameSize,Toast.LENGTH_LONG).show();
+                            frameProcessState = WAITFrameProcess;
+                            processAndActRxFrame();
+                            /// ter.displayMsg("Frame Received");///change with toast
+                            frameProcessState = WAITSTX1;
+                            bRet = true;
 
-                        }
-                        else
-                        {
-                          //  ter.displayMsg(":Checksum Error");//change with toast
+                        } else {
+                            //  ter.displayMsg(":Checksum Error");//change with toast
                             frameProcessState = WAITSTX1;
                         }
                     }
-                    if (rxByteCnt > rxFrameSize+3 || rxByteCnt >= MAXRXFRAMESize)
-                    {
+                    if (rxByteCnt > rxFrameSize + 3 || rxByteCnt >= MAXRXFRAMESize) {
                         frameProcessState = WAITSTX1;
                     }
                     break;
@@ -919,22 +961,21 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         }
         return bRet;
     }
-    public byte validateRxFrame()
-    {
+
+    public byte validateRxFrame() {
         byte bRet = 1;
         short nSum, nSum1, i, j;
 
         // calculate csum
         nSum = 0;
         j = (short) ((rxBuff[2] & 0xff) | ((rxBuff[3] & 0xff) << 8));
-        for (i = 4; i < j; i++)
-        {
+        for (i = 4; i < j; i++) {
             nSum += rxBuff[i] & 0xff;
         }
 
-        nSum = (short)(nSum & 0xFFFF);
-        nSum1 =(short)((rxBuff[i++]&0xff) << 8);
-        nSum1 |= (short) (rxBuff[i]&0xff);
+        nSum = (short) (nSum & 0xFFFF);
+        nSum1 = (short) ((rxBuff[i++] & 0xff) << 8);
+        nSum1 |= (short) (rxBuff[i] & 0xff);
 
         if (nSum != nSum1)
             bRet = 2;
@@ -944,95 +985,81 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     }
 
 
-
-
-    private void processAndActRxFrame()
-    {
-        rxprIndex =8;
-        try
-        {
+    private void processAndActRxFrame() {
+        rxprIndex = 8;
+        try {
             if (rxBuff[rxprIndex++] != 0xEE)    //Reply OK
             {
-                if (rxBuff[rxprIndex - 1] == (int)cmdWhoAmI) //-1 because incremented above
+                if (rxBuff[rxprIndex - 1] == (int) cmdWhoAmI) //-1 because incremented above
                 {
-                }
-                else if (rxBuff[rxprIndex-1] == 0x4F)
-                {
-                    long aa=0;
+                } else if (rxBuff[rxprIndex - 1] == 0x4F) {
+                    long aa = 0;
                     rxprIndex++;
-                    compara.termo= (byte)(rxBuff[rxprIndex++]& 0xff);
-                    compara.siteno=(byte)(rxBuff[rxprIndex++]& 0xff);
+                    compara.termo = (byte) (rxBuff[rxprIndex++] & 0xff);
+                    compara.siteno = (byte) (rxBuff[rxprIndex++] & 0xff);
 
 
-
-                   // int abba=0,x,y,z,l;
-
+                    // int abba=0,x,y,z,l;
 
 
-                   // abba = rxBuff[rxprIndex++]& 0xff;
-                   //x= rxBuff[rxprIndex++]& 0xff;
-                   // abba= abba| (x<<8);
-                   /// x=rxBuff[rxprIndex++]& 0xff;
-                  //  abba |=  x;
-                   /// abba|= (x<<16);
+                    // abba = rxBuff[rxprIndex++]& 0xff;
+                    //x= rxBuff[rxprIndex++]& 0xff;
+                    // abba= abba| (x<<8);
+                    /// x=rxBuff[rxprIndex++]& 0xff;
+                    //  abba |=  x;
+                    /// abba|= (x<<16);
                     ///x=rxBuff[rxprIndex++]& 0xff;
-                   /// abba |= (x<<24);
+                    /// abba |= (x<<24);
 
 
+                    compara.sessionidrx = rxBuff[rxprIndex++] & 0xff;
+                    compara.sessionidrx |= (long) ((rxBuff[rxprIndex++] & 0xff) << 8);
+                    compara.sessionidrx |= (long) ((rxBuff[rxprIndex++] & 0xff) << 16);
+                    compara.sessionidrx |= (long) ((rxBuff[rxprIndex++] & 0xff) << 24);
 
-
-                    compara.sessionidrx = rxBuff[rxprIndex++]& 0xff;
-                    compara.sessionidrx |= (long)((rxBuff[rxprIndex++]& 0xff)<<8);
-                    compara.sessionidrx |= (long)((rxBuff[rxprIndex++]& 0xff)<<16);
-                    compara.sessionidrx |= (long)((rxBuff[rxprIndex++]& 0xff)<<24);
-
-                    if(sessionid == compara.sessionidrx)  // replyframe if sessionid matches
+                    if (sessionid == compara.sessionidrx)  // replyframe if sessionid matches
                     {
                         ProcessBLEFrame();
                     }
-                }
-                else
-                {
+                } else {
                     //Invalid command
                 }
-               //////////////////// ter.pollCmdReplyState = 0;      //Reset the command reply state
-            }
-            else //Reply error
+                //////////////////// ter.pollCmdReplyState = 0;      //Reset the command reply state
+            } else //Reply error
             {
 
 
-               //////////// displayRxFrameError(rxBuff[rxprIndex++]);
-               ///////////// ter.pollCmdReplyState = 2;      //set command reply state to indicate waiting loop command replied with error and should be reset from there
+                //////////// displayRxFrameError(rxBuff[rxprIndex++]);
+                ///////////// ter.pollCmdReplyState = 2;      //set command reply state to indicate waiting loop command replied with error and should be reset from there
             }
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             showMessage(ex.getMessage());
         }
         frameProcessState = WAITSTX1;
     }
-    private void    ProcessBLEFrame()
-    {
+
+    private void ProcessBLEFrame() {
 
         int rxb = 9;
-        int name=40;
-        int date=16;
+        int name = 40;
+        int date = 16;
         int i = 0;
         int j = 0;
-        int l=0;
-        int m=0;
-        int direction =0;
-        String FullName="";
-
+        int l = 0;
+        int m = 0;
+        short res = 0;
+        int direction = 0;
+        String FullName = "";
+        String s="";
         char chr = ' ';
-        String filename="";
+        String filename = "";
         FileChannel ch = null;
-        filename="mytextfile.txt";
+        FileChannel ch1 = null;
+        filename = "mytextfile.txt";
 
         displaytxCommandMsgRX(rxBuff[rxb]);
 
-        switch(rxBuff[rxb])
-        {
+        switch (rxBuff[rxb]) {
             case 0x51: //get IMEI
                 i++;
                 i++;
@@ -1040,25 +1067,25 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                 tmpBuff[i++] = compara.termo;
                 tmpBuff[i++] = compara.siteno;
                 //sessionid++;
-                tmpBuff[i++] = (byte)(sessionid>>0);
-                tmpBuff[i++] = (byte)(sessionid>>8);
-                tmpBuff[i++] = (byte)(sessionid>>16);
-                tmpBuff[i++] = (byte)(sessionid>>24);
+                tmpBuff[i++] = (byte) (sessionid >> 0);
+                tmpBuff[i++] = (byte) (sessionid >> 8);
+                tmpBuff[i++] = (byte) (sessionid >> 16);
+                tmpBuff[i++] = (byte) (sessionid >> 24);
                 tmpBuff[i++] = 0;//////good response;
 
-                   // count = TXvalue1.length;
-                    j = tmpBuff[i++] = (byte) count;
-                    for (int k = 0; k < j; k++) {
-                   tmpBuff[i++] = TXvalue1[k];
-                    }
+                // count = TXvalue1.length;
+                j = tmpBuff[i++] = (byte) count;
+                for (int k = 0; k < j; k++) {
+                    tmpBuff[i++] = TXvalue1[k];
+                }
 
 
-                tmpBuff[0] = (byte)i;
-                tmpBuff[1] = (byte)(i>>8);
-             //   tmpBuff1 = new byte[i];
-              //  System.arraycopy(tmpBuff, 0, tmpBuff1, 0, i);
+                tmpBuff[0] = (byte) i;
+                tmpBuff[1] = (byte) (i >> 8);
+                //   tmpBuff1 = new byte[i];
+                //  System.arraycopy(tmpBuff, 0, tmpBuff1, 0, i);
                 btnSend.setBackgroundColor(Color.MAGENTA);
-                sendCommandToTerminal(rxBuff[rxb-1]);
+                sendCommandToTerminal(rxBuff[rxb - 1]);
                 break;
             case 0x52: //Send file
                 i++;
@@ -1067,14 +1094,14 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                 tmpBuff[i++] = compara.termo;
                 tmpBuff[i++] = compara.siteno;
                 sessionid++;
-                tmpBuff[i++] = (byte)(sessionid>>0);
-                tmpBuff[i++] = (byte)(sessionid>>8);
-                tmpBuff[i++] = (byte)(sessionid>>16);
-                tmpBuff[i++] = (byte)(sessionid>>24);
+                tmpBuff[i++] = (byte) (sessionid >> 0);
+                tmpBuff[i++] = (byte) (sessionid >> 8);
+                tmpBuff[i++] = (byte) (sessionid >> 16);
+                tmpBuff[i++] = (byte) (sessionid >> 24);
                 tmpBuff[i++] = 0;//////good response;
                 //filename="mytextfile.txt";
                 try {
-                    FileInputStream fileIn=openFileInput(filename);
+                    FileInputStream fileIn = openFileInput(filename);
 
                     byte[] b = filename.getBytes();
                     ch = fileIn.getChannel();
@@ -1082,43 +1109,65 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                     int size = (int) ch.size();
                     MappedByteBuffer buf = ch.map(FileChannel.MapMode.READ_ONLY, 0, size);
                     byte[] bytes = new byte[size];
-                    int lnth=0;
-                    lnth=bytes.length;
+                    int lnth = 0;
+                    lnth = bytes.length;
                     buf.get(bytes);
 
-                    while(m<16) {
+                    while (m < 16) {
 
 
-                        if(m>=b.length)
-                            tmpBuff[i++]=0;
+                        if (m >= b.length)
+                            tmpBuff[i++] = 0;
                         else
-                            tmpBuff[i++]=b[m];
+                            tmpBuff[i++] = b[m];
                         m++;
 
                     }
 
                     tmpBuff[i++] = 0;
-                    tmpBuff[i++] =0;
                     tmpBuff[i++] = 0;
                     tmpBuff[i++] = 0;
+                    tmpBuff[i++] = 0;
 
                     tmpBuff[i++] = 0;
 
-                    tmpBuff[i++] = (byte)lnth;
-                    tmpBuff[i++] = (byte)(lnth>>8);
+                    tmpBuff[i++] = (byte) lnth;
+                    tmpBuff[i++] = (byte) (lnth >> 8);
 
-                    while(l<size)//size
+                    while (l < size)//size
                     {
-                     tmpBuff[i++]=bytes[l];
-                     l++;
+                        tmpBuff[i++] = bytes[l];
+                        l++;
 
                     }
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
 
-                finally {
+
+
+                    File direction_file = new File(getFilesDir() + File.separator + DirectionFile);
+                    if ((direction_file.exists())) {
+
+                        FileInputStream fileIn1 = openFileInput(DirectionFile);
+
+
+                        ch1 = fileIn1.getChannel();
+
+                        int size1 = (int) ch1.size();
+                        MappedByteBuffer buf1 = ch1.map(FileChannel.MapMode.READ_ONLY, 0, size1);
+                        byte[] bytes1 = new byte[size1];
+                        buf1.get(bytes1);
+
+                       tmpBuff[i++]= bytes1[0];// s.getBytes();
+                   }
+                   else
+                       tmpBuff[i++]=0;
+                       tmpBuff[i++]=0;
+
+
+
+                    } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
                     try {
 
                         if (ch != null) {
@@ -1129,18 +1178,18 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                     }
                 }
 
-                tmpBuff[0] = (byte)i;
-                tmpBuff[1] = (byte)(i>>8);
+                tmpBuff[0] = (byte) i;
+                tmpBuff[1] = (byte) (i >> 8);
                 btnSend.setBackgroundColor(Color.BLUE);
-                sendCommandToTerminal(rxBuff[rxb-1]);
+                sendCommandToTerminal(rxBuff[rxb - 1]);
                 break;
 
             case 0x53: //Send file
                 btnSend.setBackgroundColor(Color.GREEN);
-                String  strdate = (rxBuff[date++])+2000+"/"+rxBuff[date++] +"/"+rxBuff[date++]+" " +
-                        ""+ rxBuff[date++]+":"+rxBuff[date++]+":"+ rxBuff[date++];
+                String strdate = (rxBuff[date++]) + 2000 + "/" + rxBuff[date++] + "/" + rxBuff[date++] + " " +
+                        "" + rxBuff[date++] + ":" + rxBuff[date++] + ":" + rxBuff[date++];
 
-                 SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                 try {
                     Date date1 = format.parse(strdate);
                     DateFormat df = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
@@ -1153,16 +1202,15 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                 }
                 txtdatetime.setTextColor(Color.BLUE);
                 //extract name
-                for (int k = 0; k < 16; k++)
-                {
-                    if ((rxBuff[name+k]&0xff)== 0)
-                    break;
+                for (int k = 0; k < 16; k++) {
+                    if ((rxBuff[name + k] & 0xff) == 0)
+                        break;
 
-                    chr = (char)( rxBuff[name+k]&0xff);
+                    chr = (char) (rxBuff[name + k] & 0xff);
                     FullName += chr;
                 }
-                direction = rxBuff[name+16];
-                FullName =FullName.trim();
+                direction = rxBuff[name + 16];
+                FullName = FullName.trim();
                 txtname.setText(FullName);
                 txtname.setTextColor(Color.BLUE);
 
@@ -1171,223 +1219,71 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                 tmpBuff[i++] = rxBuff[rxb];
                 tmpBuff[i++] = compara.termo;
                 tmpBuff[i++] = compara.siteno;
-                tmpBuff[i++] = (byte)(sessionid>>0);
-                tmpBuff[i++] = (byte)(sessionid>>8);
-                tmpBuff[i++] = (byte)(sessionid>>16);
-                tmpBuff[i++] = (byte)(sessionid>>24);
-
-                try
-                {
+                tmpBuff[i++] = (byte) (sessionid >> 0);
+                tmpBuff[i++] = (byte) (sessionid >> 8);
+                tmpBuff[i++] = (byte) (sessionid >> 16);
+                tmpBuff[i++] = (byte) (sessionid >> 24);
+                res = (short) (rxBuff[rxb + 13] & 0xff);
+                res |= (rxBuff[rxb + 14] << 8);
+                if(sysvalue.equals("eacs"))
+                    res=(short) (rxBuff[rxb+14]&0xff) ;
+                else
+                    res=(short) (res & 0xFF9E);
+                try {
 
                     txtmessagecode.setText("");
                     txttick.setText("");
+                    if (res  == 0) {
 
-                    switch(rxBuff[rxb+13]&0xff) {
+                      int  soundcode = 0;
+                        s = "IN";
+                        s = getResources().getString(R.string.IN);
+                        if ((direction & 0x20) == 0x20)
+                        {
+                            s = getResources().getString(R.string.OUT);
+                            soundcode = 1;
+                        }
 
-                        case IN_OUT_Punch:
-                            txtmessagecode.setText("Invalid IN/Out");//  Toast.makeText(this,"Invalid IN/Out",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case InvalidDoor:
-                            txtmessagecode.setText("Invalid Door");// Toast.makeText(this,"Invalid Door",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case SystemLocked:
-                            txtmessagecode.setText("System Locked");// Toast.makeText(this,"System Locked",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case ExitEntryMissed:
-                            txtmessagecode.setText("Exit Entry Missed");//  Toast.makeText(this,"Exit Entry Missed",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case ExpiredCard:
-                            txtmessagecode.setText("Card Expired");// Toast.makeText(this,"Card Expired",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
+                        s = s + getResources().getString( R.string.Punched_Successfully);
 
-                        case CardType1:
-                            txtmessagecode.setText("CardType1");// Toast.makeText(this,"CardType1",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case CardType2:
-                            txtmessagecode.setText("CardType2");//  Toast.makeText(this,"CardType2",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case BlackListedCard:
-                            txtmessagecode.setText("BlackListed Card");//   Toast.makeText(this,"BlackListed Card",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case READER_ERROR_SET:
-                            txtmessagecode.setText("READER ERROR SET");//  Toast.makeText(this,"READER ERROR SET",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case READER_ERROR_CLEAR:
-                            txtmessagecode.setText("READER ERROR CLEAR");//  Toast.makeText(this,"READER ERROR CLEAR",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case DOOR_KEPT_OPEN_ALARM:
-                            txtmessagecode.setText("DOOR KEPT OPEN ALARM");//  Toast.makeText(this,"DOOR KEPT OPEN ALARM",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case DOOR_FORCED_OPEN_ALARM:
-                            txtmessagecode.setText("DOOR FORCED OPEN ALARM");//  Toast.makeText(this,"DOOR FORCED OPEN ALARM",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case EPB_ALARM:
-                            txtmessagecode.setText("EPB ALARM");//   Toast.makeText(this,"EPB ALARM",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case EMBU_ALARM:
-                            txtmessagecode.setText("EMBU ALARM");//   Toast.makeText(this,"EMBU ALARM",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case DOOR_OPENED_BY_COMMAND:
-                            txtmessagecode.setText("DOOR OPENED BY COMMAND");//  Toast.makeText(this,"DOOR OPENED BY COMMAND",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case BIOMETRIC_ERROR_SET:
-                            txtmessagecode.setText("BIOMETRIC ERROR SET");//  Toast.makeText(this,"BIOMETRIC ERROR SET",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case BIOMETRIC_ERROR_CLEAR:
-                            txtmessagecode.setText("BIOMETRIC ERROR CLEAR");//  Toast.makeText(this,"BIOMETRIC ERROR CLEAR",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case DATE_TIME_ALARM_SET:
-                            txtmessagecode.setText("DATE TIME ALARM SET");// Toast.makeText(this,"DATE TIME ALARM SET",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case DATE_TIME_ALARM_CLEAR:
-                            txtmessagecode.setText("DATE TIME ALARM CLEAR");//  Toast.makeText(this,"DATE TIME ALARM CLEAR",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        default:
-                            break;
+                        SoundIt(soundcode);
+                        txtmessagecode.setText(s);//   Toast.makeText(this,"Punched Successfully",Toast.LENGTH_LONG).show();
+                        txtmessagecode.setBackgroundColor(Color.CYAN);
+                        txttick.setText("\u2713");
+
+                    } else {
+
+                        txtmessagecode.setText("");
+                        txttick.setText("");
+
+                        if(sysvalue.equals("eacs"))
+                        EACSdisplayResult(res);
+                        else {
+                            ElSmartdisplayResult(res);
+                        }
+
+
+
+
+                        tmpBuff[i++] = 0;
+
+
 
                     }
-                    txtmessagecode.setText("");
-                    txttick.setText("");
 
-                    switch(rxBuff[rxb+14]&0xff) {
 
-                        case OK:
+                    FileOutputStream file_out = openFileOutput(DirectionFile, MODE_PRIVATE);
 
-                            String s = "IN";
-                            if(direction == 0)
-                                s = "OUT";
-                            s = s + " - Punched Successfully";
-                            txtmessagecode.setText(s);//   Toast.makeText(this,"Punched Successfully",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.CYAN);
-                            txttick.setText("\u2713");
-                            break;
-                        case BLACKLISTED:
-                            txtmessagecode.setText("CARD BLACKLISTED");// Toast.makeText(this,"CARD BLACKLISTED",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case ACCESSDENIED:
-                            txtmessagecode.setText("ACCESS DENIED");// Toast.makeText(this,"ACCESS DENIED",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case CARDEXPIRED:
-                            txtmessagecode.setText("CARD EXPIRED");//   Toast.makeText(this,"CARD EXPIRED",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case ANTIPASSBKERROR:
-                            txtmessagecode.setText("ANTIPASS BACK ERROR");// Toast.makeText(this,"ANTIPASS BACK ERROR",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
 
-                        case ACCLOCK:
-                            txtmessagecode.setText("ACCESS DURING LOCK");// Toast.makeText(this,"ACCESS DURING LOCK",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case ACCHOLIDAY:
-                            txtmessagecode.setText("ACCESS DURING HOLIDAY");//  Toast.makeText(this,"ACCESS DURING HOLIDAY",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case ACCLEAVE:
-                            txtmessagecode.setText("ACCESS DURING LEAVE");//  Toast.makeText(this,"ACCESS DURING LEAVE",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case PINFAIL:
-                            txtmessagecode.setText("PIN FAIL");//  Toast.makeText(this,"PIN FAIL",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case BIOFAIL:
-                            txtmessagecode.setText("BIO FAIL");// Toast.makeText(this,"BIO FAIL",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case DURESSCODE:
-                            txtmessagecode.setText("DURESS CODE");// Toast.makeText(this,"DURESS CODE",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case ACCSCHEDULE:
-                            txtmessagecode.setText("ACCESS SCHEDULE");//  Toast.makeText(this,"ACCESS SCHEDULE",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case FREE12:
-                            txtmessagecode.setText("FREE12");//  Toast.makeText(this,"FREE12",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case FREE13:
-                            txtmessagecode.setText("FREE13");//  Toast.makeText(this,"FREE13",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case ACCESCORT:
-                            txtmessagecode.setText("ACCESS SCORT");//  Toast.makeText(this,"ACCESS SCORT",Toast.LENGTH_LONG).show();
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-                            break;
-                        case CARDTWING:
-                            txtmessagecode.setText("CARDTWING");
-                            txtmessagecode.setBackgroundColor(Color.RED);
-                            txttick.setText("\u2715");
-
-                            //  Toast.makeText(this,"CARDTWING",Toast.LENGTH_LONG).show();
-                            break;
-                        default:
-
+                    file_out.write((byte)direction);
+                    file_out.close();
+                    if (mDevice != null) {
+                        mService.disconnect();
                     }
-                    SoundIt(direction);
-
-                       tmpBuff[i++]=0;
-                }
-                catch(Exception e) {
+                } catch (Exception e) {
                     tmpBuff[i++] = 1;
                 }
-                   String files="";
+/*                   String files="";
 
                 byte[] c = filename.getBytes();
 
@@ -1418,26 +1314,26 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
+*/
                 break;
         }
     }
 
-    public void popup(String message)
-    {
+    public void popup(String message) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    builder.setMessage(message)
-            .setCancelable(false)
-           .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
+        builder.setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
         AlertDialog alert = builder.create();
-    alert.show();
+        alert.show();
 
     }
+
     public void shakeIt(int repeat, int duration) {
         if (getSystemService(VIBRATOR_SERVICE) != null) {
             long[] pattern = {0, duration};
@@ -1445,21 +1341,304 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
         }
     }
-    private void SoundIt(int index)
-    {
-        switch(index)
-        {
-            case 0:
+
+    private void SoundIt(int index) {
+        switch (index) {
+             case 1:
                 out.start();
                 break;
-            case 1:
+            case 0:
                 in.start();
                 break;
-            case 2:
-                in.start();
+            case 3:
+                Access_Denied.start();
+                break;
+            case 4:
+               Card_Expired.start();
+                break;
+            case 5:
+               Blacklisted.start();
+                break;
+            case 6:
+                AntiPassBackError.start();
                 break;
 
         }
 
     }
+
+    private void ElSmartdisplayResult(short res) {
+
+
+            txtmessagecode.setText("");
+            txttick.setText("");
+             int soundcode=0;
+            switch (res) {
+
+                case elsmartIN_OUT_Punch:
+                    txtmessagecode.setText(R.string.Invalid_IN_Out);//  Toast.makeText(this,"Invalid IN/Out",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    soundcode = 3;
+                    break;
+                case elsmartInvalidDoor:
+                    txtmessagecode.setText(R.string.ACCESS_DENIED);// Toast.makeText(this,"Invalid Door",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    soundcode = 3;
+                    break;
+                case elsmartSystemLocked:
+                    txtmessagecode.setText(R.string.System_Locked);// Toast.makeText(this,"System Locked",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    break;
+                case elsmartExitEntryMissed:
+                    txtmessagecode.setText(R.string.Exit_Entry_Missed);//  Toast.makeText(this,"Exit Entry Missed",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    break;
+                case elsmartExpiredCard:
+                    txtmessagecode.setText(R.string.CARD_EXPIRED);// Toast.makeText(this,"Card Expired",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    soundcode=4;
+                    break;
+
+                case elsmartCardType1:
+                    txtmessagecode.setText(R.string.CardType1);// Toast.makeText(this,"CardType1",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    break;
+                case elsmartCardType2:
+                    txtmessagecode.setText(R.string.CardType2);//  Toast.makeText(this,"CardType2",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    break;
+                case elsmartBlackListedCard:
+                    txtmessagecode.setText(R.string.BlackListed_Card);//   Toast.makeText(this,"BlackListed Card",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    soundcode=5;
+                    break;
+
+                default:
+
+
+        }
+        if (mDevice != null) {
+            mService.disconnect();
+        }
+
+        SoundIt(soundcode);
+
+
+    }
+
+
+    private void EACSdisplayResult(short res) {
+
+
+            txtmessagecode.setText("");
+            txttick.setText("");
+            int  soundcode=0;
+            switch (res) {
+
+
+              /*  case eacsREADER_ERROR_SET:
+                    txtmessagecode.setText("READER ERROR SET");//  Toast.makeText(this,"READER ERROR SET",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    break;
+                case eacsREADER_ERROR_CLEAR:
+                    txtmessagecode.setText(R.string.READER_ERROR_CLEAR);//  Toast.makeText(this,"READER ERROR CLEAR",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    break;
+                case eacsDOOR_KEPT_OPEN_ALARM:
+                    txtmessagecode.setText(R.string.DOOR_KEPT_OPEN_ALARM);//  Toast.makeText(this,"DOOR KEPT OPEN ALARM",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    break;
+                case eacsDOOR_FORCED_OPEN_ALARM:
+                    txtmessagecode.setText(R.string.DOOR_FORCED_OPEN_ALARM);//  Toast.makeText(this,"DOOR FORCED OPEN ALARM",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    break;
+                case eacsEPB_ALARM:
+                    txtmessagecode.setText(R.string.EPB_ALARM);//   Toast.makeText(this,"EPB ALARM",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    break;
+                case eacsEMBU_ALARM:
+                    txtmessagecode.setText(R.string.EMBU_ALARM);//   Toast.makeText(this,"EMBU ALARM",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    break;
+                case eacsDOOR_OPENED_BY_COMMAND:
+                    txtmessagecode.setText(R.string.DOOR_OPENED_BY_COMMAND);//  Toast.makeText(this,"DOOR OPENED BY COMMAND",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    break;
+                case eacsBIOMETRIC_ERROR_SET:
+                    txtmessagecode.setText(R.string.BIOMETRIC_ERROR_SET);//  Toast.makeText(this,"BIOMETRIC ERROR SET",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    break;
+                case eacsBIOMETRIC_ERROR_CLEAR:
+                    txtmessagecode.setText(R.string.BIOMETRIC_ERROR_CLEAR);//  Toast.makeText(this,"BIOMETRIC ERROR CLEAR",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    break;
+                case eacsDATE_TIME_ALARM_SET:
+                    txtmessagecode.setText(R.string.DATE_TIME_ALARM_SET);// Toast.makeText(this,"DATE TIME ALARM SET",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    break;
+                case eacsDATE_TIME_ALARM_CLEAR:
+                    txtmessagecode.setText(R.string.DATE_TIME_ALARM_CLEAR);//  Toast.makeText(this,"DATE TIME ALARM CLEAR",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    break;*/
+                case eacsBLACKLISTED:
+                    txtmessagecode.setText(R.string.CARD_BLACKLISTED);// Toast.makeText(this,"CARD BLACKLISTED",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    soundcode = 5;
+                    break;
+                case eacsACCESSDENIED:
+                    txtmessagecode.setText(R.string.ACCESS_DENIED);// Toast.makeText(this,"ACCESS DENIED",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    soundcode = 3;
+                    break;
+                case eacsCARDEXPIRED:
+                    txtmessagecode.setText(R.string.CARD_EXPIRED);//   Toast.makeText(this,"CARD EXPIRED",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    soundcode = 4;
+                    break;
+                case eacsANTIPASSBKERROR:
+                    txtmessagecode.setText(R.string.ANTIPASS_BACK_ERROR);// Toast.makeText(this,"ANTIPASS BACK ERROR",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    soundcode = 6;
+                    break;
+
+                case eacsACCLOCK:
+                    txtmessagecode.setText(R.string.ACCESS_DURING_LOCK);// Toast.makeText(this,"ACCESS DURING LOCK",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    break;
+                case eacsACCHOLIDAY:
+                    txtmessagecode.setText(R.string.ACCESS_DURING_HOLIDAY);//  Toast.makeText(this,"ACCESS DURING HOLIDAY",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    break;
+                case eacsACCLEAVE:
+                    txtmessagecode.setText(R.string.ACCESS_DURING_LEAVE);//  Toast.makeText(this,"ACCESS DURING LEAVE",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    break;
+                case eacsPINFAIL:
+                    txtmessagecode.setText(R.string.PIN_FAIL);//  Toast.makeText(this,"PIN FAIL",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    break;
+                case eacsBIOFAIL:
+                    txtmessagecode.setText(R.string.BIO_FAIL);// Toast.makeText(this,"BIO FAIL",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    break;
+                case eacsDURESSCODE:
+                    txtmessagecode.setText(R.string.DURESS_CODE);// Toast.makeText(this,"DURESS CODE",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    break;
+                case eacsACCSCHEDULE:
+                    txtmessagecode.setText(R.string.ACCESS_SCHEDULE);//  Toast.makeText(this,"ACCESS SCHEDULE",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    break;
+                case eacsFREE12:
+                    txtmessagecode.setText(R.string.FREE12);//  Toast.makeText(this,"FREE12",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    break;
+                case eacsFREE13:
+                    txtmessagecode.setText(R.string.FREE13);//  Toast.makeText(this,"FREE13",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    break;
+                case eacsACCESCORT:
+                    txtmessagecode.setText(R.string.ACCESS_SCORT);//  Toast.makeText(this,"ACCESS SCORT",Toast.LENGTH_LONG).show();
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+                    break;
+                case eacsCARDTWING:
+                    txtmessagecode.setText(R.string.CARDTWING);
+                    txtmessagecode.setBackgroundColor(Color.RED);
+                    txttick.setText("\u2715");
+
+                    //  Toast.makeText(this,"CARDTWING",Toast.LENGTH_LONG).show();
+                    break;
+                default:
+
+            }
+
+
+        SoundIt(soundcode);
+
+
+    }
+
+
+
+
+    public String regfileValue() {
+        FileInputStream fileIn = null;
+        try {
+            fileIn = openFileInput(DirectionFile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        InputStreamReader InputRead;
+        InputRead = new InputStreamReader(fileIn);
+
+        char[] inputBuffer = new char[READ_BLOCK_SIZE];
+        String s = "";
+        int charRead;
+
+        try {
+            while ((charRead = InputRead.read(inputBuffer)) > 0) {
+                // char to string conversion
+                String readstring = String.copyValueOf(inputBuffer, 0, charRead);
+                s += readstring;
+            }
+            InputRead.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return  s;
+    }
+
+
+    private void PAlertDialog(String title, String msg)
+    {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle(title);
+        builder.setMessage(msg);
+        builder.setPositiveButton( getResources().getString(R.string.OK), new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+
+    }
+
+
 }
