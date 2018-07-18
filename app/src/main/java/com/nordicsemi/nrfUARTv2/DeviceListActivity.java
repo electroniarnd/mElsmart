@@ -110,6 +110,24 @@ public class DeviceListActivity extends Activity {
         }
         populateList();
         mEmptyList = (TextView) findViewById(R.id.empty);
+
+
+      //  try {
+          //  Thread.sleep(10000);
+      //  } catch (InterruptedException e) {
+        //    e.printStackTrace();
+      //  }
+      //  if (deviceList.size()==1)
+     //   {
+           // Bundle b = new Bundle();
+           // b.putString(BluetoothDevice.EXTRA_DEVICE, deviceList.get(0).getAddress());
+
+       //     Intent result = new Intent();
+        ///    result.putExtras(b);
+        //    setResult(Activity.RESULT_OK, result);
+       //     finish();
+      //  }
+
         Button cancelButton = (Button) findViewById(R.id.btn_cancel);
         cancelButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -131,6 +149,7 @@ public class DeviceListActivity extends Activity {
 
         ListView newDevicesListView = (ListView) findViewById(R.id.new_devices);
         newDevicesListView.setAdapter(deviceAdapter);
+
         newDevicesListView.setOnItemClickListener(mDeviceClickListener);
 
            scanLeDevice(true);
@@ -189,14 +208,14 @@ public class DeviceListActivity extends Activity {
                 break;
             }
         }
-        
+
         
         devRssiValues.put(device.getAddress(), rssi);
         if (!deviceFound) {
         	deviceList.add(device);
             mEmptyList.setVisibility(View.GONE);
-                 	
-        	
+
+
 
             
             deviceAdapter.notifyDataSetChanged();
