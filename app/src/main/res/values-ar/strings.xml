@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">م  السمارت</string>
+    <string name="device">جهاز</string>
+    <string name="no_device">إختر جهاز</string>
+    <string name="select_device">إختر جهاز</string>
+    <string name="status">الحالة</string>
+    <string name="llsWrite">فقدان التنبية</string>
+    <string name="iasWrite">تنبيه فوري</string>
+    <string name="scanning">البحث عن جهاز...</string>
+    <string name="no_ble_devices">لم يتم العثور على جهاز (LE)</string>
+    <string name="connected">متصل</string>
+    <string name="disconnected">غير متصل</string>
+    <string name="ready">جاهز</string>
+    <string name="disconnect">قطع الاتصال</string>
+    <string name="connect">Connect</string>
+    <string name="unpair">غيرمقترن</string>
+    <string name="pair">مقترن</string>
+    <string name="RadioButton1">مستوى تنبيه مرتفع</string>
+    <string name="RadioButton2">مستوى تنبيه متوسط</string>
+    <string name="RadioButton3">إيقاف التنبيه</string>
+    <string name="SystemId">معرف النظام</string>
+    <string name="ModelNumber">رقم الموديل</string>
+    <string name="SerialNumber">الرقم التسلسلي</string>
+    <string name="FirmwareRevision">إصدارالبرامج الثابتة</string>
+    <string name="HardwareRevision">إصدارالأجهزة</string>
+    <string name="SoftwareRevision">إصدارالبرامج</string>
+    <string name="ManufactureName">إسم الشركة المصنعة</string>
+    <string name="RegCertDataList">RegCertDataList</string>
+    <string name="ManufactureId">    رقم التصنيع</string>
+    <string name="BatteryLevel">مستوى البطارية</string>
+    <string name="OrgId">رقم المنظمة</string>
+    <string name="Txpower">مستوى (Txpower)</string>
+    <string name="Noupdate">لايوجد تحديث</string>
+    <string name="ReadTxPower">ReadTxPower</string>
+    <string name="high_alert">صدور تنبيه عالي</string>
+    <string name="low_alert">صدور تنبيه منخفض</string>
+    <string name="writeTxnoti">TxNoti</string>
+    <string name="readRssi">Read Rssi Value</string>
+    <string name="Readdummy">D Read</string>
+    <string name="removeBond">Remove Bond</string>
+    <string name="paired">مقترن</string>
+    <string name="popup_title">الخروج من (MElsmart)</string>
+    <string name="popup_message">هل تريد الخروج من هذا التطبيق؟</string>
+    <string name="popup_yes">نعم</string>
+    <string name="popup_no">لا</string>
+    <string name="ble_not_supported">البلوتوث المنخفض الطاقة غير معتمد</string>
+    <string name="scan">مسح</string>
+    <string name="cancel">إلغاء</string>
+    <string name="DebugValue">تصحيح الأخطاء</string>
+    <string name="action_settings">عن</string>
+    <string name="title_activity_registration">نشاط التسجيل</string>
+    <string name="title_activity_about">عن النشاط</string>
+
+    <string name="button_label_on">\u2713</string>
+    <string name="button_label_off">مغلق</string>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <string name="Invalid_IN_Out">دخول/خروج غير صحيح</string>
+    <string name="Invalid_Door">باب غير صحيح</string>
+    <string name="System_Locked">النظام مقفل</string>
+    <string name="Exit_Entry_Missed">معلومات الخروج غير متوفرة</string>
+    <string name="Card_Expired">البطاقة منتهية</string>
+    <string name="CardType1">نوع البطاقة 1</string>
+    <string name="CardType2">نوع البطاقة 2</string>
+    <string name="BlackListed_Card">بطاقة محظورة</string>
+    <string name="READER_ERROR_SET">تعيين خطأ القارئ</string>
+    <string name="READER_ERROR_CLEAR">إزالة خطأ القارئ</string>
+    <string name="DOOR_KEPT_OPEN_ALARM">تنبيه ترك الباب مفتوح</string>
+    <string name="DOOR_FORCED_OPEN_ALARM">تنبيه فتح الباب بشكل قسري</string>
+    <string name="EPB_ALARM">تنبيه (EPB)</string>
+    <string name="EMBU_ALARM">تنبيه (EMBU)</string>
+    <string name="DOOR_OPENED_BY_COMMAND">فتح الباب من قبل أوامر</string>
+    <string name="BIOMETRIC_ERROR_SET">تعيين خطأ البصمة</string>
+    <string name="BIOMETRIC_ERROR_CLEAR">إزالة خطأ البصمة</string>
+    <string name="DATE_TIME_ALARM_SET">تعيين وقت وتاريخ التنبيه</string>
+    <string name="DATE_TIME_ALARM_CLEAR">إزالة وقت وتاريخ التنبيه</string>
+    <string name="Punched_Successfully">تم التسجيل بنجاح</string>
+    <string name="IN">دخول</string>
+    <string name="OUT">خروج</string>
+    <string name="CARD_BLACKLISTED">البطاقة محظورة</string>
+    <string name="ACCESS_DENIED">تم رفض الدخول</string>
+    <string name="CARD_EXPIRED">البطاقة منتهية</string>
+    <string name="ANTIPASS_BACK_ERROR">ANTIPASS BACK ERROR</string>
+    <string name="ACCESS_DURING_LOCK">الدخول أثناء القفل</string>
+    <string name="ACCESS_DURING_HOLIDAY">الدخول أثناء العطل</string>
+    <string name="ACCESS_DURING_LEAVE">الدخول أثناء الإجازة</string>
+    <string name="PIN_FAIL">فشل الرقم السري</string>
+    <string name="BIO_FAIL">فشل البصمة</string>
+    <string name="DURESS_CODE">DURESS CODE</string>
+    <string name="ACCESS_SCHEDULE">جدول العبور</string>
+    <string name="FREE12">FREE12</string>
+    <string name="FREE13">FREE13</string>
+    <string name="ACCESS_SCORT">ACCESS SCORT</string>
+    <string name="CARDTWING">CARDTWING</string>
+    <string name="OK">حسناً</string>
+    <string name="Bluetooth_has_turned_on">تم تفعيل البلوتوث</string>
+    <string name="connecting">يتم الإتصال</string>
+    <string name="Registration_data_file_does_not_exist">ملف بيانات التسجيل غير موجود</string>
+    <string name="Registration_does_not_exist">التسجيل غير موجود</string>
+    <string name="onResume_BT_not_enabled_yet">onResume - BT not enabled yet</string>
+    <string name="onResume">إعادة</string>
+    <string name="onRestart">إعادة بدء</string>
+    <string name="onPause">إيقاف مؤقت</string>
+    <string name="onStop">إيقاف</string>
+    <string name="Disconnected_to">تم قطع الاتصال بـ::</string>
+    <string name="Not_Connected">Not Connected</string>
+    <string name="Connect">غير متصل</string>
+    <string name="UART_DISCONNECT_MSG">UART_DISCONNECT_MSG</string>
+    <string name="Connected_to">متصل بـ:</string>
+    <string name="readyy">- جاهز</string>
+    <string name="Disconnect">غير متصل</string>
+    <string name="UART_CONNECT_MSG">UART_CONNECT_MSG</string>
+    <string name="Unable_to_initialize_Bluetooth">تعذر تهيئة البلوتوث</string>
+    <string name="onServiceConnected_mService">onServiceConnected mService</string>
+    <string name="Registered">مسجل</string>
+    <string name="UnRegistered">غير مسجل</string>
+    <string name="Confirm">تأكيد</string>
+    <string name="Are_you_sure_to_do_Registration_Again">هل أنت متأكد من القيام بالتسجيل مرة أخرى؟</string>
+    <string name="File_write_failed">فشل كتابة الملف:</string>
+    <string name="Error">خطأ</string>
+
+    <string name="No_registration_information_found_on_the_device">لم يتم العثور على معلومات التسجيل على الجهاز</string>
+    <string name="Registration_file_doesnt_exists">ملف التسجيل غير موجود</string>
+    <string name="Registration_deleted_Successfully">تم حذف التسجيل بنجاح</string>
+    <string name="Registration_not_deleted">لم يتم حذف التسجيل</string>
+    <string name="hexBinary_needs_to_be_even_length">(hexBinary) يجب ان يكون بطول:</string>
+    <string name="contains_illegal_character_for_hexBinary">يحتوي على حرف غير مسموح به لـ (hexBinary):</string>
+
+
+    <string name="BadgeNo">قم الشارة</string>
+    <string name="IMEI">IMEI</string>
+    <string name="Lenght_of_file">طول الملف:</string>
+    <string name="download">تحميل</string>
+    <string name="Registration_successfully">نجاح التسجيل</string>
+    <string name="Information">معلومات</string>
+    <string name="No_Internet_Connection_Found">لم يتم العثور على إتصال بالشبكة</string>
+    <string name="Please_enter_badge_number">الرجاء إدخال رقم الشارة</string>
+    <string name="Please_enter_service_url">الرجاء إدخال رابط الخدمة</string>
+    <string name="Registration_Failed">فشل التسجيل</string>
+    <string name="File_Empty">الملف فارغ</string>
+    <string name="Rssi">Rssi</string>
+
+    <string name="VibrationValue">اهتزاز</string>
+    <string name="Eacs">نظام التحكم بالعبور</string>
+    <string name="Elsmart">السمارت</string>
+
+
+
+    <string name="UNREGISTER">غير مسجل</string>
+    <string name="REGISTER">مسجل</string>
+    <string name="Status">الحالة</string>
+    <string name="Title">اللقب</string>
+    <string name="Department">القسم</string>
+    <string name="Card_Valid_From">البطاقة صالحة من</string>
+    <string name="Card_Issued_From">البطاقة صادرة من</string>
+    <string name="System">النظام</string>
+    <string name="Service_URL">رابط الخدمة</string>
+    <string name="Registration">التسجيل</string>
+    <string name="Punch">تسجيل الحضور</string>
+    <string name="Re_Register_for_Elsmart_System">تحتاج إلى إعادة تسجيل لنظام السمارت</string>
+    <string name="Secondary_Data_added_successfully">تمت إضافة البيانات الثانوية بنجاح</string>
+    <string name="title_activity_records">Records</string>
+</resources>
