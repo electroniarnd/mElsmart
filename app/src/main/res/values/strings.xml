@@ -76,4 +76,118 @@
     <string name="button_label_on">\u2713</string>
     <string name="button_label_off">off</string>
 
+
+    <string name="Invalid_IN_Out">Invalid IN/Out</string>
+    <string name="Invalid_Door">Invalid Door</string>
+    <string name="System_Locked">System_Locked</string>
+    <string name="Exit_Entry_Missed">Exit_Entry_Missed</string>
+    <string name="Card_Expired">Card_Expired</string>
+    <string name="CardType1">CardType1</string>
+    <string name="CardType2">CardType2</string>
+    <string name="BlackListed_Card">BlackListed Card</string>
+    <string name="READER_ERROR_SET">READER ERROR SET</string>
+    <string name="READER_ERROR_CLEAR">READER ERROR CLEAR</string>
+    <string name="DOOR_KEPT_OPEN_ALARM">DOOR KEPT OPEN ALARM</string>
+    <string name="DOOR_FORCED_OPEN_ALARM">DOOR FORCED OPEN ALARM</string>
+
+
+    <string name="EPB_ALARM">EPB ALARM</string>
+    <string name="EMBU_ALARM">EMBU ALARM</string>
+    <string name="DOOR_OPENED_BY_COMMAND">DOOR OPENED BY COMMAND</string>
+    <string name="BIOMETRIC_ERROR_SET">BIOMETRIC ERROR SET</string>
+    <string name="BIOMETRIC_ERROR_CLEAR">BIOMETRIC ERROR CLEAR</string>
+    <string name="DATE_TIME_ALARM_SET">DATE TIME ALARM SET</string>
+    <string name="DATE_TIME_ALARM_CLEAR">DATE TIME ALARM CLEAR</string>
+    <string name="Punched_Successfully">- Punched Successfully </string>
+    <string name="IN">IN</string>
+    <string name="OUT">OUT</string>
+    <string name="CARD_BLACKLISTED">CARD BLACKLISTED</string>
+    <string name="ACCESS_DENIED">ACCESS DENIED</string>
+    <string name="CARD_EXPIRED">CARD EXPIRED</string>
+    <string name="ANTIPASS_BACK_ERROR">ANTIPASS BACK ERROR</string>
+    <string name="ACCESS_DURING_LOCK">ACCESS DURING LOCK</string>
+    <string name="ACCESS_DURING_HOLIDAY">ACCESS DURING HOLIDAY</string>
+    <string name="ACCESS_DURING_LEAVE">ACCESS DURING LEAVE</string>
+    <string name="PIN_FAIL">PIN FAIL</string>
+    <string name="BIO_FAIL">BIO FAIL</string>
+    <string name="DURESS_CODE">DURESS CODE</string>
+    <string name="ACCESS_SCHEDULE">ACCESS SCHEDULE</string>
+    <string name="FREE12">FREE12</string>
+    <string name="FREE13">FREE13</string>
+    <string name="ACCESS_SCORT">ACCESS SCORT</string>
+
+
+    <string name="CARDTWING">CARDTWING</string>
+    <string name="OK">OK</string>
+    <string name="Bluetooth_has_turned_on">Bluetooth has turned on </string>
+    <string name="connecting"> - connecting</string>
+    <string name="Registration_data_file_does_not_exist">Registration data file does not exist</string>
+    <string name="Registration_does_not_exist">Registration  does not exist</string>
+    <string name="onResume_BT_not_enabled_yet">onResume - BT not enabled yet</string>
+    <string name="onResume">onResume</string>
+    <string name="onRestart">onRestart</string>
+    <string name="onPause">onPause</string>
+    <string name="onStop">onStop</string>
+    <string name="Disconnected_to">Disconnected to:</string>
+    <string name="Not_Connected">Not Connected</string>
+    <string name="Connect">Connect</string>
+    <string name="UART_DISCONNECT_MSG">UART_DISCONNECT_MSG</string>
+    <string name="Connected_to">Connected to:</string>
+    <string name="readyy">- ready</string>
+    <string name="Disconnect">Disconnect</string>
+    <string name="UART_CONNECT_MSG">UART_CONNECT_MSG</string>
+    <string name="Unable_to_initialize_Bluetooth">Unable to initialize Bluetooth</string>
+    <string name="onServiceConnected_mService">onServiceConnected mService</string>
+    <string name="Registered">Registered</string>
+    <string name="UnRegistered">UnRegistered</string>
+    <string name="Confirm">Confirm</string>
+
+
+    <string name="Are_you_sure_to_do_Registration_Again">Are you sure to do Registration Again?</string>
+    <string name="File_write_failed">File write failed:</string>
+    <string name="Error">Error</string>
+
+
+    <string name="No_registration_information_found_on_the_device">No registration information found on the device</string>
+    <string name="Registration_file_doesnt_exists">Registration file does not exists</string>
+    <string name="Registration_deleted_Successfully">Registration deleted Successfully</string>
+    <string name="Registration_not_deleted">Registration not deleted</string>
+    <string name="hexBinary_needs_to_be_even_length">hexBinary needs to be even-length:</string>
+    <string name="contains_illegal_character_for_hexBinary">contains illegal character for hexBinary:</string>
+
+
+    <string name="BadgeNo">BadgeNo</string>
+    <string name="IMEI">IMEI</string>
+    <string name="Lenght_of_file">Lenght of file:</string>
+    <string name="download">download</string>
+    <string name="Registration_successfully">Registration successfully</string>
+    <string name="Information">Information</string>
+    <string name="No_Internet_Connection_Found">No Internet Connection Found</string>
+    <string name="Please_enter_badge_number">Please enter badge number</string>
+    <string name="Please_enter_service_url">Please enter service url</string>
+    <string name="Registration_Failed">Registration Failed</string>
+    <string name="File_Empty">File Empty</string>
+    <string name="Rssi">Rssi</string>
+
+
+    <string name="VibrationValue">Vibration</string>
+    <string name="Eacs">Eacs</string>
+    <string name="Elsmart">Elsmart</string>
+    <string name="UNREGISTER">UNREGISTER</string>
+    <string name="REGISTER">REGISTER</string>
+    <string name="Status">Status</string>
+    <string name="Title">Title</string>
+    <string name="Department">Department</string>
+    <string name="Card_Valid_From">Card Valid From</string>
+    <string name="Card_Issued_From">Card Isued From</string>
+    <string name="System">System</string>
+    <string name="Service_URL">Service URL</string>
+    <string name="Registration">Registration</string>
+
+    <string name="Punch">Punch</string>
+    <string name="Re_Register_for_Elsmart_System">Need to be Re-Register for Elsmart System</string>
+    <string name="Secondary_Data_added_successfully">Secondary Data added successfully</string>
+    <string name="title_activity_records">Records</string>
+
+
 </resources>
