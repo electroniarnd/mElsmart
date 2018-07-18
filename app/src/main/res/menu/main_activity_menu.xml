@@ -6,7 +6,7 @@
 
     <item
         android:id="@+id/Registration_id"
-        android:title="Registration"
+        android:title="@string/Registration"
         app:showAsAction="never"
         android:icon="@drawable/ic_settings_applications_white_24dp"/>
     <item
@@ -19,6 +19,12 @@
         android:id="@+id/Debug_id"
         android:orderInCategory="100"
         android:title="@string/DebugValue"
+
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/Vibration_id"
+        android:orderInCategory="100"
+        android:title="@string/VibrationValue"
 
         app:showAsAction="never" />
 
