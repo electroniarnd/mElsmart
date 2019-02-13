@@ -39,8 +39,10 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -54,27 +56,40 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Vibrator;
-import android.support.v4.app.NotificationCompatSideChannelService;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.nordicsemi.nrfUARTv2.circularbuttom.CircularProgressButton;
 
 import static com.nordicsemi.nrfUARTv2.MainActivity.FRAMERXINGSTATE.WAITFrameProcess;
 import static com.nordicsemi.nrfUARTv2.MainActivity.FRAMERXINGSTATE.WAITSTX1;
@@ -83,6 +98,7 @@ import static com.nordicsemi.nrfUARTv2.MainActivity.FRAMERXINGSTATE.WAITSTX1;
 public class MainActivity extends Activity implements RadioGroup.OnCheckedChangeListener {
     private static final int REQUEST_SELECT_DEVICE = 1;
     private static final int REQUEST_ENABLE_BT = 2;
+    private static final int  REQUEST_ENABLE_FT=3;
     private static final int UART_PROFILE_READY = 10;
     public static final String TAG = "nRFUART";
     private static final int UART_PROFILE_CONNECTED = 20;
@@ -90,10 +106,15 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     private static final int STATE_OFF = 10;
     private static int a = 0;
     private static int VisibleMode = 0;
-    private static int Vibrationmode = 0;
+    private static int AutoPunch = 0;
+    private static int Biometric = 0;
+    private int connection_value=-1;
     private static int bytcount = 0;
     private static int framesize = 0;
-    private static int autostartvalue = 1;
+    private static int autostartvalue = 0;
+    private static int startvalue = 0;
+    boolean isRunning = false;
+    CountDownTimer cTimer = null;
 
 
     //Elsmart
@@ -105,8 +126,6 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     private static final int elsmartCardType1 = 0x20;
     private static final int elsmartCardType2 = 0x40;
     private static final int elsmartBlackListedCard = 0x80;
-
-
     //eacs
     private static final int eacsREADER_ERROR_SET = 0x22;
     private static final int eacsREADER_ERROR_CLEAR = 0x23;
@@ -119,7 +138,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     private static final int eacsBIOMETRIC_ERROR_CLEAR = 0x2A;
     private static final int eacsDATE_TIME_ALARM_SET = 0x2B;
     private static final int eacsDATE_TIME_ALARM_CLEAR = 0x2C;
-    private static final String DirectionFile = "direction.txt";
+
 
     private static final int OK = 0;
     public static final int eacsBLACKLISTED = 1;
@@ -133,10 +152,19 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     public static final int eacsBIOFAIL = 9;
     public static final int eacsDURESSCODE = 10;
     public static final int eacsACCSCHEDULE = 11;
-    public static final int eacsFREE12 = 12;
-    public static final int eacsFREE13 = 13;
+    public static final int FLASH_WRITE_FAIL = 12;
+    public static final int BIO_DEVICE_ERR = 13;
     public static final int eacsACCESCORT = 14;
     public static final int eacsCARDTWING = 15;
+    public static final int SYSTEM_HALTED = 16;
+    public static final int FPTIMEOUTERROR = 17;
+    public static final int NOTSUPPORTED = 18;
+    public static final int NOTENROLLED = 19;
+    public static final int NOFINGERDETECT = 20;
+    public static final int READER_ERROR = 21;
+    public static final int Cutomer_Mismatch = 22;
+    public static final int General_Error = 23;
+
 
 
     public static final int MAX_BUFF = 8096;      //includes tcpip buffer
@@ -148,7 +176,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     public static final int STX2 = 0x55;
     public static final int ETX = 0xF0;
     //Frame Receive State
-
+  String  requiredDate="",   requiredTime="";
     public static final int PollSourceID = 0x83;
     static final int READ_BLOCK_SIZE = 4096;
 
@@ -181,58 +209,90 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
     // public enum EACS_AlarmNo {OK, BLACKLISTED,ACCESSDENIED,CARDEXPIRED,ANTIPASSBKERROR,ACCLOCK,ACCHOLIDAY, ACCLEAVE,PINFAIL,BIOFAIL, DURESSCODE,ACCSCHEDULE,FREE12,FREE13,ACCESCORT,CARDTWING };
     private FRAMERXINGSTATE frameProcessState = WAITSTX1;
-
     private TextView mRemoteRssiVal;
     RadioGroup mRg;
     private int mState = UART_PROFILE_DISCONNECTED;
     private UartService mService = null;
     private BluetoothDevice mDevice = null;
     private BluetoothAdapter mBtAdapter = null;
-    private ListView messageListView;
-    private ArrayAdapter<String> listAdapter;
-    private Button btnConnectDisconnect, btnSend;
-    private EditText edtMessage;
-    private TextView txttick, txtregistered, txtbadgeno1, textView4;
-    private TextView txtdatetime;
-    private TextView txtname;
+
+
+   //////////////// private Button  btnSend;
+
+    private TextView  txtregistered, txtbadgeno1, txtfullname, txtdate,ErrorMessage,deviceLabel;
+    private TextView txtdatetime,lblname,lbldate,lblpunchtype,txttime,punchTime,txtname,txtmessagecode;
     private static final String fileRegistrationVerify = "BadgeIMEI.txt";
     private static final String Datafile = "mytextfile.txt";
-    TextView txtmessagecode;
-    MediaPlayer in = null;
-    MediaPlayer out = null;
-    MediaPlayer error = null;
-    MediaPlayer Access_Denied = null;
-    MediaPlayer Card_Expired = null;
-    MediaPlayer Blacklisted = null;
-    MediaPlayer AntiPassBackError = null;
+    private static final String DirectionFile = "direction.txt";
+    MediaPlayer in = null,out = null, error = null,Access_Denied = null,Card_Expired = null,Blacklisted = null,AntiPassBackError = null;
     private String sysvalue="";
+    Controllerdb db =new Controllerdb(this);
+    SQLiteDatabase database;
+    CircularProgressButton  btnConnectDisconnect ;
+    private Context mContext;
+    private Activity mActivity;
+    private LinearLayout mRelativeLayout;
+    private Button mButton;
+    private PopupWindow mPopupWindow;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+         btnConnectDisconnect = (CircularProgressButton) findViewById(R.id.btn_select);
+        btnConnectDisconnect.setIndeterminateProgressMode(true);
+
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         count = telephonyManager.getDeviceId().length();
         TXvalue1 = telephonyManager.getDeviceId().getBytes();
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
+
+
+
+        txtfullname = (TextView) findViewById(R.id.txtfullname);
+        txtdate = (TextView) findViewById(R.id.txtdate);
+        deviceLabel = (TextView) findViewById(R.id.deviceLabel);
+        ErrorMessage =(TextView) findViewById(R.id.ErrorMessage);
+
+        mContext = getApplicationContext();
+
+        // Get the activity
+        mActivity = MainActivity.this;
+
+        // Get the widgets reference from XML layout
+        mRelativeLayout = (LinearLayout) findViewById(R.id.linearLayout2);
+
         if (mBtAdapter == null) {
             Toast.makeText(this, "Bluetooth is not available", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
+        if (!mBtAdapter.isEnabled()) {
+            ///      Log.i(TAG, "onResume - BT not enabled yet");
+            ///      Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            ///      startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+try {
+    mBtAdapter.enable();
+    Thread.sleep(3000);
+}
+catch (Exception ex)
+{
+    Toast.makeText(MainActivity.this,"Problem in Bluetooth Enable", Toast.LENGTH_LONG).show();
+}
+
+           }
 
 
         txtregistered = (TextView) findViewById(R.id.txtregistered);
-        txtbadgeno1 = (TextView) findViewById(R.id.txtbadgeno1);
-        textView4 = (TextView) findViewById(R.id.textView4);
+       // txtbadgeno1 = (TextView) findViewById(R.id.txtbadgeno1);
+      //  textView4 = (TextView) findViewById(R.id.textView4);
+
 
 
         File Registrationfile = new File(getFilesDir() + File.separator + fileRegistrationVerify);
-
         File Valuefile = new File(getFilesDir() + File.separator + Datafile);
         if ((Registrationfile.exists())) {
-
-
             FileInputStream fileIn = null;
             try {
                 fileIn = openFileInput(fileRegistrationVerify);
@@ -252,22 +312,18 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                     String readstring = String.copyValueOf(inputBuffer, 0, charRead);
                     s += readstring;
                 }
-
-
                 String[] urldata = s.split("~");
-
-
                 txtregistered.setText(R.string.Registered);
-                txtregistered.setBackgroundColor(Color.GREEN);
-                txtbadgeno1.setVisibility(View.VISIBLE);
-                textView4.setVisibility(View.VISIBLE);
-                txtbadgeno1.setText(urldata[0]);
-                textView4.setText(urldata[11]);
+            //    txtregistered.setBackgroundColor(Color.GREEN);
+               // txtbadgeno1.setVisibility(View.VISIBLE);
+              ////  textView4.setVisibility(View.VISIBLE);
+               // txtbadgeno1.setText(urldata[0]);
+             //////////   textView4.setText(urldata[11]);
                 sysvalue=urldata[13].toLowerCase().toString();
-
                 InputRead.close();
             } catch (IOException e) {
                 e.printStackTrace();
+                Log.e("",e.getMessage());
             }
             catch(Exception e) {
                 Toast.makeText(MainActivity.this, "Error",
@@ -277,34 +333,72 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
         } else {
             txtregistered.setText(R.string.UnRegistered);
-            txtregistered.setBackgroundColor(Color.RED);
-            txtbadgeno1.setVisibility(View.GONE);
-            textView4.setVisibility(View.GONE);
+           // txtregistered.setBackgroundColor(Color.RED);
+         //   txtbadgeno1.setVisibility(View.GONE);
+          //////////  textView4.setVisibility(View.GONE);
 
 
         }
 
 
-        messageListView = (ListView) findViewById(R.id.listMessage);
-        listAdapter = new ArrayAdapter<String>(this, R.layout.message_detail);
-        messageListView.setAdapter(listAdapter);
-        messageListView.setDivider(null);
-        btnConnectDisconnect = (Button) findViewById(R.id.btn_select);
-        btnSend = (Button) findViewById(R.id.sendButton);
-        edtMessage = (EditText) findViewById(R.id.sendText);
-        txttick = (TextView) findViewById(R.id.txttick);
 
-        txtdatetime = (TextView) findViewById(R.id.txtdatetime);
-        txtname = (TextView) findViewById(R.id.txtname1);
 
-        txtmessagecode = (TextView) findViewById(R.id.txtmessagecode);
-        edtMessage.setVisibility(View.GONE);
-        //btnSend.setVisibility(View.GONE);
-        messageListView.setVisibility(View.GONE);
-        btnConnectDisconnect.setBackgroundColor(Color.parseColor("#ABBD48"));
+
+
+
+
+
+
+
+
+
+       // txtmessagecode.setText("");
+       // txtdatetime.setText("");
+      //  txtname.setText("");
+      //  txttick.setText("");
+       // lbldate.setText("");
+        //lblname.setText("");
+       // lblpunchtype.setText("");
 
         service_init();
         // Handle Disconnect & Connect button
+       if(ReadSysSetting()==0)//check System Setting
+           Toast.makeText(this,"Error in Reading system_setting Table" , Toast.LENGTH_LONG).show();//check_Setting();
+
+
+        if ((startvalue == 0) && AutoPunch == 1 && Biometric==1) {
+            autostartvalue = 0;
+            Intent newIntent = new Intent(MainActivity.this, biometric.class);
+            startActivityForResult(newIntent, REQUEST_ENABLE_FT);
+        }
+        if(mBtAdapter.isEnabled()) {
+            if ((startvalue == 0 ) && AutoPunch == 1 && Biometric == 0) {
+                autostartvalue = 0;
+                Intent newIntent2 = new Intent(MainActivity.this, DeviceListActivity.class);
+                startActivityForResult(newIntent2, REQUEST_SELECT_DEVICE);
+                btnConnectDisconnect.setProgress(50);
+
+
+                if(isRunning==false) {
+                    cTimer =   new CountDownTimer(9000, 1000) {
+                        public void onTick(long millisUntilFinished) {
+                            isRunning = true;
+                        }
+
+                        public void onFinish() {
+                            isRunning = false;
+                            if (mDevice != null) {
+                                mService.disconnect();
+                            }
+
+                            btnConnectDisconnect.setProgress(0);
+                        }
+                    }.start();
+                }
+            }
+            startvalue = 1;
+
+        }
         btnConnectDisconnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -312,13 +406,50 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                     Log.i(TAG, "onClick - BT not enabled yet");
                     Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                     startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-                } else {
-                    if (btnConnectDisconnect.getText().equals("Connect")) {
+                }
+                else   if (btnConnectDisconnect.getProgress() == 100 ||btnConnectDisconnect.getProgress() == -1) {
+                    btnConnectDisconnect.setProgress(0);
+                    ErrorMessage.setBackgroundColor(Color.TRANSPARENT) ;   txtfullname.setText(""); txtdate.setText(""); ErrorMessage.setText("");
+                }
 
+                else {
+                    if (btnConnectDisconnect.getText().equals("Punch")) {
+
+
+
+
+                        if(isRunning==false) {
+                            cTimer =   new CountDownTimer(9000, 1000) {
+                                public void onTick(long millisUntilFinished) {
+                                    isRunning = true;
+                                }
+
+                                public void onFinish() {
+                                    isRunning = false;
+                                    if (mDevice != null) {
+                                        mService.disconnect();
+                                    }
+                                    btnConnectDisconnect.setProgress(0);
+                                }
+                            }.start();
+                        }
+
+
+
+
+
+
+                        btnConnectDisconnect.setProgress(50);
                         //Connect button pressed, open DeviceListActivity class, with popup windows that scan for devices
 
-                        Intent newIntent = new Intent(MainActivity.this, DeviceListActivity.class);
-                        startActivityForResult(newIntent, REQUEST_SELECT_DEVICE);
+                        if(Biometric==1) {
+                            Intent newIntent = new Intent(MainActivity.this, biometric.class);
+                            startActivityForResult(newIntent, REQUEST_ENABLE_FT);
+                        }
+                        if(Biometric==0) {
+                            Intent newIntent = new Intent(MainActivity.this, DeviceListActivity.class);
+                            startActivityForResult(newIntent, REQUEST_SELECT_DEVICE);
+                        }
 
                         autostartvalue = 0;
 
@@ -326,45 +457,19 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                     } else {
                         //Disconnect button pressed
                         if (mDevice != null) {
+                            try {
+                                Thread.sleep(500);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                             mService.disconnect();
-
+                            btnConnectDisconnect.setProgress(0);
                         }
                     }
                 }
             }
         });
-        // Handle Send button
 
-        btnSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EditText editText = (EditText) findViewById(R.id.sendText);
-                String message = editText.getText().toString();
-                byte[] value;
-                try {
-
-                    shakeIt(1, myVirator.sclick);
-                    //send data to service
-                    value = message.getBytes("UTF-8");
-                    sendCommandToTerminal((byte) 0x88);
-                    //  mService.writeRXCharacteristic(value);
-                    //Update the log with time stamp
-                    String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
-                    //listAdapter.add("[" + currentDateTimeString + "] TX: " + message);
-                    //messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
-                    edtMessage.setText("");
-                } catch (UnsupportedEncodingException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-
-            }
-        });
-        //  if (autostartvalue == 0) {
-        //     btnSend.performClick();
-        //     autostartvalue =1;
-
-        //  }
 
 
         // Set initial UI state
@@ -396,34 +501,20 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
             case R.id.Registration_id:
                 startActivity(new Intent(this, RegistrationActivity.class));
                 break;
+            case R.id.Setting_id:
+                startActivity(new Intent(this, setting.class));
+                break;
             case R.id.About_id:
                 startActivity(new Intent(this, AboutActivity.class));
                 break;
-            case R.id.Debug_id:
-                if (VisibleMode == 0) {
-                    messageListView.setVisibility(View.VISIBLE);
-                    VisibleMode = 1;
-                } else if (VisibleMode == 1) {
-                    messageListView.setVisibility(View.GONE);
-                    VisibleMode = 0;
-                }
-
-
+            case R.id.Record_id:
+                startActivity(new Intent(this,recordLogs.class));
+              //  getActivity().onBackPressed();
                 break;
-
-            case R.id.Vibration_id:
-                if (Vibrationmode == 0) {
-                    if (getSystemService(VIBRATOR_SERVICE) != null) {
-
-                        ((Vibrator) getApplicationContext().getSystemService(VIBRATOR_SERVICE)).cancel();
-                        Vibrationmode = 1;
-                    }
-                } else if ((Vibrationmode == 1)) {
-                    shakeIt(1, MainActivity.myVirator.sclick);
-                }
+            case R.id.Device_id:
+                startActivity(new Intent(this,Device.class));
+                //  getActivity().onBackPressed();
                 break;
-
-
             default:
                 return super.onOptionsItemSelected(item);
 
@@ -436,13 +527,22 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     //UART service connected/disconnected
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder rawBinder) {
-            mService = ((UartService.LocalBinder) rawBinder).getService();
-            Log.d(TAG, "onServiceConnected mService= " + mService);
-            if (!mService.initialize()) {
-                Log.e(TAG, "Unable to initialize Bluetooth");
-                finish();
-            }
 
+          try {
+
+
+              mService = ((UartService.LocalBinder) rawBinder).getService();
+              Log.d(TAG, "onServiceConnected mService= " + mService);
+              if (!mService.initialize()) {
+                  Log.e(TAG, "Unable to initialize Bluetooth");
+                  finish();
+                 int v=0;
+              }
+          }
+          catch (Exception ex)
+          {
+              Log.e(TAG, "Unable to initialize Service");
+          }
         }
 
         public void onServiceDisconnected(ComponentName classname) {
@@ -467,24 +567,31 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
             final Intent mIntent = intent;
             //*********************//
+
+
             if (action.equals(UartService.ACTION_GATT_CONNECTED)) {
                 runOnUiThread(new Runnable() {
                     public void run() {
 
                         String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
                         Log.d(TAG, "UART_CONNECT_MSG");
-                        btnConnectDisconnect.setText("Disconnect");
-                        edtMessage.setEnabled(true);
-                        btnSend.setEnabled(true);
-                        btnSend.setBackgroundColor(Color.GREEN);
-                        btnConnectDisconnect.setBackgroundColor(Color.GREEN);
+                     //////////////////   btnConnectDisconnect.setText("Punching");//pradeeep
+
+
+
+
 
 
                         ((TextView) findViewById(R.id.deviceName)).setText(mDevice.getName() + R.string.readyy);
-                        listAdapter.add("[" + currentDateTimeString + R.string.Connected_to + mDevice.getName());
-                        messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
+
+
+
+
 
                         mState = UART_PROFILE_CONNECTED;
+
+
+
                     }
                 });
             }
@@ -492,29 +599,40 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
             //*********************//
             if (action.equals(UartService.ACTION_GATT_DISCONNECTED)) {
                 runOnUiThread(new Runnable() {
+                    @SuppressLint("ResourceAsColor")
                     public void run() {
                         String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
                         Log.d(TAG, "UART_DISCONNECT_MSG");
-                        btnConnectDisconnect.setText("Connect");
-                        edtMessage.setEnabled(false);
-                        btnSend.setEnabled(false);
-                        btnConnectDisconnect.setBackgroundColor(Color.parseColor("#ABBD48"));
-                        btnSend.setBackgroundColor(Color.LTGRAY);
+                      //  btnConnectDisconnect.setText("Punch");
+
+                        deviceLabel.setTextColor(0Xff0099cc);
+
+
                         ((TextView) findViewById(R.id.deviceName)).setText("Not Connected");
-                        listAdapter.add("[" + currentDateTimeString + "] Disconnected to: " + mDevice.getName());
+
                         mState = UART_PROFILE_DISCONNECTED;
                         try {
-                            Thread.sleep(1000);
+                            Thread.sleep(300);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
+
+                        if(cTimer != null) {
+                            cTimer.cancel();
+                            //  cTimer.();
+                            cTimer = null;
+                            isRunning=false;
+                            btnConnectDisconnect.setProgress(0);
+                        }
+
+
+
                         mService.close();
                         //setUiState();
 
                     }
                 });
             }
-
 
             //*********************//
             if (action.equals(UartService.ACTION_GATT_SERVICES_DISCOVERED)) {
@@ -537,32 +655,8 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                 runOnUiThread(new Runnable() {
                     public void run() {
                         try {
-                            //  String text = new String(txValue, "UTF-8");
-
-                            //  String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
-                            //  listAdapter.add("[" + currentDateTimeString + "] RX: " + text);
-                            // messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
-
-
                             int byteRead = txValue.length;
-
                             processRxPacket(txValue, byteRead);
-//disconnect is issued from last command 0x53 response.
-/*
-                            if(bytcount==0 && txValue.length>9)
-                                framesize=txValue[9]&0xff;
-                           if (framesize == (byte) 0x53) {
-                                bytcount++;
-                                if(bytcount==4)
-                                {
-                                    if (mDevice != null) {
-
-                                        bytcount=0;
-                                        mService.disconnect();
-                                    }
-                                }
-                           }
-*/
                         } catch (Exception e) {
                             Log.e(TAG, e.toString());
                         }
@@ -632,18 +726,22 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     @Override
     protected void onRestart() {
         super.onRestart();
+
         Log.d(TAG, "onRestart");
     }
+
+    
+
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume");
-        if (!mBtAdapter.isEnabled()) {
-            Log.i(TAG, "onResume - BT not enabled yet");
-            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-        }
+      //  Log.d(TAG, "onResume");
+       //// if (!mBtAdapter.isEnabled()) {
+      ///      Log.i(TAG, "onResume - BT not enabled yet");
+      ///      Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+      ///      startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+      ///  }
 
     }
 
@@ -677,22 +775,31 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
 
                 if (resultCode == Activity.RESULT_OK && data != null) {
+
+                    String actionName =data.getStringExtra("name");
+                    if((actionName != null && !actionName.isEmpty()) && actionName.equals("cancel") )
+                    {
+                        if(cTimer != null) {
+                            cTimer.cancel();
+                            //  cTimer.();
+                            cTimer = null;
+                            isRunning=false;
+                            if (mDevice != null) {
+                                mService.disconnect();
+                            }
+                            btnConnectDisconnect.setProgress(0);
+                              return;
+                        }
+                    }
+
+
                     String deviceAddress = data.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
                     mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(deviceAddress);
 
                     Log.d(TAG, "... onActivityResultdevice.address==" + mDevice + "mserviceValue" + mService);
                     ((TextView) findViewById(R.id.deviceName)).setText(mDevice.getName() + " - connecting");
                     mService.connect(deviceAddress);
-
-
                 }
-
-
-                txtmessagecode.setText("");
-                txtdatetime.setText("");
-                txtname.setText("");
-                txttick.setText("");
-                txtmessagecode.setBackgroundColor(Color.TRANSPARENT);
 
                 break;
             case REQUEST_ENABLE_BT:
@@ -707,6 +814,18 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                     finish();
                 }
                 break;
+
+            case REQUEST_ENABLE_FT:
+                // When the request to enable Bluetooth returns
+                if (resultCode == Activity.RESULT_OK) {
+                 //   Toast.makeText(this, "fingerprint on", Toast.LENGTH_SHORT).show();
+                    Intent newIntent = new Intent(MainActivity.this, DeviceListActivity.class);
+                    startActivityForResult(newIntent, REQUEST_SELECT_DEVICE);
+                } else {
+
+                }
+                break;
+
             default:
                 Log.e(TAG, "wrong request code");
                 break;
@@ -740,6 +859,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                     .setPositiveButton(R.string.popup_yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            startvalue=0;
                             finish();
                         }
                     })
@@ -869,24 +989,23 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
 
         if ((cmdid & 0xff) == 0x88) {
-            listAdapter.add("[" + currentDateTimeString + "] TX: " + cmdid + "  Connection message has sent");
+
         } else if ((cmdid & 0xff) == 0x4F) {
 
             if ((comid1 & 0xff) == 0x51) {
-                listAdapter.add("[" + currentDateTimeString + "] TX: " + comid1 + "  IMEI  has sent");
+
             }
             if ((comid1 & 0xff) == 0x52) {
-                listAdapter.add("[" + currentDateTimeString + "] TX: " + comid1 + "  file  has sent");
+
             }
 
             if ((comid1 & 0xff) == 0x53) {
-                listAdapter.add("[" + currentDateTimeString + "] TX: " + comid1 + " Opearation Status has sent and mobile disconnected ");
+
             }
 
         }
 
 
-        messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
 
     }
 
@@ -894,17 +1013,16 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     void displaytxCommandMsgRX(byte cmdid) {
         String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
         if ((cmdid & 0xff) == 0x51) {
-            listAdapter.add("[" + currentDateTimeString + "] RX: " + cmdid + " Request for IMEI frame has recieved");
+
         }
         if ((cmdid & 0xff) == 0x52) {
-            listAdapter.add("[" + currentDateTimeString + "] RX: " + cmdid + " Request for File frame has recieved");
+
         }
         if ((cmdid & 0xff) == 0x53) {
-            listAdapter.add("[" + currentDateTimeString + "] RX: " + cmdid + " Request for Opeartion status frame has recieved");
+
         }
 
 
-        messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
 
     }
 
@@ -1040,22 +1158,21 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
     private void ProcessBLEFrame() {
 
-        int rxb = 9;
-        int name = 40;
-        int date = 16;
-        int i = 0;
-        int j = 0;
-        int l = 0;
-        int m = 0;
+        int  empID=0, rxb = 9,name = 40,Badgeindex = 58,fullnameindex=74,empidindex=113,date = 16,i = 0,j = 0,l = 0,m = 0;
         short res = 0;
         int direction = 0;
-        String FullName = "";
-        String s="";
+        String FullName = "",badgeno="",NameDisplay="",s="",filename = "",lang="", tickvalue="\u2713";
+
+        requiredDate="";   requiredTime="";
+
         char chr = ' ';
-        String filename = "";
-        FileChannel ch = null;
-        FileChannel ch1 = null;
+
+        FileChannel ch = null,ch1 = null;
+
         filename = "mytextfile.txt";
+
+
+        lang= Locale.getDefault().getDisplayLanguage();
 
         displaytxCommandMsgRX(rxBuff[rxb]);
 
@@ -1084,7 +1201,9 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                 tmpBuff[1] = (byte) (i >> 8);
                 //   tmpBuff1 = new byte[i];
                 //  System.arraycopy(tmpBuff, 0, tmpBuff1, 0, i);
-                btnSend.setBackgroundColor(Color.MAGENTA);
+            /////////////    btnSend.setBackgroundColor(Color.MAGENTA);
+
+                deviceLabel.setTextColor(Color.GREEN);
                 sendCommandToTerminal(rxBuff[rxb - 1]);
                 break;
             case 0x52: //Send file
@@ -1140,28 +1259,26 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                         l++;
 
                     }
-
-
-
-
                     File direction_file = new File(getFilesDir() + File.separator + DirectionFile);
                     if ((direction_file.exists())) {
-
                         FileInputStream fileIn1 = openFileInput(DirectionFile);
-
-
                         ch1 = fileIn1.getChannel();
-
                         int size1 = (int) ch1.size();
                         MappedByteBuffer buf1 = ch1.map(FileChannel.MapMode.READ_ONLY, 0, size1);
                         byte[] bytes1 = new byte[size1];
                         buf1.get(bytes1);
 
                        tmpBuff[i++]= bytes1[0];// s.getBytes();
+
+                        int byt= bytes1[0];
+                     //   String strIn = new String(bytes1, 0, 1);
+                      //  String ss =buf1.toString();
+
+
                    }
                    else
                        tmpBuff[i++]=0;
-                       tmpBuff[i++]=0;
+                    tmpBuff[i++]=0;
 
 
 
@@ -1180,27 +1297,45 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
 
                 tmpBuff[0] = (byte) i;
                 tmpBuff[1] = (byte) (i >> 8);
-                btnSend.setBackgroundColor(Color.BLUE);
+            /////////////////////////    btnSend.setBackgroundColor(Color.BLUE);
+
+                deviceLabel.setTextColor(Color.MAGENTA);
+              //  btnConnectDisconnect.setProgress(50);
                 sendCommandToTerminal(rxBuff[rxb - 1]);
                 break;
 
             case 0x53: //Send file
-                btnSend.setBackgroundColor(Color.GREEN);
+                if (mDevice != null) {
+                    mService.disconnect();
+                }
+             ///////////////////////////////   btnSend.setBackgroundColor(Color.GREEN);
+                deviceLabel.setTextColor(Color.LTGRAY);
                 String strdate = (rxBuff[date++]) + 2000 + "/" + rxBuff[date++] + "/" + rxBuff[date++] + " " +
                         "" + rxBuff[date++] + ":" + rxBuff[date++] + ":" + rxBuff[date++];
 
                 SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                 try {
                     Date date1 = format.parse(strdate);
-                    DateFormat df = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
-                    String requiredDate = df.format(date1).toString();
-                    txtdatetime.setText(requiredDate.toString());
+                    DateFormat df = new SimpleDateFormat("dd MMM yyyy");
+                     requiredDate = df.format(date1).toString();
+                    /////txtdatetime.setText(requiredDate.toString());
+
+
+                    Date time1 = format.parse(strdate);
+                    DateFormat tf = new SimpleDateFormat("hh:mm:ss a");
+                     requiredTime = tf.format(time1).toString();
+                    txtdate.setText(requiredDate+", "+requiredTime);
+
+                  /////  txttime.setText(requiredTime.toString());
 
                 } catch (ParseException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-                txtdatetime.setTextColor(Color.BLUE);
+              //  lbldate.setText("Punch Date");
+               /// punchTime.setText("Punch Time");
+
+              ////  txtdatetime.setTextColor(Color.BLUE);
                 //extract name
                 for (int k = 0; k < 16; k++) {
                     if ((rxBuff[name + k] & 0xff) == 0)
@@ -1210,9 +1345,35 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                     FullName += chr;
                 }
                 direction = rxBuff[name + 16];
-                FullName = FullName.trim();
-                txtname.setText(FullName);
-                txtname.setTextColor(Color.BLUE);
+                NameDisplay = FullName.trim();
+                txtfullname.setText(NameDisplay);
+             ///   txtname.setText(FullName);
+             ///   txtname.setTextColor(Color.BLUE);
+              //  lblname.setText("Name");
+////          extract Badgeeno no
+                for (int k = 0; k < 16; k++) {
+                    if ((rxBuff[Badgeindex + k] & 0xff) == 0)
+                        break;
+
+                    chr = (char) (rxBuff[Badgeindex + k] & 0xff);
+                    badgeno += chr;
+                }
+
+               // extract full name
+                FullName="";
+                for (int k = 0; k < 16; k++) {
+                    if ((rxBuff[fullnameindex + k] & 0xff) == 0)
+                        break;
+
+                    chr = (char) (rxBuff[fullnameindex + k] & 0xff);
+                    FullName += chr;
+                }
+
+                // extract EmpID
+                for (int k = 0; k < 16; k++) {
+                   empID=(rxBuff[empidindex] & 0xff)+((rxBuff[empidindex+1] & 0xff)<<8)+((rxBuff[empidindex+1] & 0xff)<<16)+((rxBuff[empidindex+1] & 0xff)<<24);
+                   }
+
 
                 i++;
                 i++;
@@ -1225,46 +1386,72 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                 tmpBuff[i++] = (byte) (sessionid >> 24);
                 res = (short) (rxBuff[rxb + 13] & 0xff);
                 res |= (rxBuff[rxb + 14] << 8);
-                if(sysvalue.equals("eacs"))
-                    res=(short) (rxBuff[rxb+14]&0xff) ;
-                else
-                    res=(short) (res & 0xFF9E);
+              //  if(sysvalue.equals("eacs")) {
+                   // res = (short) (rxBuff[rxb + 14] & 0xff);
+              //  }
+
+               // else {
+                 //   res = (short) (res & 0xFF9E);
+               // }
                 try {
 
-                    txtmessagecode.setText("");
-                    txttick.setText("");
+                   // txtmessagecode.setText("");
+                   // txttick.setText("");
                     if (res  == 0) {
+
+                        connection_value=1;
 
                       int  soundcode = 0;
                         s = "IN";
                         s = getResources().getString(R.string.IN);
-                        if ((direction & 0x20) == 0x20)
+                        btnConnectDisconnect.setCompleteText("IN  "+tickvalue);
+
+                        if ((direction & 0x0C) == 0x08) ////////////////// if ((direction & 0x20) == 0x20)
                         {
                             s = getResources().getString(R.string.OUT);
                             soundcode = 1;
+                            btnConnectDisconnect.setCompleteText("OUT  "+tickvalue);
                         }
 
-                        s = s + getResources().getString( R.string.Punched_Successfully);
+                       //String  s1 = s + getResources().getString( R.string.Punched_Successfully);
+
+                 btnConnectDisconnect.setProgress(100);
 
                         SoundIt(soundcode);
-                        txtmessagecode.setText(s);//   Toast.makeText(this,"Punched Successfully",Toast.LENGTH_LONG).show();
-                        txtmessagecode.setBackgroundColor(Color.CYAN);
-                        txttick.setText("\u2713");
+
+                        if(sysvalue.equals("eacs"))
+                        {
+                     //   popup( NameDisplay, requiredDate, requiredTime,  s,true,0);
+                            btnConnectDisconnect.setCompleteText(tickvalue);
+                        }
+                        else {
+                         //   popup(NameDisplay, requiredDate, requiredTime, s, true, 1);
+                        }
+
+                       if(ReadMACValue(mDevice.getAddress())==-1)
+                           Toast.makeText(this,"Error in reading  Mac value",Toast.LENGTH_LONG).show();
+                       else if(ReadMACValue(mDevice.getAddress())==0)
+                       {
+                           if(WriteMACAddress()==0)
+                               Toast.makeText(this,"Error in writing  Mac",Toast.LENGTH_LONG).show();
+                       }
+                        if( WriteLog(badgeno,FullName,s,empID)==0)
+                          Toast.makeText(this,"Error in writing log",Toast.LENGTH_LONG).show();
+
+
 
                     } else {
 
-                        txtmessagecode.setText("");
-                        txttick.setText("");
-
+                       /// txtmessagecode.setText("");
+                      ///  txttick.setText("");
+                       // lblpunchtype.setText("");
+                        connection_value=0;
+                        btnConnectDisconnect.setProgress(-1);
                         if(sysvalue.equals("eacs"))
-                        EACSdisplayResult(res);
+                        EACSdisplayResult(NameDisplay,requiredDate,requiredTime,res,0);
                         else {
-                            ElSmartdisplayResult(res);
+                            EACSdisplayResult(NameDisplay,requiredDate,requiredTime,res,1);
                         }
-
-
-
-
                         tmpBuff[i++] = 0;
 
 
@@ -1272,49 +1459,22 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                     }
 
 
+                    if(cTimer != null) {
+                        cTimer.cancel();
+                      //  cTimer.();
+                        cTimer = null;
+                        isRunning=false;
+                    }
+
                     FileOutputStream file_out = openFileOutput(DirectionFile, MODE_PRIVATE);
-
-
                     file_out.write((byte)direction);
                     file_out.close();
-                    if (mDevice != null) {
-                        mService.disconnect();
-                    }
+
+
                 } catch (Exception e) {
                     tmpBuff[i++] = 1;
                 }
-/*                   String files="";
-
-                byte[] c = filename.getBytes();
-
-                m=0;
-
-                if (c.length==0) {
-
-                    Toast.makeText(MainActivity.this, "Registration data  does not exist",
-                            Toast.LENGTH_LONG).show();
-                    return;
-                }
-
-                while(m<16) {
-                    if(m>=c.length)
-                        tmpBuff[i++]=0;
-                    else
-                        tmpBuff[i++]=c[m];
-                    m++;
-
-                }
-                tmpBuff[0] = (byte)i;
-                tmpBuff[1] = (byte)(i>>8);
-                sendCommandToTerminal(rxBuff[rxb-1]);
-
-
-                try {
-                    Thread.sleep(800);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-*/
+                startvalue = 1;
                 break;
         }
     }
@@ -1361,85 +1521,78 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                 break;
             case 6:
                 AntiPassBackError.start();
+            case 7:
+                error.start();
                 break;
 
         }
 
     }
 
-    private void ElSmartdisplayResult(short res) {
-
-
-            txtmessagecode.setText("");
-            txttick.setText("");
+    private void ElSmartdisplayResult(String NameDisplay,String requiredDate,String requiredTime,short res,int Elsmart) {
+         String str="",crossvalue="\u2715";
              int soundcode=0;
             switch (res) {
 
                 case elsmartIN_OUT_Punch:
-                    txtmessagecode.setText(R.string.Invalid_IN_Out);//  Toast.makeText(this,"Invalid IN/Out",Toast.LENGTH_LONG).show();
-                    txtmessagecode.setBackgroundColor(Color.RED);
-                    txttick.setText("\u2715");
+                    str=getResources().getString(R.string.Invalid_IN_Out);//  Toast.makeText(this,"Invalid IN/Out",Toast.LENGTH_LONG).show();
                     soundcode = 3;
                     break;
                 case elsmartInvalidDoor:
-                    txtmessagecode.setText(R.string.ACCESS_DENIED);// Toast.makeText(this,"Invalid Door",Toast.LENGTH_LONG).show();
-                    txtmessagecode.setBackgroundColor(Color.RED);
-                    txttick.setText("\u2715");
+                    str=getResources().getString(R.string.ACCESS_DENIED);
                     soundcode = 3;
                     break;
                 case elsmartSystemLocked:
-                    txtmessagecode.setText(R.string.System_Locked);// Toast.makeText(this,"System Locked",Toast.LENGTH_LONG).show();
-                    txtmessagecode.setBackgroundColor(Color.RED);
-                    txttick.setText("\u2715");
+                    str=getResources().getString(R.string.System_Locked);// Toast.makeText(this,"System Locked",Toast.LENGTH_LONG).show();
+                    soundcode=7;
                     break;
                 case elsmartExitEntryMissed:
-                    txtmessagecode.setText(R.string.Exit_Entry_Missed);//  Toast.makeText(this,"Exit Entry Missed",Toast.LENGTH_LONG).show();
-                    txtmessagecode.setBackgroundColor(Color.RED);
-                    txttick.setText("\u2715");
+                    str=getResources().getString(R.string.Exit_Entry_Missed);//  Toast.makeText(this,"Exit Entry Missed",Toast.LENGTH_LONG).show();
+                    soundcode=7;
                     break;
                 case elsmartExpiredCard:
-                    txtmessagecode.setText(R.string.CARD_EXPIRED);// Toast.makeText(this,"Card Expired",Toast.LENGTH_LONG).show();
-                    txtmessagecode.setBackgroundColor(Color.RED);
-                    txttick.setText("\u2715");
+                    str=getResources().getString(R.string.CARD_EXPIRED);// Toast.makeText(this,"Card Expired",Toast.LENGTH_LONG).show();
                     soundcode=4;
+                    break;
+                case Cutomer_Mismatch:
+                    str=getResources().getString(R.string.Cust_Mismatch);
+                    soundcode = 7;
                     break;
 
                 case elsmartCardType1:
-                    txtmessagecode.setText(R.string.CardType1);// Toast.makeText(this,"CardType1",Toast.LENGTH_LONG).show();
-                    txtmessagecode.setBackgroundColor(Color.RED);
-                    txttick.setText("\u2715");
+                    str=getResources().getString(R.string.CardType1);// Toast.makeText(this,"CardType1",Toast.LENGTH_LONG).show();
+                    soundcode=7;
                     break;
                 case elsmartCardType2:
-                    txtmessagecode.setText(R.string.CardType2);//  Toast.makeText(this,"CardType2",Toast.LENGTH_LONG).show();
-                    txtmessagecode.setBackgroundColor(Color.RED);
-                    txttick.setText("\u2715");
+                     str=getResources().getString(R.string.CardType2);//  Toast.makeText(this,"CardType2",Toast.LENGTH_LONG).show();
+                    soundcode=7;
                     break;
                 case elsmartBlackListedCard:
-                    txtmessagecode.setText(R.string.BlackListed_Card);//   Toast.makeText(this,"BlackListed Card",Toast.LENGTH_LONG).show();
-                    txtmessagecode.setBackgroundColor(Color.RED);
-                    txttick.setText("\u2715");
+                    str=getResources().getString(R.string.BlackListed_Card);//   Toast.makeText(this,"BlackListed Card",Toast.LENGTH_LONG).show();
                     soundcode=5;
                     break;
-
+                case General_Error:
+                    str=getResources().getString(R.string.General_Errr);
+                    soundcode =7;
+                    break;
                 default:
-
-
+                    str=getResources().getString(R.string.Error);
+                    soundcode=7;//  Toast.makeText(this,"Invalid IN/Out",Toast.LENGTH_LONG).show();
         }
         if (mDevice != null) {
             mService.disconnect();
         }
 
         SoundIt(soundcode);
+        ErrorMessage.setText(str);
 
+       // popup( NameDisplay, requiredDate, requiredTime,  str, false,Elsmart);
 
     }
 
 
-    private void EACSdisplayResult(short res) {
-
-
-            txtmessagecode.setText("");
-            txttick.setText("");
+    private void EACSdisplayResult(String NameDisplay,String requiredDate,String requiredTime,short res,int Elsmart) {
+         String str="",crossvalue="\u2715";
             int  soundcode=0;
             switch (res) {
 
@@ -1500,94 +1653,120 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
                     txttick.setText("\u2715");
                     break;*/
                 case eacsBLACKLISTED:
-                    txtmessagecode.setText(R.string.CARD_BLACKLISTED);// Toast.makeText(this,"CARD BLACKLISTED",Toast.LENGTH_LONG).show();
-                    txtmessagecode.setBackgroundColor(Color.RED);
-                    txttick.setText("\u2715");
+                    str=getResources().getString(R.string.CARD_BLACKLISTED);// Toast.makeText(this,"CARD BLACKLISTED",Toast.LENGTH_LONG).show();
                     soundcode = 5;
                     break;
                 case eacsACCESSDENIED:
-                    txtmessagecode.setText(R.string.ACCESS_DENIED);// Toast.makeText(this,"ACCESS DENIED",Toast.LENGTH_LONG).show();
-                    txtmessagecode.setBackgroundColor(Color.RED);
-                    txttick.setText("\u2715");
+                    str=getResources().getString(R.string.ACCESS_DENIED);// Toast.makeText(this,"ACCESS DENIED",Toast.LENGTH_LONG).show();
                     soundcode = 3;
                     break;
                 case eacsCARDEXPIRED:
-                    txtmessagecode.setText(R.string.CARD_EXPIRED);//   Toast.makeText(this,"CARD EXPIRED",Toast.LENGTH_LONG).show();
-                    txtmessagecode.setBackgroundColor(Color.RED);
-                    txttick.setText("\u2715");
+                    str=getResources().getString(R.string.CARD_EXPIRED);//   Toast.makeText(this,"CARD EXPIRED",Toast.LENGTH_LONG).show();
                     soundcode = 4;
                     break;
                 case eacsANTIPASSBKERROR:
-                    txtmessagecode.setText(R.string.ANTIPASS_BACK_ERROR);// Toast.makeText(this,"ANTIPASS BACK ERROR",Toast.LENGTH_LONG).show();
-                    txtmessagecode.setBackgroundColor(Color.RED);
-                    txttick.setText("\u2715");
+                    str=getResources().getString(R.string.ANTIPASS_BACK_ERROR);// Toast.makeText(this,"ANTIPASS BACK ERROR",Toast.LENGTH_LONG).show();
                     soundcode = 6;
                     break;
 
                 case eacsACCLOCK:
-                    txtmessagecode.setText(R.string.ACCESS_DURING_LOCK);// Toast.makeText(this,"ACCESS DURING LOCK",Toast.LENGTH_LONG).show();
-                    txtmessagecode.setBackgroundColor(Color.RED);
-                    txttick.setText("\u2715");
+                    str=getResources().getString(R.string.ACCESS_DURING_LOCK);// Toast.makeText(this,"ACCESS DURING LOCK",Toast.LENGTH_LONG).show();
+                    soundcode = 7;
                     break;
                 case eacsACCHOLIDAY:
-                    txtmessagecode.setText(R.string.ACCESS_DURING_HOLIDAY);//  Toast.makeText(this,"ACCESS DURING HOLIDAY",Toast.LENGTH_LONG).show();
-                    txtmessagecode.setBackgroundColor(Color.RED);
-                    txttick.setText("\u2715");
+                    str=getResources().getString(R.string.ACCESS_DURING_HOLIDAY);//  Toast.makeText(this,"ACCESS DURING HOLIDAY",Toast.LENGTH_LONG).show();;
+                    soundcode = 7;
                     break;
                 case eacsACCLEAVE:
-                    txtmessagecode.setText(R.string.ACCESS_DURING_LEAVE);//  Toast.makeText(this,"ACCESS DURING LEAVE",Toast.LENGTH_LONG).show();
-                    txtmessagecode.setBackgroundColor(Color.RED);
-                    txttick.setText("\u2715");
+                    str=getResources().getString(R.string.ACCESS_DURING_LEAVE);//  Toast.makeText(this,"ACCESS DURING LEAVE",Toast.LENGTH_LONG).show();
+                    soundcode = 7;
                     break;
                 case eacsPINFAIL:
-                    txtmessagecode.setText(R.string.PIN_FAIL);//  Toast.makeText(this,"PIN FAIL",Toast.LENGTH_LONG).show();
-                    txtmessagecode.setBackgroundColor(Color.RED);
-                    txttick.setText("\u2715");
+                    str=getResources().getString(R.string.PIN_FAIL);//  Toast.makeText(this,"PIN FAIL",Toast.LENGTH_LONG).show();
+                    soundcode = 7;
                     break;
                 case eacsBIOFAIL:
-                    txtmessagecode.setText(R.string.BIO_FAIL);// Toast.makeText(this,"BIO FAIL",Toast.LENGTH_LONG).show();
-                    txtmessagecode.setBackgroundColor(Color.RED);
-                    txttick.setText("\u2715");
+                    str=getResources().getString(R.string.BIO_FAIL);// Toast.makeText(this,"BIO FAIL",Toast.LENGTH_LONG).show();
+                    soundcode = 7;
                     break;
                 case eacsDURESSCODE:
-                    txtmessagecode.setText(R.string.DURESS_CODE);// Toast.makeText(this,"DURESS CODE",Toast.LENGTH_LONG).show();
-                    txtmessagecode.setBackgroundColor(Color.RED);
-                    txttick.setText("\u2715");
+                    str=getResources().getString(R.string.DURESS_CODE);// Toast.makeText(this,"DURESS CODE",Toast.LENGTH_LONG).show();
+                    soundcode = 7;
                     break;
                 case eacsACCSCHEDULE:
-                    txtmessagecode.setText(R.string.ACCESS_SCHEDULE);//  Toast.makeText(this,"ACCESS SCHEDULE",Toast.LENGTH_LONG).show();
-                    txtmessagecode.setBackgroundColor(Color.RED);
-                    txttick.setText("\u2715");
+                    str=getResources().getString(R.string.ACCESS_SCHEDULE);//  Toast.makeText(this,"ACCESS SCHEDULE",Toast.LENGTH_LONG).show();
+                    soundcode = 7;
                     break;
-                case eacsFREE12:
-                    txtmessagecode.setText(R.string.FREE12);//  Toast.makeText(this,"FREE12",Toast.LENGTH_LONG).show();
-                    txtmessagecode.setBackgroundColor(Color.RED);
-                    txttick.setText("\u2715");
+                case FLASH_WRITE_FAIL:
+                    str=getResources().getString(R.string.FLASH_WRITE_FAIL);//  Toast.makeText(this,"FREE12",Toast.LENGTH_LONG).show();
+                    soundcode = 7;
                     break;
-                case eacsFREE13:
-                    txtmessagecode.setText(R.string.FREE13);//  Toast.makeText(this,"FREE13",Toast.LENGTH_LONG).show();
-                    txtmessagecode.setBackgroundColor(Color.RED);
-                    txttick.setText("\u2715");
+                case BIO_DEVICE_ERR:
+                    str=getResources().getString(R.string.BIO_DEVICE_ERR);//  Toast.makeText(this,"FREE13",Toast.LENGTH_LONG).show();
+                    soundcode = 7;
                     break;
                 case eacsACCESCORT:
-                    txtmessagecode.setText(R.string.ACCESS_SCORT);//  Toast.makeText(this,"ACCESS SCORT",Toast.LENGTH_LONG).show();
-                    txtmessagecode.setBackgroundColor(Color.RED);
-                    txttick.setText("\u2715");
+                    str=getResources().getString(R.string.ACCESS_SCORT);//  Toast.makeText(this,"ACCESS SCORT",Toast.LENGTH_LONG).show();
+                    soundcode = 7;
                     break;
                 case eacsCARDTWING:
-                    txtmessagecode.setText(R.string.CARDTWING);
-                    txtmessagecode.setBackgroundColor(Color.RED);
-                    txttick.setText("\u2715");
+                    str=getResources().getString(R.string.CARDTWING);
+                    break;
 
+
+                case SYSTEM_HALTED:
+                    str=getResources().getString(R.string.SYSTEM_HALTED);
+                    soundcode = 7;
+                    break;
+
+                case FPTIMEOUTERROR:
+                    str=getResources().getString(R.string.FPTIMEOUTERROR);
+                    soundcode = 7;
+                    break;
+
+                case NOTSUPPORTED:
+                    str=getResources().getString(R.string.NOTSUPPORTED);
+                    soundcode = 7;
+                    break;
+                case Cutomer_Mismatch:
+                    str=getResources().getString(R.string.Cust_Mismatch);
+                    soundcode = 7;
+                    break;
+
+
+                case NOTENROLLED:
+                    str=getResources().getString(R.string.NOTENROLLED);
+                    soundcode = 7;
+                    break;
+
+                case NOFINGERDETECT:
+                    str=getResources().getString(R.string.NOFINGERDETECT);
+                    soundcode = 7;
                     //  Toast.makeText(this,"CARDTWING",Toast.LENGTH_LONG).show();
                     break;
+
+                case READER_ERROR:
+                    str=getResources().getString(R.string.READER_ERROR);
+                    soundcode =7;
+                    break;
+                case General_Error:
+                    str=getResources().getString(R.string.General_Errr);
+                    soundcode =7;
+                    break;
                 default:
+                    str=getResources().getString(R.string.Error);// Toast.makeText(this,"ACCESS DENIED",Toast.LENGTH_LONG).show();
+                   // ErrorMessage.setText(str);
+                   // txttick.setText("\u2715");
+                    soundcode =7;
+                    break;
 
             }
 
 
         SoundIt(soundcode);
+        ErrorMessage.setText(str);
 
+      //  popup( NameDisplay, requiredDate, requiredTime,  str, false,Elsmart);
 
     }
 
@@ -1641,4 +1820,218 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     }
 
 
+
+
+
+
+    public Integer WriteLog(String badgeno,String name,String s,Integer empID)//////CHANGE INTO COMMON FUNCTION LATTER
+    {
+        int res =0;
+        try {
+
+            database=db.getWritableDatabase();
+            database.execSQL("INSERT INTO tblLogs(date,time,BadgeNo,Name,Ter,direction,empid)VALUES('"+requiredDate+"','"+requiredTime+"','"+badgeno+"','"+txtfullname.getText()+"' ,'"+compara.termo+"','"+s+"' ,"+empID+")" );
+            res=1;
+        }
+        catch (Exception ex) {
+            res=0;
+            Log.d(TAG, ex.getMessage());
+        }
+        return res;
+    }
+
+    public Integer WriteMACAddress()//////CHANGE INTO COMMON FUNCTION LATTER
+    {
+        int res =0;
+        try {
+
+            database=db.getWritableDatabase();
+            database.execSQL("INSERT INTO Device(MacId,Name)VALUES('"+mDevice.getAddress()+"','"+mDevice.getName()+"')" );
+            res=1;
+        }
+        catch (Exception ex) {
+            res=0;
+            Log.d(TAG, ex.getMessage());
+        }
+        return res;
+    }
+
+
+
+
+
+
+    public Integer ReadSysSetting()//////CHANGE INTO COMMON FUNCTION LATTER
+    {
+        int res =0;
+        try {
+            database = db.getReadableDatabase();
+            Cursor cursor = database.rawQuery("SELECT * FROM  system_setting", null);
+            if (cursor.moveToFirst()) {
+                do {
+                    VisibleMode =   Integer.valueOf(cursor.getString(cursor.getColumnIndex("Debug")));
+                    AutoPunch= Integer.valueOf( cursor.getString(cursor.getColumnIndex("AutoPunch")));
+                    Biometric= Integer.valueOf( cursor.getString(cursor.getColumnIndex("Biometric")));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            res=1;
+        }
+        catch (Exception ex) {
+            res=0;
+            Log.d(TAG, ex.getMessage());
+        }
+        return res;
+    }
+
+
+
+    public Integer ReadMACValue(String MacID)//////CHANGE INTO COMMON FUNCTION LATTER
+    {
+        String MacValue="";
+        int res =0;
+        try {
+            database = db.getReadableDatabase();
+            Cursor cursor = database.rawQuery("SELECT * FROM  Device", null);
+            if (cursor.moveToFirst()) {
+                do {
+                    MacValue =   cursor.getString(cursor.getColumnIndex("MacId"));
+                    if(MacValue.equals(MacID))
+                        res++;
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }
+        catch (Exception ex) {
+            res=-1;
+            Log.d(TAG, ex.getMessage());
+        }
+        return res;
+    }
+
+
+
+
+
+
+
+
+    public void popup(String name,String formattedDate,String formattedDate2, String punchtype,boolean value,int Elsmart)
+    {
+        ImageView iv;
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+
+        // Inflate the custom layout/view
+        View customView = inflater.inflate(R.layout.custom_layout,null);
+
+                /*
+                    public PopupWindow (View contentView, int width, int height)
+                        Create a new non focusable popup window which can display the contentView.
+                        The dimension of the window must be passed to this constructor.
+
+                        The popup does not provide any background. This should be handled by
+                        the content view.
+
+                    Parameters
+                        contentView : the popup's content
+                        width : the popup's width
+                        height : the popup's height
+                */
+
+        txtname = (TextView) customView.findViewById(R.id.txtname1);
+        txtdatetime =(TextView)  customView.findViewById(R.id.txtdatetime);
+        txttime =(TextView)  customView.findViewById(R.id.txttime);
+        txtmessagecode =(TextView)  customView.findViewById(R.id.txtmessagecode);
+    //    txttick =(TextView) customView.findViewById(R.id.txttick);
+        iv = (ImageView)customView.findViewById(R.id.idimgvwin);
+
+
+
+        ImageButton closeButton = (ImageButton) customView.findViewById(R.id.ib_close);
+        // Initialize a new instance of popup window
+        mPopupWindow = new PopupWindow(
+                customView,
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                Toolbar.LayoutParams.WRAP_CONTENT
+        );
+
+        // Set an elevation value for popup window
+        // Call requires API level 21
+        if(Build.VERSION.SDK_INT>=21){
+            mPopupWindow.setElevation(5.0f);
+        }
+
+        // Get a reference for the custom view close button
+
+        txtname.setText(name);
+        txtdatetime.setText(formattedDate);
+        txttime.setText(formattedDate2);
+        if(Elsmart==1) {
+            if (punchtype.equals("IN"))
+                iv.setImageResource(R.drawable.in);
+            else
+                iv.setImageResource(R.drawable.out);
+        }
+        else
+            iv.setImageResource(R.drawable.inn);
+        txtmessagecode.setText(punchtype);
+        txtdatetime.setTextColor(Color.BLUE);
+        txttime.setTextColor(Color.BLUE);
+        txtname.setTextColor(Color.BLUE);
+
+
+        if(value) {
+
+            txtmessagecode.setTextColor(Color.BLUE);
+            //  txttick.setText("\u2713");
+            // txttick.setTextColor(Color.GREEN);
+
+                txtmessagecode.setText("Successfully");
+        }
+            else {
+           // txttick.setText("\u2715");
+           // txttick.setTextColor(Color.RED);
+            txtmessagecode.setTextColor(Color.RED);
+            iv.setImageResource(R.drawable.cross);
+            txtmessagecode.setText(punchtype);
+        }
+
+        mPopupWindow.setTouchable(true);
+        mPopupWindow.setFocusable(true);
+        // Set a click listener for the popup window close button
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Dismiss the popup window
+                txtname.setText("");
+                txtdatetime.setText("");
+                txttime.setText("");
+
+                txtmessagecode.setText("");
+
+              //  txttick.setText("");
+
+                mPopupWindow.dismiss();
+            }
+        });
+
+                /*
+                    public void showAtLocation (View parent, int gravity, int x, int y)
+                        Display the content view in a popup window at the specified location. If the
+                        popup window cannot fit on screen, it will be clipped.
+                        Learn WindowManager.LayoutParams for more information on how gravity and the x
+                        and y parameters are related. Specifying a gravity of NO_GRAVITY is similar
+                        to specifying Gravity.LEFT | Gravity.TOP.
+
+                    Parameters
+                        parent : a parent view to get the getWindowToken() token from
+                        gravity : the gravity which controls the placement of the popup window
+                        x : the popup's x location offset
+                        y : the popup's y location offset
+                */
+        // Finally, show the popup window at the center location of root relative layout
+        mPopupWindow.showAtLocation(mRelativeLayout, Gravity.CENTER,0,0);
+
+
+    }
 }

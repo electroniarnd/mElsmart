@@ -6,6 +6,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -15,6 +17,7 @@ import android.os.Vibrator;
 import android.provider.SyncStateContract;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
@@ -26,15 +29,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONObject;
-
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -60,7 +54,7 @@ import java.util.HashMap;
 import java.util.Locale;
 
 public class RegistrationActivity extends ActionBarActivity {
-
+    public static final String TAG = "Elsmart";
     private EditText edtMessage;
     private EditText edtURL;
     private TextView txtImei,txttitle,txtdept,txtcardvalidfrom,txtcardiisuedfrom,txtcardexpired;
@@ -73,6 +67,7 @@ public class RegistrationActivity extends ActionBarActivity {
     private static  int Vibrationmode = 0;
     Context context;
     private static final String fileRegistrationVerify = "BadgeIMEI.txt";
+    private static final String  FileMacAddress="Mac.txt";
     private static final String Datafile = "mytextfile.txt";
     final String model = Build.MODEL;
     final String serial = Build.SERIAL;
@@ -81,6 +76,8 @@ public class RegistrationActivity extends ActionBarActivity {
     private static String EMPLOYEE_SERVICE_URI;// = "http://93.95.24.25/EmployeService/Service1.svc/GetEmployee/?key=1";
     private static String EMPLOYEE_SERVICE_UR2 = "http://212.12.167.242:6003/Service1.svc";
     private static String EMPLOYEE_SERVICE_URI1;
+    Controllerdb db =new Controllerdb(this);
+    SQLiteDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,12 +103,16 @@ public class RegistrationActivity extends ActionBarActivity {
          //EMPLOYEE_SERVICE_URI = "http://93.95.24.25/Emobile/Service1.svc";
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        if(ReadSysSetting()==0)//check System Setting
+            Toast.makeText(this,"Error in Reading setting Table" , Toast.LENGTH_LONG).show();//check_Setting();
         try {
             String s = "";
             StrictMode.setThreadPolicy(policy);
             txtunregistered.setText("");
             addListenerOnButton();
             DispalyData();
+
+
         }
         catch(Exception e){
             Toast.makeText(RegistrationActivity.this, "Registration Display Error",
@@ -127,6 +128,7 @@ public class RegistrationActivity extends ActionBarActivity {
 
 
                 try {
+                    if( Vibrationmode==1 )
                     shakeIt(1, MainActivity.myVirator.sclick);
                     if (checkCondition()) {
                         return;
@@ -149,6 +151,7 @@ public class RegistrationActivity extends ActionBarActivity {
                                 public void onClick(DialogInterface dialog, int which) {
                                     try {
                                         if (connectionurl()  && connectionurlSecData()  ) {
+                                            if( Vibrationmode==1 )
                                             shakeIt(1, MainActivity.myVirator.sclick);
 
 
@@ -239,6 +242,7 @@ public class RegistrationActivity extends ActionBarActivity {
             public void onClick(View v) {
 
                 try {
+                    if( Vibrationmode==1 )
                     shakeIt(1, MainActivity.myVirator.sclick);
 
                     if (checkCondition()) {
@@ -927,6 +931,30 @@ public class RegistrationActivity extends ActionBarActivity {
         }
         return  s;
     }
+
+
+    public Integer ReadSysSetting()//////CHANGE INTO COMMON FUNCTION LATTER
+    {
+        int res =0;
+        try {
+            database = db.getReadableDatabase();
+            Cursor cursor = database.rawQuery("SELECT * FROM  system_setting", null);
+            if (cursor.moveToFirst()) {
+                do {
+                    Vibrationmode =  Integer.valueOf( cursor.getString(cursor.getColumnIndex("Vibration")));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            res=1;
+        }
+        catch (Exception ex) {
+            res=0;
+            Log.d(TAG, ex.getMessage());
+        }
+        return res;
+    }
+
+
 
 }
 

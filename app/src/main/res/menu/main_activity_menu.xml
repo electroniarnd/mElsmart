@@ -14,18 +14,21 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/Record_id"
+        android:title="@string/Logs"
+        app:showAsAction="never"
+       />
+    <item
+        android:id="@+id/Setting_id"
+        android:title="Settings"
+        app:showAsAction="never"
+        />
 
     <item
-        android:id="@+id/Debug_id"
-        android:orderInCategory="100"
-        android:title="@string/DebugValue"
-
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/Vibration_id"
-        android:orderInCategory="100"
-        android:title="@string/VibrationValue"
-
-        app:showAsAction="never" />
+        android:id="@+id/Device_id"
+        android:title="Registered Terminal"
+        app:showAsAction="never"
+        />
 
 </menu>

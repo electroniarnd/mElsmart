@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.nordicsemi.nrfUARTv2.setting"
+    tools:layout_editor_absoluteY="81dp">
+
+
+    <Switch
+        android:id="@+id/AutoPunchSwitch"
+        android:layout_width="0dp"
+        android:layout_height="33dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="14dp"
+        android:layout_marginTop="16dp"
+        android:checked="false"
+        android:gravity="left"
+        android:textOff="OFF"
+        android:textOn="ON"
+        app:layout_constraintBottom_toTopOf="@+id/VibrationSwitch"
+        app:layout_constraintEnd_toEndOf="@+id/VibrationSwitch"
+        app:layout_constraintStart_toStartOf="@+id/VibrationSwitch"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Switch
+        android:id="@+id/VibrationSwitch"
+        android:layout_width="0dp"
+        android:layout_height="33dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="58dp"
+        android:layout_marginTop="63dp"
+        android:checked="false"
+        android:textOff="OFF"
+        android:textOn="ON"
+        app:layout_constraintBottom_toBottomOf="@+id/BiometricSwich"
+        app:layout_constraintEnd_toEndOf="@+id/BiometricSwich"
+        app:layout_constraintStart_toStartOf="@+id/BiometricSwich"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Switch
+        android:id="@+id/BiometricSwich1"
+        android:layout_width="0dp"
+        android:layout_height="33dp"
+        android:layout_gravity="center"
+        android:layout_marginEnd="2dp"
+        android:layout_marginTop="19dp"
+        android:checked="false"
+        android:gravity="left"
+        android:textOff="OFF"
+        android:textOn="ON"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/BiometricSwich" />
+
+
+    <Switch
+        android:id="@+id/BiometricSwich"
+        android:layout_width="0dp"
+        android:layout_height="33dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="121dp"
+        android:checked="false"
+        android:gravity="left"
+        android:textOff="OFF"
+        android:textOn="ON"
+        app:layout_constraintEnd_toEndOf="@+id/BiometricSwich1"
+        app:layout_constraintStart_toStartOf="@+id/BiometricSwich1"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="0dp"
+        android:layout_height="19dp"
+        android:layout_marginBottom="28dp"
+        android:layout_marginEnd="7dp"
+        android:layout_marginTop="16dp"
+        android:text="Auto Punch"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/textView9"
+        app:layout_constraintEnd_toEndOf="@+id/textView9"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="76dp"
+        android:layout_height="29dp"
+        android:layout_marginBottom="58dp"
+        android:layout_marginTop="55dp"
+        android:text="Vibration"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/txtBiometric"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline7"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="0dp"
+        android:layout_height="23dp"
+        android:layout_marginEnd="3dp"
+        android:layout_marginTop="21dp"
+        android:text="Biometric"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/txtBiometric"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtBiometric" />
+
+    <TextView
+        android:id="@+id/txtBiometric"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginBottom="11dp"
+        android:layout_marginTop="4dp"
+        android:text="Biometric"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/BiometricSwich1"
+        app:layout_constraintEnd_toEndOf="@+id/textView9"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/BiometricSwich"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="0dp" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="20dp" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:tag="1"
+        app:layout_constraintGuide_begin="20dp" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="20dp" />
+
+
+</android.support.constraint.ConstraintLayout>

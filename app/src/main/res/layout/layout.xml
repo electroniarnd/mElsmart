@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:stretchColumns="*"
     >
+
     <TableRow
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -12,34 +13,53 @@
 
         <TextView
             android:id="@+id/tvid"
-            android:layout_width="30dp"
-            android:layout_column="0"
+
+            android:layout_height="match_parent"
+
             android:layout_span="1"
             android:gravity="left"
+            android:padding="5sp"></TextView>
+
+
+
+
+        <TextView
+            android:id="@+id/date1"
+
+            android:gravity="left"
             android:padding="10sp"></TextView>
-        <TextView
-            android:id="@+id/tvname"
-            android:layout_column="1"
-            android:padding="10sp"
-            android:gravity="left"
-            >
-        </TextView>
 
         <TextView
-            android:id="@+id/tvmailid"
-            android:layout_column="2"
-            android:padding="10sp"
+            android:id="@+id/time1"
+
+
             android:gravity="left"
-            >
-        </TextView>
+            android:padding="10sp" ></TextView>
 
         <TextView
-            android:id="@+id/tvage"
-            android:layout_column="3"
-            android:padding="10sp"
+            android:id="@+id/terid"
+
+
             android:gravity="left"
-            >
-        </TextView>
+            android:padding="10sp"></TextView>
+
+        <TextView
+            android:id="@+id/dir"
+
+
+            android:gravity="left"
+            android:padding="10sp"
+           ></TextView>
+
+        <TextView
+            android:id="@+id/badgeno"
+
+            android:gravity="left"
+
+            android:padding="10sp">
+            ></TextView>
+
+
     </TableRow>
 
 

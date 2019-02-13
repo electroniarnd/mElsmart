@@ -22,9 +22,9 @@
 <resources>
 
     <string name="app_name">mElsmart</string>
-    <string name="device">Device:</string>
-    <string name="no_device">&lt;Select a device&gt;</string>
-    <string name="select_device">Select a device</string>
+    <string name="device">Device</string>
+    <string name="no_device">Connect a device</string>
+    <string name="select_device">Connect a device</string>
     <string name="status">Status</string>
     <string name="llsWrite">LinkLossAlert</string>
     <string name="iasWrite">ImmediateAlert</string>
@@ -112,13 +112,20 @@
     <string name="BIO_FAIL">BIO FAIL</string>
     <string name="DURESS_CODE">DURESS CODE</string>
     <string name="ACCESS_SCHEDULE">ACCESS SCHEDULE</string>
-    <string name="FREE12">FREE12</string>
-    <string name="FREE13">FREE13</string>
+    <string name="FLASH_WRITE_FAIL">FLASH WRITE FAIL</string>
+    <string name="BIO_DEVICE_ERR">BIO DEVICE ERR</string>
     <string name="ACCESS_SCORT">ACCESS SCORT</string>
 
 
-    <string name="CARDTWING">CARDTWING</string>
+    <string name="CARDTWING">CARD TWING</string>
+    <string name="SYSTEM_HALTED">SYSTEM HALTED</string>
+    <string name="FPTIMEOUTERROR">FPTIME OUT ERROR</string>
+    <string name="NOTSUPPORTED">NOT SUPPORTED</string>
+    <string name="NOTENROLLED">NOT ENROLLED</string>
+    <string name="NOFINGERDETECT">NO FINGER DETECT</string>
+    <string name="READER_ERROR">AREADER ERROR</string>
     <string name="OK">OK</string>
+
     <string name="Bluetooth_has_turned_on">Bluetooth has turned on </string>
     <string name="connecting"> - connecting</string>
     <string name="Registration_data_file_does_not_exist">Registration data file does not exist</string>
@@ -188,6 +195,81 @@
     <string name="Re_Register_for_Elsmart_System">Need to be Re-Register for Elsmart System</string>
     <string name="Secondary_Data_added_successfully">Secondary Data added successfully</string>
     <string name="title_activity_records">Records</string>
+    <string name="Logs">Logs</string>
+    <string name="AutoPunch">Auto Punch</string>
+
+    <string name="title_activity_record_logs">recordLogs</string>
+    <string name="title_activity_setting">Setting</string>
+    <string name="title_activity_device">Device</string>
+    <string name="title_activity_biometric">mElsmart</string>
+
+
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_fingerprint">One-touch Sign In</string>
+    <string name="desc_fingerprint"></string>
+    <string name="note">Your device should have at least one fingerprint registered in device settings</string>
+    <string name="title_activity_home">mElsmart</string>
+    <string name="activity_home_desc">You have successfully logged in with fingerprint authentication</string>
+    <string name="activity_home_note">Close and re-open the app to see the fingerprint auth screen again</string>
+    <string name="title_activity_barcode_capture">BarcodeCapture</string>
+    <string name="title_activity_barcodemain">barcodemain</string>
+
+    <string name="ok">OK</string>
+    <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
+    <string name="no_camera_permission">This application cannot run because it does not have the camera permission.  The application will now exit.</string>
+    <string name="low_storage_error">Face detector dependencies cannot be downloaded due to low device storage</string>
+    <string name="title_activity_barcodecaptureactivity">barcodecaptureactivity</string>
+
+    <string name="emp_name">Name</string>
+    <string name="Punch_Date">Punch Date</string>
+    <string name="Punch_Time">Punch Time</string>
+    <string name="Last_Punch">Last Punch</string>
+
+
+    <string name="Settings">Settings</string>
+    <string name="Registered_Terminal">Registered Terminal</string>
+    <string name="Cust_Mismatch">Customer Mismatch</string>
+    <string name="General_Errr">General Error</string>
+
+
+
+
+
+
+
+
+    <string name="Upload">Upload</string>
+
+
+
+    <string name="Complete">Complete</string>
+
+    <string name="IndeterminateProgressSample">Indeterminate Progress Sample</string>
+
+    <string name="IntegerProgressSample">Integer Progress Sample</string>
+
+    <string name="StateChangeSample">State Change Sample</string>
+
+    <string name="ProgressPaddingSample">Progress Padding Sample</string>
+
+    <string name="CustomSelectorSample">Custom Selector Sample</string>
+
+
+    <array name="sample_list">
+
+        <item>@string/IndeterminateProgressSample</item>
+
+        <item>@string/IntegerProgressSample</item>
+
+        <item>@string/StateChangeSample</item>
+
+        <item>@string/ProgressPaddingSample</item>
+
+        <item>@string/CustomSelectorSample</item>
+
+    </array>
+
+
 
 
 </resources>

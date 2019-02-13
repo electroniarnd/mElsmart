@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rl_custom_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:padding="2dp">
+
+    <ImageButton
+        android:id="@+id/ib_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:background="@null"
+        android:src="@drawable/ic_action_name" />
+
+
+    <TextView
+        android:id="@+id/Name"
+        android:layout_width="100dp"
+        android:layout_height="25dp"
+        android:layout_margin="4dp"
+        android:layout_below="@+id/ib_close"
+        android:layout_marginStart="10dp"
+
+        android:gravity="start"
+        android:text="@string/emp_name"
+        android:textColor="#000000"
+        android:textDirection="anyRtl"
+        android:textSize="18sp" />
+
+
+    <TextView
+        android:id="@+id/datetime"
+        android:layout_width="100dp"
+        android:layout_height="25dp"
+        android:layout_below="@+id/Name"
+        android:layout_margin="4dp"
+        android:text="@string/Punch_Date"
+        android:textColor="#000000"
+        android:textDirection="anyRtl"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/punchTime"
+        android:layout_width="100dp"
+        android:layout_height="25dp"
+        android:layout_below="@+id/datetime"
+        android:layout_margin="4dp"
+        android:text="@string/Punch_Time"
+        android:textColor="#000000"
+        android:textDirection="anyRtl"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/punch"
+        android:layout_width="100dp"
+        android:layout_height="25dp"
+        android:layout_below="@+id/punchTime"
+        android:layout_margin="4dp"
+        android:text="@string/Last_Punch"
+        android:textColor="#000000"
+        android:textDirection="anyRtl"
+        android:textSize="18sp" />
+
+
+    <TextView
+        android:id="@+id/txtname1"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+
+
+        android:layout_alignBaseline="@+id/Name"
+        android:layout_alignBottom="@+id/Name"
+        android:layout_alignStart="@+id/txttime"
+        android:gravity="start"
+        android:textDirection="anyRtl"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/txttime"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:layout_alignBaseline="@+id/punchTime"
+        android:layout_alignBottom="@+id/datetime"
+        android:layout_alignStart="@+id/txtdatetime"
+        android:textDirection="anyRtl"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/txtdatetime"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:layout_below="@+id/txttime"
+        android:layout_margin="4dp"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/punchTime"
+        android:textDirection="anyRtl"
+        android:layout_alignBaseline="@+id/datetime"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/txtmessagecode"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:layout_alignBaseline="@+id/punch"
+        android:layout_alignBottom="@+id/punch"
+        android:layout_alignStart="@+id/txtdatetime"
+        android:textDirection="anyRtl"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:id="@+id/idimgvwin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/punch"
+
+        android:layout_marginTop="10dp"
+        android:foregroundGravity="center"
+        android:gravity="center_vertical"
+        app:srcCompat="@drawable/common_google_signin_btn_icon_dark_normal_background" />
+
+
+</RelativeLayout>

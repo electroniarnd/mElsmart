@@ -17,17 +17,29 @@ public class CustomAdapter extends BaseAdapter {
     Controllerdb controldb;
     SQLiteDatabase db;
     private ArrayList<String> Id = new ArrayList<String>();
-    private ArrayList<String> Name = new ArrayList<String>();
-    private ArrayList<String> MailId = new ArrayList<String>();
-    private ArrayList<String> Age = new ArrayList<String>();
-    public CustomAdapter(Context  context,ArrayList<String> Id,ArrayList<String> Name, ArrayList<String> MailId,ArrayList<String> Age
-    )
+    private ArrayList<String> date = new ArrayList<String>();
+    private ArrayList<String> time1 = new ArrayList<String>();
+  //  private ArrayList<String> Name = new ArrayList<String>();
+    private ArrayList<String> Ter = new ArrayList<String>();
+    private ArrayList<String> direction = new ArrayList<String>();
+    private ArrayList<String> badgeno = new ArrayList<String>();
+
+
+   // private ArrayList<String> empid = new ArrayList<String>();
+    public CustomAdapter(Context  context,ArrayList<String> Id, ArrayList<String> date,ArrayList<String> time
+            ,ArrayList<String> Ter ,ArrayList<String> direction,ArrayList<String> badgeno)
     {
         this.mContext = context;
         this.Id = Id;
-        this.Name = Name;
-        this.MailId = MailId;
-        this.Age=Age;
+     //   this.Name = Name;
+
+        this.date=date;
+        this.time1=time;
+        this.Ter=Ter;
+        this.direction=direction;
+
+        this.badgeno = badgeno;
+      //  this.empid=empid;
     }
     @Override
     public int getCount() {
@@ -51,23 +63,38 @@ public class CustomAdapter extends BaseAdapter {
             convertView = layoutInflater.inflate(R.layout.layout, null);
             holder = new viewHolder();
             holder.id = (TextView) convertView.findViewById(R.id.tvid);
-            holder.name = (TextView) convertView.findViewById(R.id.tvname);
-            holder.mail = (TextView) convertView.findViewById(R.id.tvmailid);
-            holder.age = (TextView) convertView.findViewById(R.id.tvage);
+           // holder.name = (TextView) convertView.findViewById(R.id.tvname);
+            holder.date = (TextView) convertView.findViewById(R.id.date1);
+            holder.time = (TextView) convertView.findViewById(R.id.time1);
+            holder.Ter = (TextView) convertView.findViewById(R.id.terid);
+          //  holder.empid = (TextView) convertView.findViewById(R.id.empid);
+            holder.direction = (TextView) convertView.findViewById(R.id.dir);
+            holder.badgeno = (TextView) convertView.findViewById(R.id.badgeno);
             convertView.setTag(holder);
         } else {
             holder = (viewHolder) convertView.getTag();
         }
         holder.id.setText(Id.get(position));
-        holder.name.setText(Name.get(position));
-        holder.mail.setText(MailId.get(position));
-        holder.age.setText(Age.get(position));
+       // holder.name.setText(Name.get(position));
+
+        holder.date.setText(date.get(position));
+        holder.time.setText(time1.get(position));
+        holder.Ter.setText(Ter.get(position));
+        //holder.empid.setText(empid.get(position));
+        holder.direction.setText(direction.get(position));
+        holder.badgeno.setText(badgeno.get(position));
         return convertView;
     }
     public class viewHolder {
         TextView id;
-        TextView name;
-        TextView mail;
-        TextView age;
+       // TextView name;
+
+        TextView date;
+        TextView time;
+        TextView Ter;
+       // TextView empid;
+        TextView direction;
+        TextView badgeno;
+
     }
 }
