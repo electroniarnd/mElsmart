@@ -41,7 +41,7 @@
     <string name="Readdummy">D Read</string>
     <string name="removeBond">Remove Bond</string>
     <string name="paired">مقترن</string>
-    <string name="popup_title">الخروج من (MElsmart)</string>
+    <string name="popup_title">الخروج من (mElSmart)</string>
     <string name="popup_message">هل تريد الخروج من هذا التطبيق؟</string>
     <string name="popup_yes">نعم</string>
     <string name="popup_no">لا</string>
@@ -52,22 +52,10 @@
     <string name="action_settings">عن</string>
     <string name="title_activity_registration">نشاط التسجيل</string>
     <string name="title_activity_about">عن النشاط</string>
-
+    <string name="Connected">-Connected</string>
     <string name="button_label_on">\u2713</string>
     <string name="button_label_off">مغلق</string>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    <string name="title_activity_tracking">Tracking</string>
     <string name="Invalid_IN_Out">دخول/خروج غير صحيح</string>
     <string name="Invalid_Door">باب غير صحيح</string>
     <string name="System_Locked">النظام مقفل</string>
@@ -106,7 +94,7 @@
     <string name="CARDTWING">CARDTWING</string>
     <string name="OK">حسناً</string>
     <string name="title_activity_setting">Setting</string>
-
+    <string name="title_activity_test">test</string>
 
 
 
@@ -210,7 +198,7 @@
 
     <string name="title_activity_device">جهاز</string>
     <string name="title_activity_barcode_capture">تم التقاط الباركود</string>
-    <string name="title_activity_barcodemain">barcodemain</string>
+    <string name="title_activity_barcodemain">Barcode</string>
     <string name="title_activity_barcodecaptureactivity">نشاط التقاط الباركود </string>
 
 
@@ -230,13 +218,16 @@
     <string name="Cust_Mismatch">Customer Mismatch</string>
     <string name="General_Errr">General Error</string>
 
-
-
-
-
+    <string name="title_alert_no_intenet">No internet</string>
+    <string name="msg_alert_no_internet">Please make sure that you have active internet connection.</string>
+    <string name="msg_location_service_started">Location Tracking Started</string>
+    <string name="settings">settings</string>
+    <string name="permission_denied_explanation">You have not granted location permission. So the service cannot be started.</string>
+    <string name="permission_rationale">Please grant location permission to start the service</string>
+    <string name="btn_label_refresh">Refresh</string>
     <string name="Upload">Upload</string>
 
-
+    <string name="no_google_playservice_available">No Google Playservice found. Please install it.</string>
 
     <string name="Complete">Complete</string>
 
@@ -251,6 +242,9 @@
     <string name="CustomSelectorSample">Custom Selector Sample</string>
 
 
+    <string name="title_activity_projects">Projects</string>
+    <string name="title_activity_task">Task</string>
+    <string name="title_activity_location_history">Location History</string>
     <array name="sample_list">
 
         <item>@string/IndeterminateProgressSample</item>
@@ -264,4 +258,29 @@
         <item>@string/CustomSelectorSample</item>
 
     </array>
+
+    <string-array name="spinner_task">
+        <item>Initiated</item>
+        <item>Started</item>
+        <item>Progress</item>
+        <item>Suspended</item>
+        <item>Resumed</item>
+        <item>Transfered</item>
+        <item>Finished</item>
+
+    </string-array>
+
+
+    <string name="title_activity_map_tracking">MapTracking</string>
+    <string name="title_activity_task__details">Task_Details</string>
+    <string name="title_activity_task_history">TaskHistory</string>
+    <string name="title_activity_task_on_map">TaskOnMap</string>
+    <string name="title_activity_markattendance">Mark Attendance</string>
+    <string name="title_activity_mainpage">Punch Type</string>
+    <string name="title_activity_registration_page">Registration</string>
+    <string name="geofence">GeoFence</string>
+    <string name="title_activity_setting_geo">settingGeo</string>
+    <string name="title_activity_setting__qr">setting_QR</string>
+    <string name="title_activity_geo__qr">Geofence With QR Code</string>
 </resources>
+

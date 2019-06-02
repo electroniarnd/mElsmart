@@ -240,11 +240,13 @@ public class DeviceListActivity extends Activity {
                         .build();
                 filters = new ArrayList<>();
 
-             //filters.add(new ScanFilter.Builder().setServiceUuid(new ParcelUuid(RX_SERVICE_UUIDESP32)).build());
-              filters.add(new ScanFilter.Builder().setServiceUuid(new ParcelUuid(RX_SERVICE_UUID)).build());
+           // filters.add(new ScanFilter.Builder().setServiceUuid(new ParcelUuid(RX_SERVICE_UUIDESP32)).build());
+          filters.add(new ScanFilter.Builder().setServiceUuid(new ParcelUuid(RX_SERVICE_UUID)).build());
              //   filters.add(new ScanFilter.Builder().setServiceUuid(new ParcelUuid( UUID.fromString("6E400002-B5A3-F393-E0A9-E50E24DCCA9E"))).build());
               //  filters.add(new ScanFilter.Builder().setServiceUuid(new ParcelUuid( UUID.fromString("6E400003-B5A3-F393-E0A9-E50E24DCCA9E"))).build());
                 filters.add( new ScanFilter.Builder().setDeviceAddress("24:0A:C4:AF:6B:FA").build());
+                filters.add( new ScanFilter.Builder().setDeviceAddress("3C:71:BF:D1:18:82").build());
+
             }
 
 
@@ -350,10 +352,6 @@ public class DeviceListActivity extends Activity {
         if (!deviceFound) {
         	deviceList.add(device);
             mEmptyList.setVisibility(View.GONE);
-
-
-
-            
             deviceAdapter.notifyDataSetChanged();
         }
     }

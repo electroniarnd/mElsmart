@@ -27,8 +27,6 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
 public class biometric extends Activity {
-
-
     private TextView message;
     private static final String KEY_NAME = "SwA";
     public static final String TAG = "FingerPrintActivity";
@@ -42,15 +40,9 @@ public class biometric extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_biometric);
-
         Integer res=0;
-
-
         mHandler = new Handler();
-        // Use this check to determine
-
-
-
+        // Use this check to determin
         message = (TextView) findViewById(R.id.errorText);
         // Button btn = (Button) findViewById(R.id.authBtn);
 
@@ -75,9 +67,6 @@ public class biometric extends Activity {
                 //
             }
         }
-
-
-
     }
 
 

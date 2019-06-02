@@ -31,7 +31,7 @@ public class setting extends AppCompatActivity {
     public static final String TAG = "ElSmart";
 
 
-;
+
     private FingerprintManager fingerprintManager;
 
 

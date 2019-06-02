@@ -5,30 +5,75 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    tools:context="com.nordicsemi.nrfUARTv2.AboutActivity">
+    tools:context="com.nordicsemi.nrfUARTv2.AboutActivity"
+    tools:layout_editor_absoluteY="81dp">
 
     <TextView
         android:id="@+id/txtabout"
-        android:layout_width="94dp"
-        android:layout_height="33dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="34dp"
+        android:layout_width="100dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="24dp"
+        android:width="@dimen/activity_horizontal_margin"
         android:text="Version:"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/textView2"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView2"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="190dp"
-        android:layout_height="44dp"
-        android:layout_marginRight="48dp"
-        android:layout_marginTop="34dp"
-        android:text="mElsmart 1.8"
+        android:layout_height="0dp"
+        android:layout_marginBottom="142dp"
+        android:layout_marginRight="16dp"
+        android:text="mElsmart 2.0"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtcontactus"
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintTop_creator="1" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="384dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="28dp"
+        app:layout_constraintBottom_toTopOf="@+id/txtcontact"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo" />
+
+    <TextView
+        android:id="@+id/txtcontact"
+        android:layout_width="87dp"
+        android:layout_height="30dp"
+        android:layout_marginBottom="26dp"
+        android:layout_marginLeft="16dp"
+        android:text="Contact Us"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/txtcontactus"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+    <TextView
+        android:id="@+id/txtcontactus"
+        android:layout_width="wrap_content"
+        android:layout_height="173dp"
+        android:layout_marginBottom="31dp"
+        android:layout_marginLeft="16dp"
+        android:text="Husain Building
+King Abdul Aziz Street \n
+P.O. Box 180, Al-Khobar 31952 \n
+Kingdom of Saudi Arabia \n
+Phone:+966 13 894 4216 |  Fax:+966 13 894 9991 \n
+info@electronia.com | sales@electronia.com"
+        app:layout_constraintBottom_toTopOf="@+id/textView2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtcontact" />
+
 </android.support.constraint.ConstraintLayout>

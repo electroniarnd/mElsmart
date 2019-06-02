@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/txtPlace"
+        android:layout_width="@android:dimen/thumbnail_width"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="Marshmallow"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@android:color/black" />
+
+
+    <TextView
+        android:id="@+id/txtStatusTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/txtPlace"
+        android:text="Status:"
+        android:textColor="?android:attr/colorFocusedHighlight" />
+
+
+    <TextView
+        android:id="@+id/txtBadgeNoTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/txtDatetimeTask"
+        android:layout_below="@+id/txtDatetimeTask"
+        android:text="BadgeNo"
+        android:textColor="?android:attr/colorFocusedHighlight" />
+
+
+    <TextView
+        android:id="@+id/txtDatetimeTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/txtPlace"
+        android:layout_alignBottom="@+id/txtPlace"
+        android:layout_alignParentEnd="true"
+
+        android:text="DateTime"
+        android:textColor="@android:color/black" />
+
+</RelativeLayout>

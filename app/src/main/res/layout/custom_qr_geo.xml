@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_custom_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:padding="2dp">
+
+    <ImageButton
+        android:id="@+id/ib_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:background="@null"
+        android:src="@drawable/ic_close_black_24dp" android:contentDescription="TODO" />
+
+    <TextView
+        android:id="@+id/txtBageNot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/ib_close"
+        android:layout_marginStart="16dp"
+        android:text="Badge No"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/txtBadgeNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/txtBageNot"
+        android:layout_marginStart="38dp"
+        android:layout_toEndOf="@+id/txtBageNot"
+        android:textColor="@color/Green" />
+
+    <TextView
+        android:id="@+id/txtPunchDatet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/txtBageNot"
+        android:layout_below="@+id/txtBageNot"
+        android:layout_marginTop="19dp"
+        android:text="Punch Date"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/txtPunchDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/txtPunchDatet"
+        android:layout_alignStart="@+id/txtBadgeNo"
+        android:textColor="@color/Green" />
+
+    <TextView
+        android:id="@+id/txtpunchtimet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/txtPunchDatet"
+        android:layout_below="@+id/txtPunchDatet"
+        android:layout_marginTop="18dp"
+        android:text="PunchTime"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/txtPunchTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/txtpunchtimet"
+        android:layout_alignStart="@+id/txtPunchDate"
+        android:textColor="@color/Green" />
+
+    <TextView
+        android:id="@+id/txtlastpuncgt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/txtpunchtimet"
+        android:layout_below="@+id/txtpunchtimet"
+        android:layout_marginTop="22dp"
+        android:text="Last Punch"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/txtLastPunch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/txtlastpuncgt"
+        android:layout_alignStart="@+id/txtPunchTime"
+        android:textColor="@color/Green" />
+
+    <TextView
+        android:id="@+id/txtnamet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/txtlastpuncgt"
+        android:layout_below="@+id/txtlastpuncgt"
+        android:layout_marginTop="18dp"
+        android:text="@string/geofence"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/txtLogStatust"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/txtnamet"
+        android:layout_below="@+id/txtnamet"
+        android:layout_marginTop="18dp"
+        android:text="Log Status"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/txtGeoname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/txtnamet"
+        android:layout_alignBottom="@+id/txtnamet"
+
+        android:layout_alignStart="@+id/txtLastPunch"
+        android:textColor="@color/Green" />
+
+    <TextView
+        android:id="@+id/txtLogStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+
+        android:layout_alignBottom="@+id/txtLogStatust"
+        android:layout_alignStart="@+id/txtGeoname"
+        android:textColor="@color/Green" />
+
+    <TextView
+        android:id="@+id/lblQRCodeName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/txtLogStatust"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="18dp"
+        android:text="QRCode Name"
+        android:textColor="@color/black"
+        android:layout_below="@+id/txtLogStatust"/>
+
+    <TextView
+        android:id="@+id/txtQRCodeName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/lblQRCodeName"
+        android:layout_alignBottom="@+id/lblQRCodeName"
+        android:layout_alignStart="@+id/txtLogStatus"
+        android:textColor="@color/Green"
+        android:layout_below="@+id/txtLogStatus"/>
+
+    />
+
+</RelativeLayout>

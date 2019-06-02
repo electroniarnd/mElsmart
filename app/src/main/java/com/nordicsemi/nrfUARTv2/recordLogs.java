@@ -30,10 +30,11 @@ public class recordLogs extends AppCompatActivity {
     SQLiteDatabase db;
     private ArrayList<String> Id = new ArrayList<String>();
     private ArrayList<String> date = new ArrayList<String>();
-    private ArrayList<String> BadgeNo = new ArrayList<String>();
+ //   private ArrayList<String> BadgeNo = new ArrayList<String>();
     private ArrayList<String> Ter = new ArrayList<String>();
     private ArrayList<String> direction = new ArrayList<String>();
     private ArrayList<String> time = new ArrayList<String>();
+    private ArrayList<String> name = new ArrayList<String>();
     ListView lv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +58,11 @@ public class recordLogs extends AppCompatActivity {
         Cursor cursor = db.rawQuery("SELECT * FROM  tblLogs  order by Id desc LIMIT 120",null);
         Id.clear();
         date.clear();
-        BadgeNo.clear();
+       // BadgeNo.clear();
      //   Name.clear();
         Ter.clear();
         time.clear();
-
+        name.clear();
       //  empid.clear();
         direction.clear();
         if (cursor.moveToFirst()) {
@@ -71,15 +72,18 @@ public class recordLogs extends AppCompatActivity {
                 time.add(cursor.getString(cursor.getColumnIndex("time")));
 
               //  Name.add(cursor.getString(cursor.getColumnIndex("Name")));
-                Ter.add(cursor.getString(cursor.getColumnIndex("Ter")));
+                Ter.add(cursor.getString(cursor.getColumnIndex("PunchType")));
                 //empid.add(cursor.getString(cursor.getColumnIndex("empid")));
-                direction.add(cursor.getString(cursor.getColumnIndex("direction")));
-                BadgeNo.add(cursor.getString(cursor.getColumnIndex("BadgeNo")));
-
+                if(cursor.getString(cursor.getColumnIndex("direction")).equals("0"))
+                direction.add("IN");
+                else
+                    direction.add("OUT");
+              //  BadgeNo.add(cursor.getString(cursor.getColumnIndex("BadgeNo")));
+                name.add(cursor.getString(cursor.getColumnIndex("Ter")));
 
             } while (cursor.moveToNext());
         }
-        CustomAdapter ca = new CustomAdapter(recordLogs.this,Id, date,time,Ter,direction,BadgeNo);
+        CustomAdapter ca = new CustomAdapter(recordLogs.this,Id, date,time,Ter,direction,name);
         lv.setAdapter(ca);
         //code to set adapter to populate list
         cursor.close();

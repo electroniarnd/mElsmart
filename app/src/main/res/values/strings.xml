@@ -21,7 +21,7 @@
   -->
 <resources>
 
-    <string name="app_name">mElsmart</string>
+    <string name="app_name">mElSmart</string>
     <string name="device">Device</string>
     <string name="no_device">Connect a device</string>
     <string name="select_device">Connect a device</string>
@@ -61,7 +61,7 @@
     <string name="Readdummy">D Read</string>
     <string name="removeBond">Remove Bond</string>
     <string name="paired">paired</string>
-    <string name="popup_title">Quit MElsmart</string>
+    <string name="popup_title">Quit mElSmart</string>
     <string name="popup_message">Do you want to quit this Application?</string>
     <string name="popup_yes">YES</string>
     <string name="popup_no">NO</string>
@@ -81,7 +81,7 @@
     <string name="Invalid_Door">Invalid Door</string>
     <string name="System_Locked">System_Locked</string>
     <string name="Exit_Entry_Missed">Exit_Entry_Missed</string>
-    <string name="Card_Expired">Card_Expired</string>
+    <string name="Card_Expired">Expiry Date</string>
     <string name="CardType1">CardType1</string>
     <string name="CardType2">CardType2</string>
     <string name="BlackListed_Card">BlackListed Card</string>
@@ -89,7 +89,7 @@
     <string name="READER_ERROR_CLEAR">READER ERROR CLEAR</string>
     <string name="DOOR_KEPT_OPEN_ALARM">DOOR KEPT OPEN ALARM</string>
     <string name="DOOR_FORCED_OPEN_ALARM">DOOR FORCED OPEN ALARM</string>
-
+    <string name="no_google_playservice_available">No Google Playservice found. Please install it.</string>
 
     <string name="EPB_ALARM">EPB ALARM</string>
     <string name="EMBU_ALARM">EMBU ALARM</string>
@@ -148,7 +148,7 @@
     <string name="Registered">Registered</string>
     <string name="UnRegistered">UnRegistered</string>
     <string name="Confirm">Confirm</string>
-
+    <string name="Connected">-Connected</string>
 
     <string name="Are_you_sure_to_do_Registration_Again">Are you sure to do Registration Again?</string>
     <string name="File_write_failed">File write failed:</string>
@@ -163,7 +163,7 @@
     <string name="contains_illegal_character_for_hexBinary">contains illegal character for hexBinary:</string>
 
 
-    <string name="BadgeNo">BadgeNo</string>
+    <string name="BadgeNo">Badge ID</string>
     <string name="IMEI">IMEI</string>
     <string name="Lenght_of_file">Lenght of file:</string>
     <string name="download">download</string>
@@ -185,8 +185,8 @@
     <string name="Status">Status</string>
     <string name="Title">Title</string>
     <string name="Department">Department</string>
-    <string name="Card_Valid_From">Card Valid From</string>
-    <string name="Card_Issued_From">Card Isued From</string>
+    <string name="Card_Valid_From">Valid From</string>
+    <string name="Card_Issued_From">Issued From</string>
     <string name="System">System</string>
     <string name="Service_URL">Service URL</string>
     <string name="Registration">Registration</string>
@@ -201,24 +201,24 @@
     <string name="title_activity_record_logs">recordLogs</string>
     <string name="title_activity_setting">Setting</string>
     <string name="title_activity_device">Device</string>
-    <string name="title_activity_biometric">mElsmart</string>
+    <string name="title_activity_biometric">mElSmart</string>
 
 
     <string name="title_activity_main">MainActivity</string>
     <string name="title_fingerprint">One-touch Sign In</string>
     <string name="desc_fingerprint"></string>
     <string name="note">Your device should have at least one fingerprint registered in device settings</string>
-    <string name="title_activity_home">mElsmart</string>
+    <string name="title_activity_home">mElSmart</string>
     <string name="activity_home_desc">You have successfully logged in with fingerprint authentication</string>
     <string name="activity_home_note">Close and re-open the app to see the fingerprint auth screen again</string>
     <string name="title_activity_barcode_capture">BarcodeCapture</string>
-    <string name="title_activity_barcodemain">barcodemain</string>
+    <string name="title_activity_barcodemain">Barcode</string>
 
     <string name="ok">OK</string>
     <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
     <string name="no_camera_permission">This application cannot run because it does not have the camera permission.  The application will now exit.</string>
     <string name="low_storage_error">Face detector dependencies cannot be downloaded due to low device storage</string>
-    <string name="title_activity_barcodecaptureactivity">barcodecaptureactivity</string>
+    <string name="title_activity_barcodecaptureactivity">Barcode Capture Activity</string>
 
     <string name="emp_name">Name</string>
     <string name="Punch_Date">Punch Date</string>
@@ -232,14 +232,7 @@
     <string name="General_Errr">General Error</string>
 
 
-
-
-
-
-
-
     <string name="Upload">Upload</string>
-
 
 
     <string name="Complete">Complete</string>
@@ -268,8 +261,38 @@
         <item>@string/CustomSelectorSample</item>
 
     </array>
+    <string name="title_activity_tracking">Tracking</string>
+    <string name="title_activity_projects">Projects</string>
+    <string name="title_activity_task">Task</string>
+    <string name="title_activity_location_history">Location History</string>
+    <string name="title_activity_test">test</string>
+    <string name="msg_location_service_started">Location Tracking Started</string>
+    <string name="permission_rationale">Please grant location permission to start the service</string>
+    <string name="title_alert_no_intenet">No internet</string>
+    <string name="msg_alert_no_internet">Please make sure that you have active internet connection.</string>
+    <string name="settings">settings</string>
+    <string name="btn_label_refresh">Refresh</string>
+    <string name="permission_denied_explanation">You have not granted location permission. So the service cannot be started.</string>
+    <string name="title_activity_map_tracking">Map Tracking</string>
+    <string name="title_activity_task__details">Task Details</string>
+    <string name="title_activity_task_history">Task History</string>
+    <string name="title_activity_task_on_map">Task On Map</string>
 
 
-
-
+    <string-array name="spinner_task">
+        <item>Initiated</item>
+        <item>Started</item>
+        <item>Progress</item>
+        <item>Suspended</item>
+        <item>Resumed</item>
+        <item>Transfered</item>
+        <item>Finished</item>
+    </string-array>
+    <string name="title_activity_markattendance">Mark Attendance</string>
+    <string name="title_activity_mainpage">Punch Type</string>
+    <string name="title_activity_registration_page">Registration</string>
+    <string name="geofence">GeoFence</string>
+    <string name="title_activity_setting_geo">settingGeo</string>
+    <string name="title_activity_setting__qr">setting_QR</string>
+    <string name="title_activity_geo__qr">Geofence With QR Code</string>
 </resources>

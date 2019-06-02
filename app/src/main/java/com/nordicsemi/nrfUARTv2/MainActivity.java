@@ -26,13 +26,18 @@ package com.nordicsemi.nrfUARTv2;
 
 
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.text.DateFormat;
@@ -42,8 +47,10 @@ import java.util.Date;
 import java.util.Locale;
 
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -55,11 +62,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -67,6 +79,10 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Vibrator;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
@@ -89,6 +105,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.nordicsemi.nrfUARTv2.circularbuttom.CircularProgressButton;
 
 import static com.nordicsemi.nrfUARTv2.MainActivity.FRAMERXINGSTATE.WAITFrameProcess;
@@ -96,6 +114,14 @@ import static com.nordicsemi.nrfUARTv2.MainActivity.FRAMERXINGSTATE.WAITSTX1;
 
 
 public class MainActivity extends Activity implements RadioGroup.OnCheckedChangeListener {
+
+    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
+
+    private TextView mMsgView;
+    private boolean isGPS = false;
+
+
+
     private static final int REQUEST_SELECT_DEVICE = 1;
     private static final int REQUEST_ENABLE_BT = 2;
     private static final int  REQUEST_ENABLE_FT=3;
@@ -106,6 +132,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     private static final int STATE_OFF = 10;
     private static int a = 0;
     private static int VisibleMode = 0;
+    private static int Tracking = 0;
     private static int AutoPunch = 0;
     private static int Biometric = 0;
     private int connection_value=-1;
@@ -115,7 +142,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     private static int startvalue = 0;
     boolean isRunning = false;
     CountDownTimer cTimer = null;
-
+    private boolean mAlreadyStartedService = false;
 
     //Elsmart
     private static final int elsmartIN_OUT_Punch = 0x01;
@@ -165,7 +192,9 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     public static final int Cutomer_Mismatch = 22;
     public static final int General_Error = 23;
 
-
+    public static  int BLE = 0;
+    public static  int geofence =0; //Integer.valueOf(cursor.getString(cursor.getColumnIndex("Geofence")));
+    public static  int QRCode=0;
 
     public static final int MAX_BUFF = 8096;      //includes tcpip buffer
     public static final int MAXRXFRAMESize = 4096;
@@ -191,6 +220,11 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
     int count = 0;
     public byte[] TXvalue1;
     public byte[] tmpBuff1;
+
+
+
+
+
 
     public enum FRAMERXINGSTATE {
         NONE,
@@ -240,16 +274,13 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-         btnConnectDisconnect = (CircularProgressButton) findViewById(R.id.btn_select);
+        btnConnectDisconnect = (CircularProgressButton) findViewById(R.id.btn_select);
         btnConnectDisconnect.setIndeterminateProgressMode(true);
 
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         count = telephonyManager.getDeviceId().length();
         TXvalue1 = telephonyManager.getDeviceId().getBytes();
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
-
-
-
         txtfullname = (TextView) findViewById(R.id.txtfullname);
         txtdate = (TextView) findViewById(R.id.txtdate);
         deviceLabel = (TextView) findViewById(R.id.deviceLabel);
@@ -274,7 +305,7 @@ public class MainActivity extends Activity implements RadioGroup.OnCheckedChange
             ///      startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
 try {
     mBtAdapter.enable();
-    Thread.sleep(3000);
+    Thread.sleep(1000);
 }
 catch (Exception ex)
 {
@@ -333,32 +364,17 @@ catch (Exception ex)
 
         } else {
             txtregistered.setText(R.string.UnRegistered);
-           // txtregistered.setBackgroundColor(Color.RED);
-         //   txtbadgeno1.setVisibility(View.GONE);
-          //////////  textView4.setVisibility(View.GONE);
+            popup("Registration  does not exist");
 
-
+            Intent Registration = new Intent(MainActivity.this, RegistrationPage.class);
+            startActivity(Registration);
+           // return;
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-       // txtmessagecode.setText("");
-       // txtdatetime.setText("");
-      //  txtname.setText("");
-      //  txttick.setText("");
-       // lbldate.setText("");
-        //lblname.setText("");
-       // lblpunchtype.setText("");
+        if ((!(Valuefile.exists()))) {
+            popup("BLE Registration data file does not exist");
+            return;
+        }
 
         service_init();
         // Handle Disconnect & Connect button
@@ -380,7 +396,7 @@ catch (Exception ex)
 
 
                 if(isRunning==false) {
-                    cTimer =   new CountDownTimer(9000, 1000) {
+                    cTimer =   new CountDownTimer(8000, 1000) {
                         public void onTick(long millisUntilFinished) {
                             isRunning = true;
                         }
@@ -389,9 +405,14 @@ catch (Exception ex)
                             isRunning = false;
                             if (mDevice != null) {
                                 mService.disconnect();
+                               // if(mService != null)
+                                  //  mService.close();
+                                deviceLabel.setTextColor(0Xff0099cc);
+                                ((TextView) findViewById(R.id.deviceName)).setText("Not Connected");
                             }
 
                             btnConnectDisconnect.setProgress(0);
+
                         }
                     }.start();
                 }
@@ -402,24 +423,32 @@ catch (Exception ex)
         btnConnectDisconnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //if (!mBtAdapter.isEnabled()) {
+                  ////  Log.i(TAG, "onClick - BT not enabled yet");
+                  ///  Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                   // startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+              //  }
+
+
                 if (!mBtAdapter.isEnabled()) {
-                    Log.i(TAG, "onClick - BT not enabled yet");
-                    Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                    startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+                    try {
+                        mBtAdapter.enable();
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
-                else   if (btnConnectDisconnect.getProgress() == 100 ||btnConnectDisconnect.getProgress() == -1) {
+
+
+                    if (btnConnectDisconnect.getProgress() == 100 ||btnConnectDisconnect.getProgress() == -1) {
                     btnConnectDisconnect.setProgress(0);
                     ErrorMessage.setBackgroundColor(Color.TRANSPARENT) ;   txtfullname.setText(""); txtdate.setText(""); ErrorMessage.setText("");
                 }
 
                 else {
                     if (btnConnectDisconnect.getText().equals("Punch")) {
-
-
-
-
                         if(isRunning==false) {
-                            cTimer =   new CountDownTimer(9000, 1000) {
+                            cTimer =   new CountDownTimer(8000, 1000) {
                                 public void onTick(long millisUntilFinished) {
                                     isRunning = true;
                                 }
@@ -428,17 +457,17 @@ catch (Exception ex)
                                     isRunning = false;
                                     if (mDevice != null) {
                                         mService.disconnect();
+                                        deviceLabel.setTextColor(0Xff0099cc);
+                                      //  if(mService != null)
+                                          //  mService.close();
+
+                                        ((TextView) findViewById(R.id.deviceName)).setText("Not Connected");
                                     }
                                     btnConnectDisconnect.setProgress(0);
+
                                 }
                             }.start();
                         }
-
-
-
-
-
-
                         btnConnectDisconnect.setProgress(50);
                         //Connect button pressed, open DeviceListActivity class, with popup windows that scan for devices
 
@@ -450,9 +479,7 @@ catch (Exception ex)
                             Intent newIntent = new Intent(MainActivity.this, DeviceListActivity.class);
                             startActivityForResult(newIntent, REQUEST_SELECT_DEVICE);
                         }
-
                         autostartvalue = 0;
-
 
                     } else {
                         //Disconnect button pressed
@@ -463,6 +490,8 @@ catch (Exception ex)
                                 e.printStackTrace();
                             }
                             mService.disconnect();
+                           // if(mService != null)
+                              //  mService.close();
                             btnConnectDisconnect.setProgress(0);
                         }
                     }
@@ -480,6 +509,28 @@ catch (Exception ex)
         Blacklisted = MediaPlayer.create(this,R.raw.blacklisted);
         AntiPassBackError = MediaPlayer.create(this,R.raw.antipassback);
         Access_Denied = MediaPlayer.create(this, R.raw.accessdenied);
+
+        if(!checkServiceRunning()) {
+
+
+
+
+            Thread thread = new Thread() {
+                @Override
+                public void run() {
+                    Intent startServiceIntent = new Intent(MainActivity.this, LocationUpdateservice.class);
+                    startService(startServiceIntent);
+                }
+            };
+            thread.start();
+
+
+
+
+
+
+        }
+
 
     }
 
@@ -499,7 +550,9 @@ catch (Exception ex)
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case R.id.Registration_id:
+
                 startActivity(new Intent(this, RegistrationActivity.class));
+
                 break;
             case R.id.Setting_id:
                 startActivity(new Intent(this, setting.class));
@@ -515,6 +568,19 @@ catch (Exception ex)
                 startActivity(new Intent(this,Device.class));
                 //  getActivity().onBackPressed();
                 break;
+            case R.id.Tracking_id:
+                if(ReadTrackingValue()==0) {
+                    if(Tracking==1 )
+                    startActivity(new Intent(this, Tracking.class));
+                    else
+                        Toast.makeText(this,"not authorized",Toast.LENGTH_LONG).show();
+
+                }
+                else
+                    Toast.makeText(this,"Local Database Error",Toast.LENGTH_LONG).show();
+                //  getActivity().onBackPressed();
+                break;
+
             default:
                 return super.onOptionsItemSelected(item);
 
@@ -576,22 +642,8 @@ catch (Exception ex)
                         String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
                         Log.d(TAG, "UART_CONNECT_MSG");
                      //////////////////   btnConnectDisconnect.setText("Punching");//pradeeep
-
-
-
-
-
-
-                        ((TextView) findViewById(R.id.deviceName)).setText(mDevice.getName() + R.string.readyy);
-
-
-
-
-
+                      ((TextView) findViewById(R.id.deviceName)).setText(mDevice.getName() +( getResources().getString( R.string.Connected)));
                         mState = UART_PROFILE_CONNECTED;
-
-
-
                     }
                 });
             }
@@ -709,18 +761,23 @@ catch (Exception ex)
         mService.stopSelf();
         mService = null;
 
+      //  if (mBtAdapter.isEnabled()) {
+         //   mBtAdapter.disable();
+       // }
     }
 
     @Override
     protected void onStop() {
         Log.d(TAG, "onStop");
         super.onStop();
+
     }
 
     @Override
     protected void onPause() {
         Log.d(TAG, "onPause");
         super.onPause();
+
     }
 
     @Override
@@ -743,6 +800,8 @@ catch (Exception ex)
       ///      startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
       ///  }
 
+
+
     }
 
     @Override
@@ -756,24 +815,6 @@ catch (Exception ex)
 
             case REQUEST_SELECT_DEVICE:
                 //When the DeviceListActivity return, with the selected device address
-
-                File Registrationfile = new File(getFilesDir() + File.separator + fileRegistrationVerify);
-
-                File Valuefile = new File(getFilesDir() + File.separator + Datafile);
-                if ((!(Registrationfile.exists())) && data != null) {
-                    popup("Registration  does not exist");
-
-
-                    return;
-                }
-                if ((!(Valuefile.exists())) && data != null) {
-
-                    popup("Registration data file does not exist");
-
-                    return;
-                }
-
-
                 if (resultCode == Activity.RESULT_OK && data != null) {
 
                     String actionName =data.getStringExtra("name");
@@ -786,6 +827,9 @@ catch (Exception ex)
                             isRunning=false;
                             if (mDevice != null) {
                                 mService.disconnect();
+                                ((TextView) findViewById(R.id.deviceName)).setText("Not Connected");
+                               // if(mService != null)
+                                //   mService.close();
                             }
                             btnConnectDisconnect.setProgress(0);
                               return;
@@ -806,6 +850,7 @@ catch (Exception ex)
                 // When the request to enable Bluetooth returns
                 if (resultCode == Activity.RESULT_OK) {
                     Toast.makeText(this, R.string.Bluetooth_has_turned_on, Toast.LENGTH_SHORT).show();
+
 
                 } else {
                     // User did not enable Bluetooth or an error occurred
@@ -860,7 +905,18 @@ catch (Exception ex)
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             startvalue=0;
-                            finish();
+                            if (mBtAdapter.isEnabled()) {
+                                mBtAdapter.disable();
+                            }
+                            if (ReadSystemValue() == 1) {
+                                if (BLE == 1 && QRCode == 0 && geofence == 0) {
+
+                                    MainActivity.this.moveTaskToBack(true);
+                                }
+                                else
+                                    finish();
+                            }
+
                         }
                     })
                     .setNegativeButton(R.string.popup_no, null)
@@ -1158,7 +1214,7 @@ catch (Exception ex)
 
     private void ProcessBLEFrame() {
 
-        int  empID=0, rxb = 9,name = 40,Badgeindex = 58,fullnameindex=74,empidindex=113,date = 16,i = 0,j = 0,l = 0,m = 0;
+        int  empID=0,dir=0, rxb = 9,name = 40,Badgeindex = 58,fullnameindex=74,empidindex=113,date = 16,i = 0,j = 0,l = 0,m = 0;
         short res = 0;
         int direction = 0;
         String FullName = "",badgeno="",NameDisplay="",s="",filename = "",lang="", tickvalue="\u2713";
@@ -1306,7 +1362,10 @@ catch (Exception ex)
 
             case 0x53: //Send file
                 if (mDevice != null) {
+
                     mService.disconnect();
+                 //   if(mService != null)
+                    //    mService.close();
                 }
              ///////////////////////////////   btnSend.setBackgroundColor(Color.GREEN);
                 deviceLabel.setTextColor(Color.LTGRAY);
@@ -1404,13 +1463,34 @@ catch (Exception ex)
                       int  soundcode = 0;
                         s = "IN";
                         s = getResources().getString(R.string.IN);
+                        dir=0;
                         btnConnectDisconnect.setCompleteText("IN  "+tickvalue);
+
+
+
 
                         if ((direction & 0x0C) == 0x08) ////////////////// if ((direction & 0x20) == 0x20)
                         {
+
+
+
+                          //  Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
+                          //  intent.putExtra("enabled", false);
+                           // sendBroadcast(intent);
+                            dir=1;
                             s = getResources().getString(R.string.OUT);
                             soundcode = 1;
                             btnConnectDisconnect.setCompleteText("OUT  "+tickvalue);
+                            stopService(new Intent(this, LocationMonitoringService.class));
+                            mAlreadyStartedService = false;
+                        }
+                        else
+                        {
+
+                            MainActivity.AsyncTaskRunner runner = new MainActivity.AsyncTaskRunner();
+                            runner.execute();
+
+
                         }
 
                        //String  s1 = s + getResources().getString( R.string.Punched_Successfully);
@@ -1435,16 +1515,12 @@ catch (Exception ex)
                            if(WriteMACAddress()==0)
                                Toast.makeText(this,"Error in writing  Mac",Toast.LENGTH_LONG).show();
                        }
-                        if( WriteLog(badgeno,FullName,s,empID)==0)
+                        if( WriteLog(badgeno,FullName,dir,empID)==0)
                           Toast.makeText(this,"Error in writing log",Toast.LENGTH_LONG).show();
 
 
 
                     } else {
-
-                       /// txtmessagecode.setText("");
-                      ///  txttick.setText("");
-                       // lblpunchtype.setText("");
                         connection_value=0;
                         btnConnectDisconnect.setProgress(-1);
                         if(sysvalue.equals("eacs"))
@@ -1465,6 +1541,7 @@ catch (Exception ex)
                         cTimer = null;
                         isRunning=false;
                     }
+
 
                     FileOutputStream file_out = openFileOutput(DirectionFile, MODE_PRIVATE);
                     file_out.write((byte)direction);
@@ -1824,13 +1901,14 @@ catch (Exception ex)
 
 
 
-    public Integer WriteLog(String badgeno,String name,String s,Integer empID)//////CHANGE INTO COMMON FUNCTION LATTER
+    public Integer WriteLog(String badgeno,String name,Integer s,Integer empID)//////CHANGE INTO COMMON FUNCTION LATTER
     {
+         String type="BLE";
         int res =0;
         try {
 
             database=db.getWritableDatabase();
-            database.execSQL("INSERT INTO tblLogs(date,time,BadgeNo,Name,Ter,direction,empid)VALUES('"+requiredDate+"','"+requiredTime+"','"+badgeno+"','"+txtfullname.getText()+"' ,'"+compara.termo+"','"+s+"' ,"+empID+")" );
+            database.execSQL("INSERT INTO tblLogs(date,time,BadgeNo,Name,Ter,direction,empid,PunchType,sent)VALUES('"+requiredDate+"','"+requiredTime+"','"+badgeno+"','"+txtfullname.getText()+"' ,'"+compara.termo+"',"+s+" ,"+empID+",'"+type+ "',"+1+")");
             res=1;
         }
         catch (Exception ex) {
@@ -1901,6 +1979,30 @@ catch (Exception ex)
                 } while (cursor.moveToNext());
             }
             cursor.close();
+        }
+        catch (Exception ex) {
+            res=-1;
+            Log.d(TAG, ex.getMessage());
+        }
+        return res;
+    }
+
+
+    public Integer ReadTrackingValue()//////CHANGE INTO COMMON FUNCTION LATTER
+    {
+        String MacValue="";
+        int res =0;
+        try {
+            database = db.getReadableDatabase();
+            Cursor cursor = database.rawQuery("SELECT * FROM  Registration", null);
+            if (cursor.moveToFirst()) {
+                do {
+                    Tracking =  Integer.valueOf(cursor.getString(cursor.getColumnIndex("Tracking")));
+
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            res =0;
         }
         catch (Exception ex) {
             res=-1;
@@ -2034,4 +2136,370 @@ catch (Exception ex)
 
 
     }
+
+
+
+    private void startStep1() {
+
+        //Check whether this user has installed Google play service which is being used by Location updates.
+        if (isGooglePlayServicesAvailable()) {
+
+            //Passing null to indicate that it is executing for the first time.
+            startStep2(null);
+
+        } else {
+            Toast.makeText(getApplicationContext(), R.string.no_google_playservice_available, Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+
+
+    /**
+     * Step 2: Check & Prompt Internet connection
+     */
+    private Boolean startStep2(DialogInterface dialog) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+
+
+        NetworkInfo.State mobile = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState();
+//wifi
+        NetworkInfo.State wifi = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+       ////// if (mobile == NetworkInfo.State.CONNECTED || mobile == NetworkInfo.State.CONNECTING) {
+       ///////     try {
+          ///////////      String mobile1=  mobile.name();
+
+           //////// } catch (Exception e) {
+           /////////////     e.printStackTrace();
+           ////////// }
+
+      //////////////////////  }
+
+      ////////////  else if (wifi == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTING) {
+        /////////////    String wifi1=  mobile.name();
+  //////////////////      }
+
+        //if (activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
+        //  promptInternetConnect();
+       //  return false;
+     // }
+        if (dialog != null) {
+            dialog.dismiss();
+        }
+
+        //Yes there is active internet connection. Next check Location is granted by user or not.
+
+        if (checkPermissions()) { //Yes permissions are granted by the user. Go to the next step.
+            startStep3();
+        } else {  //No user has not granted the permissions yet. Request now.
+            requestPermissions();
+        }
+        return true;
+    }
+
+    /**
+     * Show A Dialog with button to refresh the internet state.
+     */
+
+
+
+    private void promptInternetConnect() {
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
+        builder.setTitle(R.string.title_alert_no_intenet);
+        builder.setMessage(R.string.msg_alert_no_internet);
+
+        String positiveText = getString(R.string.btn_label_refresh);
+        builder.setPositiveButton(positiveText,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+
+                        //Block the Application Execution until user grants the permissions
+                        if (startStep2(dialog)) {
+
+                            //Now make sure about location permission.
+                            if (checkPermissions()) {
+
+                                //Step 2: Start the Location Monitor Service
+                                //Everything is there to start the service.
+                                startStep3();
+                            } else if (!checkPermissions()) {
+                                requestPermissions();
+                            }
+
+                        }
+                    }
+                });
+
+        android.support.v7.app.AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+
+
+
+    private void startStep3() {
+
+        //And it will be keep running until you close the entire application from task manager.
+        //This method will executed only once.
+
+        if (!mAlreadyStartedService) {
+
+          //  mMsgView.setText(R.string.msg_location_service_started);
+
+            //Start location sharing service to app server.........
+            if(!isMyServiceRunning(LocationMonitoringService.class)) {
+                Intent intent = new Intent(MainActivity.this, LocationMonitoringService.class);
+                startService(intent);
+
+                mAlreadyStartedService = true;
+            }
+            //Ends................................................
+        }
+    }
+
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+    public boolean isGooglePlayServicesAvailable() {
+        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+        int status = googleApiAvailability.isGooglePlayServicesAvailable(this);
+        if (status != ConnectionResult.SUCCESS) {
+            if (googleApiAvailability.isUserResolvableError(status)) {
+                googleApiAvailability.getErrorDialog(this, status, 2404).show();
+            }
+            return false;
+        }
+        return true;
+    }
+
+
+    private boolean checkPermissions() {
+        int permissionState1 = ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION);
+
+        int permissionState2 = ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION);
+
+        return permissionState1 == PackageManager.PERMISSION_GRANTED && permissionState2 == PackageManager.PERMISSION_GRANTED;
+
+    }
+
+    /**
+     * Start permissions requests.
+     */
+
+
+
+
+    private void requestPermissions() {
+
+        boolean shouldProvideRationale =
+                ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        android.Manifest.permission.ACCESS_FINE_LOCATION);
+
+        boolean shouldProvideRationale2 =
+                ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION);
+
+
+        // Provide an additional rationale to the img_user. This would happen if the img_user denied the
+        // request previously, but didn't check the "Don't ask again" checkbox.
+        if (shouldProvideRationale || shouldProvideRationale2) {
+            Log.i(TAG, "Displaying permission rationale to provide additional context.");
+            showSnackbar(R.string.permission_rationale,
+                    android.R.string.ok, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            // Request permission
+                            ActivityCompat.requestPermissions(MainActivity.this,
+                                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                                    REQUEST_PERMISSIONS_REQUEST_CODE);
+                        }
+                    });
+        } else {
+            Log.i(TAG, "Requesting permission");
+            // Request permission. It's possible this can be auto answered if device policy
+            // sets the permission in a given state or the img_user denied the permission
+            // previously and checked "Never ask again".
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    REQUEST_PERMISSIONS_REQUEST_CODE);
+        }
+    }
+
+
+
+    public static boolean isSimSupport(Context context)
+    {
+        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);  //gets the current TelephonyManager
+        return !(tm.getSimState() == TelephonyManager.SIM_STATE_ABSENT);
+
+    }
+
+    /**
+     * Shows a {@link Snackbar}.
+     *
+     * @param mainTextStringId The id for the string resource for the Snackbar text.
+     * @param actionStringId   The text of the action item.
+     * @param listener         The listener associated with the Snackbar action.
+     */
+
+
+    private void showSnackbar(final int mainTextStringId, final int actionStringId,
+                              View.OnClickListener listener) {
+        Snackbar.make(
+                findViewById(android.R.id.content),
+                getString(mainTextStringId),
+                Snackbar.LENGTH_INDEFINITE)
+                .setAction(getString(actionStringId), listener).show();
+    }
+
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        Log.i(TAG, "onRequestPermissionResult");
+        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
+            if (grantResults.length <= 0) {
+                // If img_user interaction was interrupted, the permission request is cancelled and you
+                // receive empty arrays.
+                Log.i(TAG, "User interaction was cancelled.");
+            } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                Log.i(TAG, "Permission granted, updates requested, starting location updates");
+                startStep3();
+
+            } else {
+                // Permission denied.
+
+                // Notify the img_user via a SnackBar that they have rejected a core permission for the
+                // app, which makes the Activity useless. In a real app, core permissions would
+                // typically be best requested during a welcome-screen flow.
+
+                // Additionally, it is important to remember that a permission might have been
+                // rejected without asking the img_user for permission (device policy or "Never ask
+                // again" prompts). Therefore, a img_user interface affordance is typically implemented
+                // when permissions are denied. Otherwise, your app could appear unresponsive to
+                // touches or interactions which have required permissions.
+                showSnackbar(R.string.permission_denied_explanation,
+                        R.string.settings, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                // Build intent that displays the App settings screen.
+                                Intent intent = new Intent();
+                                intent.setAction(
+                                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                Uri uri = Uri.fromParts("package",
+                                        BuildConfig.APPLICATION_ID, null);
+                                intent.setData(uri);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                            }
+                        });
+            }
+        }
+    }
+
+    private class AsyncTaskRunner extends AsyncTask<String, String, String> {
+
+        private String resp;
+
+
+        @Override
+        protected String doInBackground(String... params) {
+            publishProgress("Sleeping..."); // Calls onProgressUpdate()
+            try {
+                new GpsUtils(MainActivity.this).turnGPSOn(new GpsUtils.onGpsListener() {
+                    @Override
+                    public void gpsStatus(boolean isGPSEnable) {
+                        // turn on GPS
+                        isGPS = isGPSEnable;
+                    }
+                });
+
+                startStep1();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                resp = e.getMessage();
+            }
+            return resp;
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            String  res="";
+
+
+
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+
+
+
+        }
+
+
+        @Override
+        protected void onProgressUpdate(String... text) {
+
+        }
+    }
+    public Integer ReadSystemValue()//////CHANGE INTO COMMON FUNCTION LATTER
+    {
+        String MacValue = "";
+        int res = 0;
+        try {
+            database = db.getReadableDatabase();
+            Cursor cursor = database.rawQuery("SELECT BLE,Geofence,QRCode  From   Registration", null);
+            if (cursor.moveToFirst()) {
+                do {
+
+                    BLE = Integer.valueOf(cursor.getString(cursor.getColumnIndex("BLE")));
+                    geofence = Integer.valueOf(cursor.getString(cursor.getColumnIndex("Geofence")));
+                    QRCode = Integer.valueOf(cursor.getString(cursor.getColumnIndex("QRCode")));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            res = 1;
+        } catch (Exception ex) {
+            res = 0;
+            Log.d(TAG, ex.getMessage());
+        }
+        return res;
+    }
+
+    public boolean checkServiceRunning(){
+        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
+        {
+            if ("com.nordicsemi.nrfUARTv2.LocationUpdateservice"
+                    .equals(service.service.getClassName()))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 }

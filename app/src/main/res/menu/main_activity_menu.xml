@@ -11,7 +11,7 @@
         android:icon="@drawable/ic_settings_applications_white_24dp"/>
     <item
         android:id="@+id/About_id"
-        android:orderInCategory="100"
+
         android:title="@string/action_settings"
         app:showAsAction="never" />
     <item
@@ -28,6 +28,12 @@
     <item
         android:id="@+id/Device_id"
         android:title="Registered Terminal"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/Tracking_id"
+        android:title="Tracking"
         app:showAsAction="never"
         />
 

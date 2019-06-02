@@ -71,7 +71,7 @@
 
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/txtstartdate"
         android:layout_width="0dp"
         android:layout_height="19dp"
         android:layout_marginBottom="28dp"
@@ -79,13 +79,13 @@
         android:layout_marginTop="16dp"
         android:text="Auto Punch"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView9"
-        app:layout_constraintEnd_toEndOf="@+id/textView9"
+        app:layout_constraintBottom_toTopOf="@+id/txtenddate"
+        app:layout_constraintEnd_toEndOf="@+id/txtenddate"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView9"
+        android:id="@+id/txtenddate"
         android:layout_width="76dp"
         android:layout_height="29dp"
         android:layout_marginBottom="58dp"
@@ -118,7 +118,7 @@
         android:text="Biometric"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/BiometricSwich1"
-        app:layout_constraintEnd_toEndOf="@+id/textView9"
+        app:layout_constraintEnd_toEndOf="@+id/txtenddate"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/BiometricSwich"

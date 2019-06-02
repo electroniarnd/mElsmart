@@ -5,7 +5,7 @@
     android:layout_height="fill_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@drawable/bgimage"
+    android:background="@drawable/backimage"
     android:textDirection="anyRtl"
     android:id="@+id/linearLayout5"
     >
@@ -40,16 +40,14 @@
 
                 <com.nordicsemi.nrfUARTv2.circularbuttom.CircularProgressButton
                     android:id="@+id/btn_select"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
+                    android:layout_width="215dp"
+                    android:layout_height="215dp"
                     android:textColor="@color/cpb_white"
                     android:textSize="40sp"
                     app:cpb_cornerRadius="148dp"
-
                     app:cpb_iconError="@drawable/ic_action_cancel"
                     app:cpb_textIdle="Punch"
-                    app:cpb_textProgress="Punching"
-
+                    app:cpb_textProgress="Processing"
                     ></com.nordicsemi.nrfUARTv2.circularbuttom.CircularProgressButton>
 
                 <TextView
@@ -60,7 +58,6 @@
                     android:layout_alignStart="@+id/txtdatetime"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
                     android:gravity="center"
-
                     android:textColor="@color/cpb_blue_dark"
                     android:textDirection="anyRtl"
                     android:textSize="24sp" />
@@ -104,10 +101,7 @@
             android:id="@+id/textView16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
-
             android:layout_marginStart="90dp"
-
             android:gravity="center_horizontal"
             android:text="@string/Status"
             android:textColor="@color/cpb_blue"

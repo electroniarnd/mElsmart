@@ -39,26 +39,25 @@
         <TextView
             android:id="@+id/terid"
 
-
+            android:width="50dp"
             android:gravity="left"
             android:padding="10sp"></TextView>
 
         <TextView
             android:id="@+id/dir"
 
-
+            android:width="50dp"
             android:gravity="left"
             android:padding="10sp"
            ></TextView>
 
         <TextView
-            android:id="@+id/badgeno"
+            android:id="@+id/txtname"
+
 
             android:gravity="left"
-
-            android:padding="10sp">
+            android:padding="10sp"
             ></TextView>
-
 
     </TableRow>
 

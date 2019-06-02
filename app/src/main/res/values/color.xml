@@ -3,23 +3,13 @@
 
     <color name="colorPrimary">#000000</color>
     <color name="colorPrimaryDark">#1e282d</color>
-    <color name="colorAccent">#1e282d</color>
+    <color name="colorAccent">#2b48dd</color>
     <color name="textPrimary">#f5f5f5</color>
     <color name="textPrimaryDark">#95aab4</color>
     <color name="errorText">#ff7878</color>
-    <color name="Green">#008000</color>
-
-
-
-
-
-
-
-
-
-
-
-
+    <color name="Green">#2b48dd</color>
+    <color name="background_color">#ffffff</color>
+    <color name="border_color">#81b71a</color>
     <color name="red">#f31616</color>
     <color name="cream">#dbc1c1</color>
 
@@ -46,7 +36,7 @@
     <color name="color_0288D1">#0288D1</color>
     <color name="color_00BFFF1">#00BFFF</color>
     <color name="color_03A9F4">#03A9F4</color>
-    <color name="color_448AFF">#448AFF</color>
+    <color name="color_448AFF">#2b48dd</color>
 
     <color name="color_00796B">#00796B</color>
     <color name="color_009688">#009688</color>
@@ -58,7 +48,7 @@
 
     <color name="color_F45B69">#F45B69</color>
     <color name="color_EBEBEB">#EBEBEB</color>
-    <color name="color_4062BB">#4062BB</color>
+    <color name="color_4062BB">#1162ee</color>
     <color name="color_59C3C3">#59C3C3</color>
 
 
@@ -75,7 +65,7 @@
 
     <color name="cpb_red">#ffff4444</color>
 
-    <color name="cpb_red_dark">#ffcd3a3a</color>
+    <color name="cpb_red_dark">#1162ee</color>
 
     <color name="cpb_green">#ff99cc00</color>
 

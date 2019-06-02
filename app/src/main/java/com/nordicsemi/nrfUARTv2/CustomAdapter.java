@@ -22,23 +22,24 @@ public class CustomAdapter extends BaseAdapter {
   //  private ArrayList<String> Name = new ArrayList<String>();
     private ArrayList<String> Ter = new ArrayList<String>();
     private ArrayList<String> direction = new ArrayList<String>();
-    private ArrayList<String> badgeno = new ArrayList<String>();
+    private ArrayList<String> name = new ArrayList<String>();
+ //   private ArrayList<String> badgeno = new ArrayList<String>();
 
 
    // private ArrayList<String> empid = new ArrayList<String>();
     public CustomAdapter(Context  context,ArrayList<String> Id, ArrayList<String> date,ArrayList<String> time
-            ,ArrayList<String> Ter ,ArrayList<String> direction,ArrayList<String> badgeno)
+            ,ArrayList<String> Ter ,ArrayList<String> direction,ArrayList<String> name)
     {
         this.mContext = context;
         this.Id = Id;
-     //   this.Name = Name;
+        this.name = name;
 
         this.date=date;
         this.time1=time;
         this.Ter=Ter;
         this.direction=direction;
 
-        this.badgeno = badgeno;
+     //   this.badgeno = badgeno;
       //  this.empid=empid;
     }
     @Override
@@ -69,7 +70,9 @@ public class CustomAdapter extends BaseAdapter {
             holder.Ter = (TextView) convertView.findViewById(R.id.terid);
           //  holder.empid = (TextView) convertView.findViewById(R.id.empid);
             holder.direction = (TextView) convertView.findViewById(R.id.dir);
-            holder.badgeno = (TextView) convertView.findViewById(R.id.badgeno);
+            holder.name= (TextView) convertView.findViewById(R.id.txtname);
+
+            //  holder.badgeno = (TextView) convertView.findViewById(R.id.badgeno);
             convertView.setTag(holder);
         } else {
             holder = (viewHolder) convertView.getTag();
@@ -82,7 +85,8 @@ public class CustomAdapter extends BaseAdapter {
         holder.Ter.setText(Ter.get(position));
         //holder.empid.setText(empid.get(position));
         holder.direction.setText(direction.get(position));
-        holder.badgeno.setText(badgeno.get(position));
+        holder.name.setText(name.get(position));
+       // holder.badgeno.setText(badgeno.get(position));
         return convertView;
     }
     public class viewHolder {
@@ -94,7 +98,8 @@ public class CustomAdapter extends BaseAdapter {
         TextView Ter;
        // TextView empid;
         TextView direction;
-        TextView badgeno;
+        TextView name;
+      //  TextView badgeno;
 
     }
 }

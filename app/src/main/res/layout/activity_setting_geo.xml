@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.nordicsemi.nrfUARTv2.settingGeo"
+    tools:layout_editor_absoluteY="73dp">
+
+        <Switch
+            android:id="@+id/AutoPunchSwitch"
+            android:layout_width="0dp"
+            android:layout_height="33dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:checked="false"
+            android:gravity="left"
+            android:textOff="OFF"
+            android:textOn="ON"
+            app:layout_constraintEnd_toEndOf="@+id/BiometricSwich"
+            app:layout_constraintStart_toStartOf="@+id/BiometricSwich"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <Switch
+            android:id="@+id/BiometricSwich"
+            android:layout_width="0dp"
+            android:layout_height="33dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="68dp"
+            android:checked="false"
+            android:gravity="left"
+            android:textOff="OFF"
+            android:textOn="ON"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/txtstartdate"
+            android:layout_width="0dp"
+            android:layout_height="19dp"
+            android:layout_marginTop="16dp"
+            android:text="Auto Punch"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txtBiometric"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:text="Biometric"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/BiometricSwich" />
+
+    </android.support.constraint.ConstraintLayout>

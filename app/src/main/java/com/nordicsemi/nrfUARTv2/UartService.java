@@ -152,8 +152,8 @@ public class UartService extends Service {
 
                     ///}
                /// }
-
-                BluetoothGattService RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
+                BluetoothGattService RxService=null;
+                 RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
                 if (RxService == null) {
                     RX_SERVICE_UUID1=RX_SERVICE_UUIDESP32;
                     RX_CHAR_UUID1=RX_CHAR_UUIDESP32;
