@@ -30,7 +30,7 @@ public class CustomAdapter extends BaseAdapter {
     public CustomAdapter(Context  context,ArrayList<String> Id, ArrayList<String> date,ArrayList<String> time
             ,ArrayList<String> Ter ,ArrayList<String> direction,ArrayList<String> name)
     {
-        this.mContext = context;
+        this.mContext =     context;
         this.Id = Id;
         this.name = name;
 

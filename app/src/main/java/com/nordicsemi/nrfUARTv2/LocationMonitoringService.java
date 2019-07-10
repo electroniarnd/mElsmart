@@ -288,6 +288,7 @@ public class LocationMonitoringService extends Service implements
             EMPLOYEE_SERVICE_URI1 = s.replace(' ','-');
             URL url = new URL(EMPLOYEE_SERVICE_URI1);
             URLConnection conexion = url.openConnection();
+            conexion.setConnectTimeout(3 * 1000);
             conexion.connect();
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
             InputStream input = new BufferedInputStream(url.openStream());

@@ -209,8 +209,8 @@ public class markattendanceActivity extends AppCompatActivity implements OnMapRe
             Thread thread = new Thread() {
                 @Override
                 public void run() {
-                    Intent startServiceIntent = new Intent(markattendanceActivity.this, GeofenceLogService.class);
-                    startService(startServiceIntent);
+                 ////   Intent startServiceIntent = new Intent(markattendanceActivity.this, GeofenceLogService.class);
+                  ///////Pradeep2  startService(startServiceIntent);
                 }
             };
             thread.start();
@@ -221,8 +221,8 @@ public class markattendanceActivity extends AppCompatActivity implements OnMapRe
             Thread thread = new Thread() {
                 @Override
                 public void run() {
-                    Intent startServiceIntent = new Intent(markattendanceActivity.this, LocationUpdateservice.class);
-                    startService(startServiceIntent);
+                 ////////////   Intent startServiceIntent = new Intent(markattendanceActivity.this, LocationUpdateservice.class);
+                   //////////////Pradeep3 startService(startServiceIntent);
                 }
             };
             thread.start();
@@ -848,9 +848,9 @@ public class markattendanceActivity extends AppCompatActivity implements OnMapRe
         if (punchtype == 0) {
             SoundIt(0);
             txtLastPunch.setText("IN");
-            if(!isMyServiceRunning(LocationMonitoringService.class)) {
-                Intent intent = new Intent(markattendanceActivity.this, LocationMonitoringService.class);
-                startService(intent);
+            if(!checkLocationMonitoringServiceRunning()) {
+                markattendanceActivity.AsyncTaskRunnerLocMonitoring runner = new markattendanceActivity.AsyncTaskRunnerLocMonitoring();
+                runner.execute();
             }
         }
         else {
@@ -1164,23 +1164,16 @@ public class markattendanceActivity extends AppCompatActivity implements OnMapRe
         @Override
         protected void onPostExecute(String result) {
             String  res="";
-
-
-
         }
 
 
         @Override
         protected void onPreExecute() {
-
-
-
         }
 
 
         @Override
         protected void onProgressUpdate(String... text) {
-
         }
     }
 
@@ -1391,6 +1384,50 @@ public class markattendanceActivity extends AppCompatActivity implements OnMapRe
         }
         return false;
     }
+
+
+
+
+
+
+    private class AsyncTaskRunnerLocMonitoring extends AsyncTask<String, String, String> {
+
+        private String resp;
+
+
+        @Override
+        protected String doInBackground(String... params) {
+            publishProgress("Sleeping..."); // Calls onProgressUpdate()
+            try {
+
+           //     Intent intent = new Intent(markattendanceActivity.this, LocationMonitoringService.class);
+            //    startService(intent);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                resp = e.getMessage();
+            }
+            return resp;
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            String  res="";
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+
+        @Override
+        protected void onProgressUpdate(String... text) {
+        }
+    }
+
+
 }
 
 
