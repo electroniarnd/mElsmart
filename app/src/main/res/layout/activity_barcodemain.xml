@@ -6,11 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.nordicsemi.nrfUARTv2.barcodemain"
+    android:background="@drawable/backimage"
+    tools:context="com.electronia.mElsmart.barcodemain"
+
     android:orientation="vertical"
     android:id="@+id/rl">
 
-    <com.nordicsemi.nrfUARTv2.circularbuttom.CircularProgressButton
+    <com.electronia.mElsmart.circularbuttom.CircularProgressButton
         android:id="@+id/scan_barcode_button"
         android:layout_width="215dp"
         android:layout_height="215dp"
@@ -21,8 +23,8 @@
         android:textSize="40sp"
         app:cpb_cornerRadius="148dp"
         app:cpb_iconError="@drawable/ic_action_cancel"
-        app:cpb_textIdle="Punch"
-        app:cpb_textProgress="Processing"></com.nordicsemi.nrfUARTv2.circularbuttom.CircularProgressButton>
+        app:cpb_textIdle="@string/Punch"
+        app:cpb_textProgress="@string/Processing"></com.electronia.mElsmart.circularbuttom.CircularProgressButton>
 
 
     <TextView
@@ -34,7 +36,7 @@
         android:layout_marginTop="23dp"
         android:freezesText="true"
         android:gravity="center"
-        android:text="Your Scan Result will be here"
+        android:text=""
         android:textSize="22sp" />
 
 

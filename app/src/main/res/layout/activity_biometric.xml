@@ -6,7 +6,7 @@ android:id="@+id/activity_fingerprint"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:background="@drawable/bio"
-tools:context="com.nordicsemi.nrfUARTv2.biometric">
+tools:context="com.electronia.mElsmart.biometric">
 
 <LinearLayout
     android:layout_width="match_parent"

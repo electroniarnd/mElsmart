@@ -38,17 +38,17 @@
                 android:orientation="vertical">
 
 
-                <com.nordicsemi.nrfUARTv2.circularbuttom.CircularProgressButton
+                <com.electronia.mElsmart.circularbuttom.CircularProgressButton
                     android:id="@+id/btn_select"
                     android:layout_width="215dp"
                     android:layout_height="215dp"
                     android:textColor="@color/cpb_white"
-                    android:textSize="40sp"
+                    android:textSize="32sp"
                     app:cpb_cornerRadius="148dp"
                     app:cpb_iconError="@drawable/ic_action_cancel"
-                    app:cpb_textIdle="Punch"
-                    app:cpb_textProgress="Processing"
-                    ></com.nordicsemi.nrfUARTv2.circularbuttom.CircularProgressButton>
+                    app:cpb_textIdle="@string/Punch"
+                    app:cpb_textProgress="@string/Processing"
+                    ></com.electronia.mElsmart.circularbuttom.CircularProgressButton>
 
                 <TextView
                     android:id="@+id/txtfullname"

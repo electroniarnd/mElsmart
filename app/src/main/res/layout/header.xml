@@ -18,7 +18,7 @@
             android:background="#c0c0c0"
             android:gravity="left"
             android:padding="10sp"
-            android:text="No"
+            android:text="@string/No"
             android:textStyle="bold"></TextView>
 
 
@@ -30,7 +30,7 @@
             android:background="#c0c0c0"
             android:gravity="left"
             android:padding="10sp"
-            android:text="Date"
+            android:text="@string/Date"
             android:textStyle="bold"></TextView>
 
         <TextView
@@ -40,7 +40,7 @@
             android:background="#c0c0c0"
             android:gravity="right"
             android:padding="10sp"
-            android:text="Terminal No "
+            android:text="@string/Terminal_No"
             android:textStyle="bold"></TextView>
         <TextView
             android:layout_width="37dp"
@@ -49,7 +49,7 @@
             android:background="#c0c0c0"
             android:gravity="right"
             android:padding="10sp"
-            android:text="Direction"
+            android:text="@string/Direction"
             android:textStyle="bold"></TextView>
 
         <TextView
@@ -58,7 +58,7 @@
             android:background="#c0c0c0"
             android:gravity="right"
             android:padding="10sp"
-            android:text="Name"
+            android:text="@string/emp_name"
             android:textStyle="bold"></TextView>
 
     </TableRow>

@@ -15,7 +15,7 @@ android:stretchColumns="*">
         android:background="#c0c0c0"
         android:gravity="left"
         android:padding="10sp"
-        android:text="No"
+        android:text="@string/No"
         android:textStyle="bold"></TextView>
 
     <TextView
@@ -24,7 +24,7 @@ android:stretchColumns="*">
         android:background="#c0c0c0"
         android:gravity="left"
         android:padding="10sp"
-        android:text="MAC Address"
+        android:text="@string/MAC_Address"
         android:textStyle="bold"></TextView>
 
     <TextView
@@ -34,7 +34,7 @@ android:stretchColumns="*">
         android:background="#c0c0c0"
         android:gravity="left"
         android:padding="10sp"
-        android:text="Device Name"
+        android:text="@string/device_name"
         android:textStyle="bold"></TextView>
 </TableRow>
 </TableLayout>

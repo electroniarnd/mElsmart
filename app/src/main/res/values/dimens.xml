@@ -3,12 +3,30 @@
 <resources>
 
 
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">8dp</dimen>
+    <dimen name="activity_horizontal_margin">8dp</dimen>
 
     <dimen name="btn_login_margin_top">@dimen/dimen_16_dp</dimen>
     <dimen name="btn_login_margin_bottom">@dimen/dimen_8_dp</dimen>
     <dimen name="dimen_16_dp">16dp</dimen>
     <dimen name="cpb_stroke_width">4dp</dimen>
     <dimen name="dimen_8_dp">8dp</dimen>
+    <dimen name="dimen_4_dp">4dp</dimen>
+    <dimen name="dimen_12_dp">12dp</dimen>
+    <dimen name="textview_micro_size">12sp</dimen>
+    <dimen name="textview_small_size">14sp</dimen>
+    <dimen name="textview_middle_size">18sp</dimen>
+    <dimen name="textview_large_size">22sp</dimen>
+
+
+    <dimen name="page_title_size">20sp</dimen>
+    <dimen name="list_item_size">16sp</dimen>
+    <dimen name="menu_title">16sp</dimen>
+    <dimen name="button_tab_size">14sp</dimen>
+
+
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="nav_header_height">230dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
 </resources>

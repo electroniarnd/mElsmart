@@ -10,38 +10,37 @@
 
     android:id="@+id/rl"
     android:orientation="vertical"
-    tools:context="com.nordicsemi.nrfUARTv2.markattendanceActivity">
+    tools:context="com.electronia.mElsmart.markattendanceActivity">
 
 
 
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/map_frame"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.nordicsemi.nrfUARTv2.markattendanceActivity"/>
-    <LinearLayout
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:weightSum="2">
 
-        <Button
-            android:id="@+id/check_in_button"
-            android:layout_width="wrap_content"
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <LinearLayout
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:background="@color/Green"
-            android:text="punch"
-            android:textColor="@android:color/background_light" />
+            android:layout_marginBottom="100dp"
+            android:orientation="horizontal"
+            android:gravity="center|bottom"
+            android:weightSum="2">
 
+            <Button
+                android:id="@+id/check_in_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@color/Green"
+                android:text="@string/Punch"
+                android:textColor="@android:color/background_light" />
+        </LinearLayout>
 
-
-    </LinearLayout>
 
 </RelativeLayout>
 

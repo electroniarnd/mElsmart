@@ -1,32 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (c) 2015, Nordic Semiconductor
-  ~ All rights reserved.
-  ~
-  ~ Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-  ~
-  ~ 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-  ~
-  ~ 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the
-  ~ documentation and/or other materials provided with the distribution.
-  ~
-  ~ 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this
-  ~ software without specific prior written permission.
-  ~
-  ~ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-  ~ LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-  ~ HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-  ~ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-  ~ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-  ~ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
--->
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.nordicsemi.nrfUARTv2"
+    package="com.electronia.mElsmart"
     android:versionCode="43"
     android:versionName="2.0">
-
-    <uses-sdk
-        android:minSdkVersion="18"
-        android:targetSdkVersion="18" />
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -46,6 +22,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
+    <protected-broadcast android:name="com.motorola.motocare.INTENT_TRIGGER" />
+
     <permission
         android:name="com.example.aishwarya.myapplication.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
@@ -61,7 +39,36 @@
         android:icon="@drawable/blueicon"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@android:style/Theme.Holo.Light">
+        android:theme="@android:style/Theme.Holo.Light"
+        android:usesCleartextTraffic="true">
+
+        <activity
+            android:name=".Geo_QR_MapActivity"
+            android:label="@string/title_activity_geo__qr__map"
+            android:theme="@style/NoActionBarTheme" />
+        <activity
+            android:name=".ProjectDetails"
+            android:label="@string/title_activity_project_details"
+            android:theme="@style/NoActionBarTheme" />
+        <activity
+            android:name=".SignUp"
+            android:label="@string/title_activity_registration_page"
+            android:theme="@style/NoActionBarTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".LeaveRequest"
+            android:label="Leave Request"
+            android:theme="@style/NoActionBarTheme" />
+        <activity
+            android:name=".MPRequest"
+            android:label="@string/title_activity_mprequest"
+            android:theme="@style/NoActionBarTheme" />
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -70,13 +77,7 @@
             android:value="AIzaSyCvJ0aNZ5H7CNv9Zkh6zB_glNya-c4geHw" />
 
         <activity
-            android:name=".MainActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
             android:name=".DeviceListActivity"
-            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Dialog" />
 
         <service
@@ -87,57 +88,37 @@
             android:enabled="true" />
 
         <activity
-            android:name=".RegistrationActivity"
-            android:label="@string/Registration"
-            android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light" />
-        <activity
             android:name=".AboutActivity"
-            android:label="About"
-            android:parentActivityName=".MainActivity"
+            android:label="@string/title_activity_about"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light" />
+            android:theme="@style/NoActionBarTheme" />
         <activity
             android:name=".recordLogs"
             android:label="@string/Logs"
-            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light" />
+            android:theme="@style/NoActionBarTheme" />
         <activity
             android:name=".setting"
             android:label="@string/Settings"
-            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light" />
+            android:theme="@style/NoActionBarTheme" />
         <activity
             android:name=".Device"
             android:label="@string/device"
-            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light" />
+            android:theme="@style/NoActionBarTheme" />
         <activity
             android:name=".biometric"
             android:label="@string/title_activity_biometric" />
-        <activity
-            android:name=".barcodemain"
-            android:label="@string/title_activity_barcodemain"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppThemeQR" />
         <activity
             android:name=".barcode.barcodecaptureactivity"
             android:label="@string/title_activity_barcodecaptureactivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light" />
         <activity
-            android:name=".Tracking"
-            android:label="@string/title_activity_tracking"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light" />
-        <activity
             android:name=".Task"
             android:label="@string/title_activity_task"
-            android:parentActivityName=".Task_Details"
+            android:parentActivityName=".ProjectDetails"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light" />
         <activity
@@ -146,15 +127,14 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light" />
         <activity
-            android:name=".Projects"
+            android:name=".Tracking"
             android:label="@string/title_activity_projects"
-            android:parentActivityName=".Tracking"
+            android:parentActivityName=".ProjectDetails"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+            android:theme="@style/NoActionBarTheme" />
         <activity
             android:name=".test"
             android:label="@string/title_activity_test"
-            android:parentActivityName=".MainActivity"
             android:theme="@style/Theme.AppCompat.Light" />
         <activity
             android:name=".MapTracking"
@@ -164,19 +144,18 @@
         <activity
             android:name=".Task_Details"
             android:label="@string/title_activity_task__details"
-            android:parentActivityName=".Projects"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light" />
         <activity
             android:name=".TaskHistory"
             android:label="@string/title_activity_task_history"
-            android:parentActivityName=".Task_Details"
+            android:parentActivityName=".ProjectDetails"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light" />
         <activity
             android:name=".TaskOnMap"
             android:label="@string/title_activity_task_on_map"
-            android:parentActivityName=".Task_Details"
+            android:parentActivityName=".ProjectDetails"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
@@ -186,11 +165,6 @@
             android:exported="true" />
 
         <activity
-            android:name=".markattendanceActivity"
-            android:label="@string/title_activity_markattendance"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
-        <activity
             android:name=".mainpage"
             android:label="@string/title_activity_mainpage"
             android:screenOrientation="portrait" />
@@ -199,13 +173,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_registration_page"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:windowSoftInputMode="stateHidden" />
 
         <service
             android:name=".GeofenceLogService"
@@ -218,16 +186,16 @@
         <activity
             android:name=".setting_QR"
             android:label="@string/title_activity_setting__qr" />
-        <activity
-            android:name=".Geo_QR"
-            android:label="@string/title_activity_geo__qr"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light" />
 
         <service
             android:name=".PictureDownloadService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity
+            android:name=".Main2Activity"
+            android:label="@string/title_activity_main2"
+            android:theme="@style/NoActionBarTheme" />
     </application>
 
 </manifest>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/SignUp_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="20dp"
+    android:background="@drawable/backimage"
+>
+
+    <LinearLayout
+        android:id="@+id/login_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+
+        >
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/title_activity_sign_up"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/menu_title"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edtBadgeId"
+            android:singleLine="true"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@android:color/transparent"
+            android:drawableStart="@drawable/usersignup"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:hint="@string/BadgeNo"
+            android:inputType="textPersonName"
+            android:padding="10dp"
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            android:textSize="@dimen/textview_small_size" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:background="@color/colorPrimary" />
+
+        <EditText
+            android:id="@+id/edtURL"
+            android:singleLine="true"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:drawableStart="@drawable/url"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:hint="http://212.12.167.242:6002"
+            android:inputType="textPersonName"
+
+            android:padding="10dp"
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            android:textSize="@dimen/textview_small_size" />
+
+
+
+
+
+        <RadioGroup
+            android:id="@+id/radioSystem"
+            android:layout_width="228dp"
+            android:layout_height="47dp"
+            android:layout_marginStart="76dp"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal"
+            android:textDirection="locale"
+
+                       >
+
+            <RadioButton
+                android:id="@+id/Elsmart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:textColor="@color/colorPrimary"
+                android:text="@string/Elsmart"
+                android:textSize="@dimen/textview_small_size"/>
+
+            <RadioButton
+                android:id="@+id/Eacs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:textColor="@color/colorPrimary"
+                android:text="@string/Eacs"
+                android:textSize="@dimen/textview_small_size"/>
+
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btnSignup"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:background="@drawable/loginbutton_selector"
+            android:padding="3dp"
+            android:text="@string/title_activity_sign_up"
+            android:textColor="@color/cpb_white"
+            android:textSize="@dimen/button_tab_size"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>

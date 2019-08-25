@@ -1,12 +1,13 @@
 apply plugin: 'com.android.application'
 android {
     compileSdkVersion 'Google Inc.:Google APIs:24'
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 28
     defaultConfig {
-        applicationId "com.nordicsemi.nrfUARTv2"
+        applicationId "com.electronia.mElsmart"
         minSdkVersion 21
-        targetSdkVersion 21
+        targetSdkVersion 28
         vectorDrawables.useSupportLibrary = true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         setProperty("archivesBaseName", "Elsmart Mobile App")
     }
     dexOptions {
@@ -23,23 +24,46 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:23.0.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:appcompat-v7:21.0.3'
-    compile 'com.android.support:recyclerview-v7:23.0.0'
-    compile 'com.android.support:cardview-v7:23.0.0'
-    compile 'com.android.support:design:23.0.0'
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.google.android.gms:play-services-vision:12.0.1'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'com.google.android.gms:play-services-vision:12.0.1'
     implementation 'com.google.android.gms:play-services-maps:12.0.1'
     // implementation "com.google.android.gms:play-services-location:10.2.0"
     implementation 'com.google.android.gms:play-services-location:12.0.1'
     implementation 'com.google.android.gms:play-services-appinvite:12.0.1'
-    testCompile 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
     implementation 'com.google.maps.android:android-maps-utils:0.3.4'
-    compile 'com.jakewharton:butterknife:8.0.1'
+    implementation 'com.jakewharton:butterknife:8.0.1'
+    implementation files('libs/apache-commons-net.jar')
+
+    ////////////  compile 'com.android.support:appcompat-v7:27.0.0'
+    implementation 'androidx.annotation:annotation:1.1.0'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+
+
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
+    implementation 'androidx.vectordrawable:vectordrawable:1.0.1'
+    implementation 'com.google.android.material:material:1.0.0'
+
+
+    //implementation files('libs/commons-net-3.6.jar')
+    //implementation files('libs/commons-net-3.1.jar')
+
+
+    def nav_version = "1.0.0-alpha06"
+
+    implementation "android.arch.navigation:navigation-fragment:$nav_version"
+    implementation "android.arch.navigation:navigation-ui:$nav_version"
 }

@@ -117,7 +117,6 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_below="@+id/punch"
-
         android:layout_marginTop="10dp"
         android:foregroundGravity="center"
         android:gravity="center_vertical"

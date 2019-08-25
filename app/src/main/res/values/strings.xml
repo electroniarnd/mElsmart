@@ -69,13 +69,13 @@
     <string name="scan">Scan</string>
     <string name="cancel">Cancel</string>
     <string name="DebugValue">Debug</string>
-    <string name="action_settings">About</string>
+
     <string name="title_activity_registration">Registration Activity</string>
-    <string name="title_activity_about">AboutActivity</string>
+    <string name="title_activity_about">About</string>
 
     <string name="button_label_on">\u2713</string>
     <string name="button_label_off">off</string>
-
+    <string name="action_settings">About</string>
 
     <string name="Invalid_IN_Out">Invalid IN/Out</string>
     <string name="Invalid_Door">Invalid Door</string>
@@ -193,6 +193,7 @@
 
     <string name="Punch">Punch</string>
     <string name="Re_Register_for_Elsmart_System">Need to be Re-Register for Elsmart System</string>
+    <string name="Re_Register_for_Eacs_System">Need to be Re-Register for Eacs System</string>
     <string name="Secondary_Data_added_successfully">Secondary Data added successfully</string>
     <string name="title_activity_records">Records</string>
     <string name="Logs">Logs</string>
@@ -211,14 +212,14 @@
     <string name="title_activity_home">mElSmart</string>
     <string name="activity_home_desc">You have successfully logged in with fingerprint authentication</string>
     <string name="activity_home_note">Close and re-open the app to see the fingerprint auth screen again</string>
-    <string name="title_activity_barcode_capture">BarcodeCapture</string>
-    <string name="title_activity_barcodemain">Barcode</string>
+    <string name="title_activity_barcode_capture">QR Code</string>
+    <string name="title_activity_barcodemain">QR Code</string>
 
     <string name="ok">OK</string>
     <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
     <string name="no_camera_permission">This application cannot run because it does not have the camera permission.  The application will now exit.</string>
     <string name="low_storage_error">Face detector dependencies cannot be downloaded due to low device storage</string>
-    <string name="title_activity_barcodecaptureactivity">Barcode Capture Activity</string>
+    <string name="title_activity_barcodecaptureactivity">Scanning QR Code</string>
 
     <string name="emp_name">Name</string>
     <string name="Punch_Date">Punch Date</string>
@@ -290,9 +291,164 @@
     </string-array>
     <string name="title_activity_markattendance">Mark Attendance</string>
     <string name="title_activity_mainpage">Punch Type</string>
-    <string name="title_activity_registration_page">Registration</string>
+    <string name="title_activity_registration_page">ElGuard</string>
     <string name="geofence">GeoFence</string>
     <string name="title_activity_setting_geo">settingGeo</string>
     <string name="title_activity_setting__qr">setting_QR</string>
     <string name="title_activity_geo__qr">Geofence With QR Code</string>
+    <string name="title_activity_main2">Main2Activity</string>
+
+
+    <string name="title_project">Project</string>
+    <string name="title_attendance">Attendance</string>
+    <string name="title_manual_punch">Project</string>
+    <string name="title_task">Task</string>
+    <string name="title_profile">Profile</string>
+    <string name="show">Show</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_logs">logs</string>
+    <string name="title_defaults">Defalts</string>
+    <string name="title_activity_mprequest">Manual Punch Request</string>
+    <string name="title_activity_leave_request">Leave Request</string>
+    <string name="title_activity_sign_up">SIGNUP</string>
+
+    <string name="Local_Database_Error">Local Database Error</string>
+    <string name="Badge_No_not_found">Badge Number not found</string>
+    <string name="Internet_Connection_not_found">Internet Connection not found</string>
+    <string name="Please_enter_Date">Please Enter Date</string>
+    <string name="Please_enter_IN_Time">Please Enter IN Time</string>
+    <string name="Please_enter_OUT_Time">Please Enter OUT Time</string>
+    <string name="Please_check_IN_or_OUT_Checkbox">Please check IN/OUT Checkbox</string>
+    <string name="Error_in_Date_or_Time">Error in Date or Time</string>
+    <string name="Updated_Successfully">Updated Successfully</string>
+    <string name="Error_Connection_with_Server">Error:Connection with Server</string>
+    <string name="Loading"> Loading...</string>
+    <string name="Please_Wait"> Please Wait</string>
+
+    <string name="Please_enter_from_date">Please enter from date</string>
+    <string name="Please_enter_To_date">Please enter to date</string>
+    <string name="Error_in_reading_local_database">Error in reading local database</string>
+    <string name="Leave_Description_Error">Leave Description Error:</string>
+    <string name="Error_in_Leave_Description_database">Error in Leave Description database</string>
+    <string name="Leave_description_not_found">Leave description not found</string>
+    <string name="From_Date_and_To_Date_shouldbe_same">From Date and To Date should be same</string>
+    <string name="user_not_authorized_for_manual_punch">User not authorized for manual punch</string>
+    <string name="user_not_authorized_for_leave">User not authorized for leave</string>
+    <string name="Leave_already_exist">Leave already exist</string>
+    <string name="Ble_Registration_Failed">Ble Registration Failed:</string>
+    <string name="Geofence_Registration_Failed">Geofence Registration Failed:</string>
+    <string name="QR_Code_Registration_failed">QR Code Registration Failed:</string>
+    <string name="Profile_Photo_Error">Profile Photo Error:</string>
+    <string name="Server_database_update_failed">Server database update failed</string>
+    <string name="Already_Updated"> Already Updated</string>
+    <string name="Updating_Failed"> Update Failed</string>
+    <string name="Updating_failed_with_some_error">Updating failed with some error</string>
+    <string name="Error_in_inserting_local_database">Error in inserting local database</string>
+    <string name="Server_Offline">Server Offline</string>
+    <string name="Please_wait">Please wait for defined time and try again for server</string>
+    <string name="Other_server_connection_error">Other server connection error</string>
+    <string name="Network_Connection_Error">Network Connection Error</string>
+    <string name="Registration_Error">Registration Error</string>
+    <string name="Updating_Registration">Updating Registration....</string>
+    <string name="Please_Wait1">Please Wait</string>
+    <string name="BLE">BLE</string>
+    <string name="Geo">Geo</string>
+    <string name="QR">QR</string>
+    <string name="Geo_QR">Geo_QR</string>
+    <string name="MP">MP</string>
+    <string name="NA">NA</string>
+    <string name="Processing">Processing</string>
+    <string name="ble_not_available">BLE not available</string>
+    <string name="leave_request">Leave Request</string>
+    <string name="Manual_Punch_Request">Manual Punch Request</string>
+    <string name="ble_enable_problem">BLE Enable Problem</string>
+    <string name="BLE_registration_data_file_does_not_exist">BLE Registration data file does not exist</string>
+    <string name="not_Authorized">You are not authorized</string>
+    <string name="Device_support_UART"> Device does not support UART. Disconnecting</string>
+    <string name="Problem_in_BLE_turning_ON"> Problem in BLE Turning ON</string>
+    <string name="Error_in_reading_Mac_value">Error in reading  MAC value</string>
+    <string name="Error_in_writing_Mac_value"> Error in writing  MAC</string>
+    <string name="Log_Write_Error">Log Write Error</string>
+    <string name="Permission_denied_to_read_your_External_storage">Log Write Error</string>
+    <string name="Version">Version:</string>
+    <string name="mElsmartabt">mElsmart 2.0</string>
+    <string name="Contact_Us">Contact Us</string>
+    <string name="Address">" \n Husain Building \n King Abdul Aziz Street \n P.O. Box 180, Al-Khobar 31952 \n Kingdom of Saudi Arabia \n Phone:+966 13 894 4216 |  Fax:+966 13 894 9991 \n info@electronia.com | sales@electronia.com"</string>
+    <string name="Website">Website:</string>
+    <string name="QR_Code_not_found">QR Code not found</string>
+    <string name="QR_Code_not_matching">QR Code not matching</string>
+    <string name="No_Result_Found">No Result Found</string>
+    <string name="Log_Saved_OffLine">Log Saved OffLine</string>
+    <string name="OFFLINE">OFFLINE</string>
+    <string name="ONLINE">OFFLINE</string>
+    <string name="Data_deleted">Data deleted</string>
+    <string name="Fail_to_Delete">Fail to Delete</string>
+    <string name="List_View_Clicked">List View Clicked:</string>
+    <string name="Delete">Delete</string>
+    <string name="goefence_not_found_for_this_employee">Goefence not found for this employee</string>
+    <string name="you_are_inside">You are inside</string>
+    <string name="you_are_outside">You are Outside</string>
+    <string name="Building">Building</string>
+    <string name="Log_did_not_save_offline">Error:Log did not save Offline</string>
+    <string name="Gps_and_Network">Gps and Network both are not  enable</string>
+    <string name="assigned_any_geofence">You are not assigned any Geofence</string>
+    <string name="your_location_not_found">Your location  not found</string>
+    <string name="No">S.No</string>
+    <string name="Date">Date</string>
+    <string name="Terminal_No">Terminal No</string>
+    <string name="Direction">Direction</string>
+    <string name="MAC_Address"> MAC Address</string>
+    <string name="device_name"> Device Name</string>
+    <string name="Last_punch_not_found"> Last Punch Not found</string>
+    <string name="Manual_Punch_Detail"> Manual Punch Detail</string>
+    <string name="IN_Time">IN Time</string>
+    <string name="OUT_Time">OUT Time</string>
+    <string name="From_Date">From Date</string>
+    <string name="Remarks">Remarks</string>
+    <string name="Send">Send</string>
+    <string name="Leave_Detail">Leave Detail</string>
+    <string name="Leave_Type">Leave Type</string>
+    <string name="To_Date">To Date</string>
+    <string name="Hourly_Leave"> Hourly Leave</string>
+    <string name="no_geofence_record_found">No Geofence Record Found</string>
+    <string name="no_QR_record_found">No QR record found</string>
+    <string name="Enter_BadgeNo">Please Enter Badge Number </string>
+    <string name="Enter_URL">Please Enter URL </string>
+    <string name="Geofence_not_found"> Geofence not found </string>
+    <string name="No_Record_Found"> No Record Found. Please enter Correct Badge Number. </string>
+
+
+    <string name="Submit_Request">Submit Request</string>
+    <string name="title_activity_project_details">Project Details</string>
+    <string name="Please_Select_From_Date">Please Select From Date</string>
+    <string name="Please_Select_To_Date">Please Select To Date</string>
+    <string name="Connection_with_Server"> Error:Connection with Server</string>
+    <string name="Place"> Place</string>
+    <string name="DateTime">DateTime</string>
+    <string name="Tracking_data_is_not_found">Tracking data is not found</string>
+    <string name="Service_Not_Available"> Service Not Available</string>
+    <string name="Invalid_Latitude_or_Longitude_Used"> Invalid Latitude or Longitude Used</string>
+    <string name="No_Record">No Record Found</string>
+    <string name="Data_Saved_locally">No Internet Connection Found. Data Saved Locally</string>
+    <string name="Save_Successfully">Save Successfully</string>
+    <string name="Sending_Pending_Task">"Sending Pending Task..."</string>
+    <string name="Update">Update</string>
+    <string name="Task_Name">Task Name</string>
+    <string name="Start_Date">Start Date</string>
+    <string name="End_date">End date</string>
+    <string name="Plan">Plan</string>
+    <string name="Customer_Feedback">Customer Feedback</string>
+    <string name="Comments">Comments</string>
+    <string name="Task_Details"> Task Details</string>
+    <string name="Task_History"> Task History</string>
+    <string name="Task_on_Map"> Task on Map</string>
+    <string name="Assigned_Employee">Assigned Employee</string>
+    <string name="title_activity_geo__qr__map">Geo_QR_MapActivity</string>
+    <string name= "QR_Geo">QR Geo</string>
+    <string name= "MR">MR</string>
+    <string name= "QR__Code_Geo_Registration_failed">QR Code+Geofence Registration failed</string>
+
+
+
 </resources>

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2015, Nordic Semiconductor
   ~ All rights reserved.
   ~
@@ -35,8 +34,7 @@
         -->
     </style>
 
-    <style name="AppBaseTheme1" parent="android:Theme.NoDisplay">
-    </style>
+    <style name="AppBaseTheme1" parent="android:Theme.NoDisplay"></style>
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
@@ -44,13 +42,16 @@
 
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
+
     <color name="black">#000000</color>
     <color name="whitegrey">#FFF2F2F2</color>
+
+
     <!-- AlertDialog text color fix thanks to Shawn Castrianni, see: http://groups.google.com/group/android-developers/browse_thread/thread/f0b34621d3a70c4b -->
     <style name="DialogLight" parent="@android:style/Theme.Dialog">
-        
+
         <item name="android:windowBackground">@color/whitegrey</item>
-    	<item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
 
@@ -61,7 +62,11 @@
         <item name="colorAccent">#FF4081</item>
     </style>
 
-
+    <style name="NoActionBarTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">#FF4081</item>
+        <item name="colorPrimaryDark">#303F9F</item>
+        <item name="colorAccent">#3F51B5</item>
+    </style>
 
     <style name="NewDialog" parent="@android:style/Theme.Dialog">
 
@@ -80,19 +85,34 @@
     </style>
 
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="colorPrimary">@color/colorAccent</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+
         <item name="windowActionBar">true</item>
         <item name="windowNoTitle">true</item>
     </style>
 
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorPrimary">@color/colorAccent</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:fontFamily">20sp</item>
+    </style>
 
     <style name="AppThemeQR" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+
     </style>
 
 </resources>

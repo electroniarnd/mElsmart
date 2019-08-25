@@ -9,8 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        tools:context="com.nordicsemi.nrfUARTv2.Geo_QR"
+        tools:context="com.electronia.mElsmart.Geo_QR"
         android:orientation="vertical"
+        android:background="@drawable/backimage"
         android:id="@+id/rl">
 
 
@@ -20,7 +21,7 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.nordicsemi.nrfUARTv2.Geo_QR"/>
+        tools:context="com.electronia.mElsmart.Geo_QR"/>
     <LinearLayout
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
@@ -36,7 +37,7 @@
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:background="@color/Green"
-            android:text="punch"
+            android:text="@string/Punch"
             android:textColor="@android:color/background_light" />
 
 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">#000000</color>
-    <color name="colorPrimaryDark">#1e282d</color>
-    <color name="colorAccent">#2b48dd</color>
+    <color name="colorPrimary">#FF4081</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#3F51B5</color>
     <color name="textPrimary">#f5f5f5</color>
     <color name="textPrimaryDark">#95aab4</color>
     <color name="errorText">#ff7878</color>
@@ -15,7 +15,7 @@
 
     <color name="colorAccent2">#2c93b4</color>
     <color name="colorwhite">#ffffff</color>
-
+    <color name="button_selectorcolor">#9E9E9E</color>
 
 
 
@@ -73,4 +73,6 @@
 
     <color name="cpb_white">@android:color/white</color>
     <color name="cpb_orange">#FF4500</color>
+
+
 </resources>
