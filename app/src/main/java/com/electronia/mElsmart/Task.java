@@ -72,16 +72,7 @@ public class Task  extends Activity {
     List<String> list = new ArrayList<String>();
     String TaskId="";
     UrlConnection urlconnection;
-    String[] colors = {
-            "Initiated",
-            "Assigned",
-            "Started",
-            "Progress",
-            "Suspended",
-            "Resumed",
-            "Transfered",
-            "Finished"
-    };
+    String[] colors=new String[8];;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,6 +94,15 @@ public class Task  extends Activity {
         editfedback=(EditText) findViewById(R.id.editfedback);
         txtcomment=(EditText) findViewById(R.id.txtcomment);
         urlconnection = new UrlConnection(getApplicationContext());
+
+                colors[0]= "Initiated";
+                colors[1]= "Assigned";
+                colors[2]= "Started";
+                colors[3]=  "Progress";
+                colors[4]= "Suspended";
+                colors[5]= "Resumed";
+                colors[6]=  "Transfered";
+                colors[7]= "Finished";
 
         if(GetServiceURL()==1) {
             Toast.makeText(this, getResources().getString(R.string.Error_in_reading_local_database), Toast.LENGTH_LONG).show();
@@ -203,7 +203,7 @@ public class Task  extends Activity {
         if(taskid.length>1) {
             try {
                 db = controllerdb.getReadableDatabase();
-                Cursor cursor = db.rawQuery("SELECT * FROM  Tasks where Task_Id= " + taskid[0] + " and Employee_Id=" + taskid[1], null);
+                Cursor cursor = db.rawQuery("SELECT * FROM  Tasks where Task_Id= " + taskid[0] , null);
 
                 if (cursor.moveToFirst()) {
                     do {
@@ -279,13 +279,13 @@ public class Task  extends Activity {
 
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                String empid=TaskValue[1];
-                Bundle sendBundle = new Bundle();
-                sendBundle.putString("EmpID",empid);
-                Intent intent = new Intent(Task.this, Projects.class);
-                intent.putExtras(sendBundle);;
-                startActivity(intent);
-                finish();
+                //////String empid=TaskValue[1];
+                ////////Bundle sendBundle = new Bundle();
+               ////////// sendBundle.putString("EmpID",empid);
+               //////////// Intent intent = new Intent(Task.this, Projects.class);
+               ////////// intent.putExtras(sendBundle);;
+               ///////////// startActivity(intent);
+               ///////////// finish();
             }
         });
         AlertDialog alert = builder.create();

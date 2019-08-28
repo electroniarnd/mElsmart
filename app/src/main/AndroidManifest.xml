@@ -41,6 +41,14 @@
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Holo.Light"
         android:usesCleartextTraffic="true">
+        <service
+            android:name=".Services.TestService"
+            android:enabled="true"
+            android:exported="true"></service>
+        <service
+            android:name=".Services.AutoRegistration"
+            android:enabled="true"
+            android:exported="true" />
 
         <activity
             android:name=".Geo_QR_MapActivity"
@@ -53,20 +61,19 @@
         <activity
             android:name=".SignUp"
             android:label="@string/title_activity_registration_page"
+            android:screenOrientation="portrait"
             android:theme="@style/NoActionBarTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".LeaveRequest"
             android:label="Leave Request"
+            android:screenOrientation="portrait"
             android:theme="@style/NoActionBarTheme" />
         <activity
             android:name=".MPRequest"
             android:label="@string/title_activity_mprequest"
+            android:screenOrientation="portrait"
             android:theme="@style/NoActionBarTheme" />
 
         <meta-data
@@ -195,7 +202,15 @@
         <activity
             android:name=".Main2Activity"
             android:label="@string/title_activity_main2"
-            android:theme="@style/NoActionBarTheme" />
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBarTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
     </application>
 
 </manifest>

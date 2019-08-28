@@ -1,5 +1,6 @@
 package com.electronia.mElsmart;
 
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,7 +16,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.electronia.mElsmart.Services.AutoRegistration;
+import com.electronia.mElsmart.Services.TestService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -46,7 +50,8 @@ public class Main2Activity extends AppCompatActivity {
     public NavigationView navigationView;
     public ImageView imageview;
     public TextView BadgeNo,Name,txtLastPunch;
-
+    private static String ServiceURL = "";//+"/ElguardianService/Service1.svc/" +
+    private static int Registration = 0;
 
 
 
@@ -100,9 +105,43 @@ public class Main2Activity extends AppCompatActivity {
         Snackbar.make(navigation, "Some text", Snackbar.LENGTH_LONG).show();
 
     }
+    public boolean AutoUpdationActivity(){
+        ActivityManager manager = (ActivityManager)  getSystemService(ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
+        {
+            if ("com.electronia.mElsmart.Services.AutoRegistration"
+                    .equals(service.service.getClassName()))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
+    public Integer GetServiceURL()//////CHANGE INTO COMMON FUNCTION LATTER
+    {
+        Registration=0;
+        String MacValue="";
+        int res =1;
+        try {
+            database = db.getReadableDatabase();
+            Cursor cursor = database.rawQuery("SELECT * FROM  Registration", null);
+            if (cursor.moveToFirst()) {
+                do {
 
-
+                    ServiceURL=cursor.getString(cursor.getColumnIndex("url"));
+                    Registration++;
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            res =0;
+        }
+        catch (Exception ex) {
+            res=-1;
+            Log.d(TAG, ex.getMessage());
+        }
+        return res;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +149,19 @@ public class Main2Activity extends AppCompatActivity {
         setContentView(R.layout.activity_main2);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        if (GetServiceURL() == 1) {
+            Toast.makeText(this, getResources().getString(R.string.Error_in_reading_local_database), Toast.LENGTH_LONG).show();
+            return;
+        } else {
+            if (Registration == 0) {
+                Toast.makeText(this,  getResources().getString(R.string.Registration_does_not_exist), Toast.LENGTH_LONG).show();
+                Intent Registration = new Intent(this, SignUp.class);
+                startActivity(Registration);
+                return;
+            }
+        }
+
         viewPager = findViewById(R.id.view_pager);
         drawerLayout = findViewById(R.id.drawer_layout);
 
@@ -129,6 +181,9 @@ public class Main2Activity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         bindNavigationDrawer();
         initTitle();
+
+
+
         displayData();
         ReadRegValue();
 
@@ -143,7 +198,6 @@ public class Main2Activity extends AppCompatActivity {
         }
 
 
-
         }
 
     private void initTitle() {
@@ -153,20 +207,42 @@ public class Main2Activity extends AppCompatActivity {
                 toolbar.setTitle(navigation.getMenu().getItem(0).getTitle());
             }
         });
+
+
+        if (!AutoUpdationActivity()) {
+
+           // startService(new Intent(this, TestService.class));
+
+        }
     }
+
+
 
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
-        }
+            new AlertDialog.Builder(this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle(R.string.popup_title)
+                    .setMessage(R.string.popup_message)
+                    .setPositiveButton(R.string.popup_yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
-        moveTaskToBack(true);
-        finish();
-        System.gc();
-        System.exit(0);
+
+
+
+
+                                    finish();
+
+
+                        }
+                    })
+                    .setNegativeButton(R.string.popup_no, null)
+                    .show();
+        }
     }
 
 
@@ -349,6 +425,7 @@ public class Main2Activity extends AppCompatActivity {
         cursor.close();
         txtLastPunch.setText(LastPunch);
     }
+
 
 
 

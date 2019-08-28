@@ -17,7 +17,7 @@ import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
-public class ProjectDetails  extends TabActivity
+public class ProjectDetails  extends  TabActivity
 {
     String TaskId="";
     String[] TaskValue;
@@ -26,8 +26,19 @@ public class ProjectDetails  extends TabActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.project_tab);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
         mTitle.setText(getResources().getString(R.string.title_task));
+
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp); // your drawable
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+                finish();// Implemented by activity
+            }
+        });
+
 
         Intent intent = getIntent();
         TaskId = intent.getStringExtra("TaskID");

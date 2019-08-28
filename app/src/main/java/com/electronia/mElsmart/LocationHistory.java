@@ -110,7 +110,9 @@ public class LocationHistory extends AppCompatActivity
        // LocationHistory.AsyncTaskRunner runner1 = new LocationHistory.AsyncTaskRunner();
       //  runner1.execute("1","1","1");
       //  SaveTasks();
-
+        String CurrentDate = new SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(new Date());
+        LocationHistory.AsyncTaskRunner runner = new LocationHistory.AsyncTaskRunner();
+        runner.execute("0",CurrentDate,CurrentDate);
 
         edtfrom.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,6 +161,15 @@ public class LocationHistory extends AppCompatActivity
         btnGetLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (FromDate == null || FromDate.isEmpty() || FromDate.equals("null")) {
+                    Toast.makeText(LocationHistory.this,getResources().getString(R.string.Please_enter_from_date),Toast.LENGTH_LONG).show();
+                    return ;
+                }
+                if (ToDate == null || ToDate.isEmpty() || ToDate.equals("null")) {
+                    Toast.makeText(LocationHistory.this,getResources().getString(R.string.Please_Select_To_Date),Toast.LENGTH_LONG).show();
+                    return ;
+                }
             //    tvw.setText("Selected Date: "+ eText.getText());
                 LocationHistory.AsyncTaskRunner runner = new LocationHistory.AsyncTaskRunner();
                 runner.execute("1",FromDate,ToDate);
@@ -184,12 +195,7 @@ public class LocationHistory extends AppCompatActivity
                        // PAlertDialog(getResources().getString(R.string.Error), "Internet Connection not found");
                         return rest;
                     }
-                    if (FrmDate == null || FrmDate.isEmpty() || FrmDate.equals("null")) {
-                        return getResources().getString(R.string.Please_enter_from_date);
-                    }
-                    if (Todate == null || Todate.isEmpty() || Todate.equals("null")) {
-                        return getResources().getString(R.string.Please_Select_To_Date);
-                    }
+
                     lang= Locale.getDefault().getDisplayLanguage();
                     if(!lang.equals("English"))
                     {

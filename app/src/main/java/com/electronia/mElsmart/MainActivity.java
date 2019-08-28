@@ -596,6 +596,7 @@ public class MainActivity extends Fragment {
     }
 
 
+
     //UART service connected/disconnected
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder rawBinder) {

@@ -89,14 +89,14 @@ public class CustomAdapter_Mac extends BaseAdapter {
                 }
                 if(res>0)
                 {
-                    Toast.makeText(mContext, "Data deleted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Data deleted " + DeviceName.get(position), Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
                     Toast.makeText(mContext,
                             "Fail to Delete", Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(mContext, "Data deleted1"+holder.Delete.getText()+Delete.get(position), Toast.LENGTH_SHORT).show();
+             //   Toast.makeText(mContext, "Data deleted1"+holder.Delete.getText()+Delete.get(position), Toast.LENGTH_SHORT).show();
 
             }
         });

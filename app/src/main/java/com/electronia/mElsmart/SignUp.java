@@ -18,6 +18,8 @@ import android.os.Build;
 import android.os.Bundle;
 
 import com.electronia.mElsmart.Common.UrlConnection;
+import com.electronia.mElsmart.Services.AutoRegistration;
+import com.electronia.mElsmart.Services.TestService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -129,26 +131,30 @@ public class SignUp extends AppCompatActivity {
             }
         });
         Count=0;
-        if( ReadSystemValue() == 1) {
-            if (Count > 0) {
-                edtBadgeNo.setText(BadgeNo);
-                edtURL.setText(url);
-                btnregistration.setEnabled(false);
-                SignUp.AsyncTaskRunner runner = new SignUp.AsyncTaskRunner();
-                runner.execute();
-            }
-        }
-        else
-        {
-           Toast.makeText(this,"Local Database Error",Toast.LENGTH_LONG).show();
-        }
+      ///  if( ReadSystemValue() == 1) {
+          ///  if (Count > 0) {
+            ///    edtBadgeNo.setText(BadgeNo);
+              ///  edtURL.setText(url);
+              ///  btnregistration.setEnabled(false);
+               /// SignUp.AsyncTaskRunner runner = new SignUp.AsyncTaskRunner();
+                ///runner.execute();
+           /// }
+       /// }
+       /// else
+       /// {
+        //   Toast.makeText(this,"Local Database Error",Toast.LENGTH_LONG).show();
+       /// }
 
+        if (!AutoUpdationActivity()) {
 
+//   startService(new Intent(this, TestService.class));
+
+        }
         btnregistration.setOnClickListener(new View.OnClickListener() {
             @TargetApi(Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View v) {
-                String result = "", DisplayResult = "",UpdateValue="",ErrorValue="",result1="";
+                String result = "", DisplayResult = "",UpdateValue="",ErrorValue="",result1="",msg1="";
                 int res = 0;
 
                 RegisteredValue=0;
@@ -170,6 +176,7 @@ public class SignUp extends AppCompatActivity {
                     }
 
                         if (!urlconnection.checkConnection()) {
+                            PAlertDialog(getResources().getString(R.string.Error), getResources().getString(R.string.No_Internet_Connection_Found));
                         return;
                     }
                     result = connectionurlSecData();
@@ -187,7 +194,7 @@ public class SignUp extends AppCompatActivity {
                                 {
                                     if(result.contains("no_geofence_record_found"))
                                     {
-                                        msg= getResources().getString(R.string.no_geofence_record_found)  + "\n";
+                                        msg1= msg+ "\n"+getResources().getString(R.string.no_geofence_record_found);
                                     }
                                     else
                                         DisplayResult +=getResources().getString(R.string.Geofence_Registration_Failed)+"\n" + result + "\n";
@@ -199,15 +206,21 @@ public class SignUp extends AppCompatActivity {
                                 if (!result.equals("Success")) {
                                     if(result.contains("no_QR_record_found"))
                                     {
-                                        msg+= getResources().getString(R.string.no_QR_record_found)  + "\n";
+                                        if(msg1.contains("IMEI"))
+                                             msg1+=  "\n"+getResources().getString(R.string.no_QR_record_found);
+                                        else
+                                            msg1+= msg+ "\n"+getResources().getString(R.string.no_QR_record_found);
+
                                     }
                                     else
                                     DisplayResult += getResources().getString(R.string.QR_Code_Registration_failed) + "\n" + result;
                                 }
                                 //  PAlertDialog(getResources().getString(R.string.Error), "QR Code RegisTration Failed");
                             }
+
                             result="";
                             if (GeoQR == 1) {
+
                                 if(QRCode == 0)
                                 result = connectionurlQR();
                                 else
@@ -227,7 +240,8 @@ public class SignUp extends AppCompatActivity {
                                     {
                                         if(result.contains("no_geofence_record_found"))
                                         {
-                                            msg= getResources().getString(R.string.no_geofence_record_found)  + "\n";
+
+                                            msg1=msg+"\n"+ getResources().getString(R.string.no_geofence_record_found)  + "\n";
                                         }
                                         else
                                             DisplayResult +=getResources().getString(R.string.QR__Code_Geo_Registration_failed)+"\n" + result + "\n";
@@ -236,32 +250,30 @@ public class SignUp extends AppCompatActivity {
 
                                 else
                                 {
-                                    if(result.contains("no_QR_record_found"))
+                                    if(result.contains("no_QR_record_found")  )
                                     {
-                                        msg+= getResources().getString(R.string.no_QR_record_found)  + "\n";
+                                        if(msg1.contains("IMEI"))
+                                        msg1+= "\n"+getResources().getString(R.string.no_QR_record_found)  + "\n";
+                                        else
+                                            msg1+= msg+"\n"+getResources().getString(R.string.no_QR_record_found)  + "\n";
                                     }
                                     else
                                         DisplayResult += getResources().getString(R.string.QR__Code_Geo_Registration_failed) + "\n" + result;
                                 }
-
-
-
-
-
                             }
 
                             result=  GetEmpPic(Employee_Id);
 
                             if (!result.equals("Success"))
                             {
-                                msg +=getResources().getString(R.string.Profile_Photo_Error)+"\n" +result+"\n";
+                                msg1 +=getResources().getString(R.string.Profile_Photo_Error)+"\n" +result+"\n";
                             }
 
                             result=  LeaveDesc();
                             if (!result.equals("Success"))
                             {
 
-                                msg +=getResources().getString(R.string.Leave_Description_Error)+"\n" +result+"\n";
+                                msg1 +=getResources().getString(R.string.Leave_Description_Error)+"\n" +result+"\n";
                             }
 
                             if (!DisplayResult.equals("") && !DisplayResult.equals(null))
@@ -271,8 +283,13 @@ public class SignUp extends AppCompatActivity {
                             PAlertDialog(getResources().getString(R.string.Error), getResources().getString(R.string.Local_Database_Error));
                             return;
                         }
+
+
                         if (DisplayResult.equals("") || DisplayResult.equals(null)) {
-                            PAlertDialog1(getResources().getString(R.string.Information), getResources().getString(R.string.Registration_successfully) + "\n" + msg);
+                            if(!msg1.contains("IMEI"))
+                            PAlertDialog1(getResources().getString(R.string.Information), getResources().getString(R.string.Registration_successfully) + "\n" +msg + "\n" + msg1  );
+                            else
+                                PAlertDialog1(getResources().getString(R.string.Information), getResources().getString(R.string.Registration_successfully) + "\n" + msg1  );
                             UpdateValue=  UpdateStatus(31);
                             if(!UpdateValue.equals("Success"))
                             {
@@ -280,7 +297,7 @@ public class SignUp extends AppCompatActivity {
                             }
                         }
                         else
-                            PAlertDialog(getResources().getString(R.string.Information), getResources().getString(R.string.Registration_Failed) + "\n" + DisplayResult +  "\n"+msg);
+                            PAlertDialog(getResources().getString(R.string.Information), getResources().getString(R.string.Registration_Failed) + "\n" + DisplayResult +  "\n"+msg1);
 
                     } else {
                         if(result.contains("Please enter Correct Badge Number"))
@@ -290,7 +307,7 @@ public class SignUp extends AppCompatActivity {
                         else {
                             result = result.replace("`","");
                             result = result.replace("'","");
-                            PAlertDialog(getResources().getString(R.string.Error), getResources().getString(R.string.Registration_Failed) + ": " + "\n" + result + "\n" + DisplayResult + "\n" + msg);
+                            PAlertDialog(getResources().getString(R.string.Error), getResources().getString(R.string.Registration_Failed) + ": " + "\n" + result + "\n" + DisplayResult + "\n" + msg1);
                         }
                     }
 
@@ -301,6 +318,20 @@ public class SignUp extends AppCompatActivity {
             }
         });
     }
+
+    public boolean AutoUpdationActivity(){
+        ActivityManager manager = (ActivityManager)  getSystemService(ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
+        {
+            if ("com.electronia.mElsmart.Services.AutoRegistration"
+                    .equals(service.service.getClassName()))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     private String Auto_Registration()
     {
@@ -421,7 +452,7 @@ public class SignUp extends AppCompatActivity {
         try {
             String badgeno = edtBadgeNo.getText().toString();
 
-            msg = ( getResources().getString(R.string.BadgeNo)+ ": " + badgeno+ "\n" + getResources().getString(R.string.IMEI)+": "  + IMEI);
+        msg = ( getResources().getString(R.string.BadgeNo)+ ": " + badgeno+ "\n" + getResources().getString(R.string.IMEI)+": "  + IMEI);
             lang= Locale.getDefault().getDisplayLanguage();
 
             if(lang.equals("English")) {
@@ -867,21 +898,23 @@ public class SignUp extends AppCompatActivity {
             s = urlar+"/ElguardianService/Service1.svc/"  + "/GetImage" + "/" + Empid;
             EMPLOYEE_SERVICE_URI = s.replace(' ','-');
            data= urlconnection.ServerConnection_Pic(EMPLOYEE_SERVICE_URI);
-
-            if (data[0]==-100)//contains("`") || json.contains("^"))
+          if(data.length>0)
             {
-                res= getResources().getString(R.string.Please_wait) ;//"Please wait for defined time and try again for server";
-                return res;
-            }
-            if (data[0]==-101)//contains("`") || json.contains("^"))
-            {
-                res=getResources().getString(R.string.Server_Offline);//"Server Offline";
-                return res;
-            }
-            if (data[0]==-102)//contains("`") || json.contains("^"))
-            {
-                res=getResources().getString(R.string.Other_server_connection_error);//"Other Server Connection Error";
-                return res;
+                if (data[0] == -100)//contains("`") || json.contains("^"))
+                {
+                    res = getResources().getString(R.string.Please_wait);//"Please wait for defined time and try again for server";
+                    return res;
+                }
+                if (data[0] == -101)//contains("`") || json.contains("^"))
+                {
+                    res = getResources().getString(R.string.Server_Offline);//"Server Offline";
+                    return res;
+                }
+                if (data[0] == -102)//contains("`") || json.contains("^"))
+                {
+                    res = getResources().getString(R.string.Other_server_connection_error);//"Other Server Connection Error";
+                    return res;
+                }
             }
             UpdateLogData(Empid,data);
         } catch (Exception e) {
@@ -911,6 +944,8 @@ public class SignUp extends AppCompatActivity {
     {
         int res =0;
         try {
+            database=db.getWritableDatabase();
+            database.execSQL("delete from  Profile_Photo");
             database = db.getReadableDatabase();
             ContentValues values = new ContentValues();
             values.put("pic", img);

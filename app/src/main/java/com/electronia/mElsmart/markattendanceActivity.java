@@ -51,6 +51,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.electronia.mElsmart.Common.UrlConnection;
+import com.electronia.mElsmart.Services.AutoRegistration;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -89,6 +90,7 @@ import static android.content.Context.LOCATION_SERVICE;
 
 public class markattendanceActivity extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     private static final String TAG = "markattendanceActivity";
+    private static final String TODO ="" ;
     GoogleMap map;
     SupportMapFragment mapFragment;
     //  LatLng portLatLong,portLatLong1,portLatLong2,portLatLong3;
@@ -180,7 +182,7 @@ public class markattendanceActivity extends Fragment implements OnMapReadyCallba
             return;
         } else {
             if (Registration == 0) {
-                Toast.makeText(getActivity(),  getResources().getString(R.string.Registration_does_not_exist), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.Registration_does_not_exist), Toast.LENGTH_LONG).show();
                 Intent Registration = new Intent(getActivity(), SignUp.class);
                 startActivity(Registration);
                 return;
@@ -190,19 +192,19 @@ public class markattendanceActivity extends Fragment implements OnMapReadyCallba
 
         if (Geofence() == 1) {
             if (countGeofence == 0) {
-                Toast.makeText(getActivity(),  getResources().getString(R.string.goefence_not_found_for_this_employee), Toast.LENGTH_LONG);
+                Toast.makeText(getActivity(), getResources().getString(R.string.goefence_not_found_for_this_employee), Toast.LENGTH_LONG);
                 check_in_button.setEnabled(false);
             }
         } else {
-            Toast.makeText(getActivity(),  getResources().getString(R.string.Error_in_reading_local_database), Toast.LENGTH_LONG);
+            Toast.makeText(getActivity(), getResources().getString(R.string.Error_in_reading_local_database), Toast.LENGTH_LONG);
         }
         if (ReadSysSetting() == 0) {//check System Setting
-            Toast.makeText(getActivity(),  getResources().getString(R.string.Error_in_reading_local_database), Toast.LENGTH_LONG).show();//check_Setting();
+            Toast.makeText(getActivity(), getResources().getString(R.string.Error_in_reading_local_database), Toast.LENGTH_LONG).show();//check_Setting();
             return;
         }
 
         if (RaadGeoFence() != 1)
-            Toast.makeText(getActivity(),  getResources().getString(R.string.Error_in_reading_local_database), Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.Error_in_reading_local_database), Toast.LENGTH_LONG).show();
 
         in = MediaPlayer.create(getActivity(), R.raw.in);
         out = MediaPlayer.create(getActivity(), R.raw.out);
@@ -239,11 +241,11 @@ public class markattendanceActivity extends Fragment implements OnMapReadyCallba
                     Toast.makeText(getActivity(), getResources().getString(R.string.you_are_inside) + building, Toast.LENGTH_SHORT).show();
 
                 } else {
-                    if(Geolocation !=null) {
+                    if (Geolocation != null) {
                         map.moveCamera(CameraUpdateFactory.newLatLngZoom(Geolocation, 17.0f));
                         map.animateCamera(CameraUpdateFactory.zoomTo(17), 2000, null);
                     }
-                    Toast.makeText(getActivity(),getResources().getString(R.string.you_are_outside), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.you_are_outside), Toast.LENGTH_SHORT).show();
                     //  SoundIt(2);
 
                 }
@@ -270,6 +272,25 @@ public class markattendanceActivity extends Fragment implements OnMapReadyCallba
             };
             thread.start();
         }
+
+
+        if (!AutoUpdationActivity()) {
+
+            // getActivity().startService(new Intent(getActivity(), AutoRegistration.class));
+
+        }
+    }
+
+
+    public boolean AutoUpdationActivity() {
+        ActivityManager manager = (ActivityManager) getActivity().getSystemService(ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if ("com.electronia.mElsmart.Services.AutoRegistration"
+                    .equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -311,7 +332,7 @@ public class markattendanceActivity extends Fragment implements OnMapReadyCallba
 
 
             if (grantResults.length > 0) {
-                if(permissions != null) {
+                if (permissions != null) {
                     for (int i = 0; i < permissions.length; i++) {
 
 
@@ -371,11 +392,11 @@ public class markattendanceActivity extends Fragment implements OnMapReadyCallba
                 Toast.makeText(getActivity(), getResources().getString(R.string.you_are_inside) + building, Toast.LENGTH_SHORT).show();
 
             } else {
-                if(Geolocation !=null) {
+                if (Geolocation != null) {
                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(Geolocation, 17.0f));
                     map.animateCamera(CameraUpdateFactory.zoomTo(17), 2000, null);
                 }
-                Toast.makeText(getActivity(),getResources().getString(R.string.you_are_outside), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.you_are_outside), Toast.LENGTH_SHORT).show();
                 //  SoundIt(2);
 
             }
@@ -507,9 +528,10 @@ public class markattendanceActivity extends Fragment implements OnMapReadyCallba
         return res;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public String SaveLog(String BadgeNo, int punchtype, int geoid) {
 
-        String msg = "", s = "", lang = "", number = "", urlar = "", rest = "Success",json="";
+        String msg = "", s = "", lang = "", number = "", urlar = "", rest = "Success", json = "";
         Date dt = new Date();
         SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd");
         SimpleDateFormat df1 = new SimpleDateFormat("HH.mm.ss");
@@ -521,8 +543,20 @@ public class markattendanceActivity extends Fragment implements OnMapReadyCallba
         String formattedDate2 = "";// = time.format(dt.getTime());
         String formatDate = "";// = dfDate.format(dt.getTime());
         try {
-            lang= Locale.getDefault().getDisplayLanguage();
-
+            lang = Locale.getDefault().getDisplayLanguage();
+            Criteria criteria = new Criteria();
+            bestProvider = locationManager.getBestProvider(criteria, false);
+            if (getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && getActivity().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    Activity#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for Activity#requestPermissions for more details.
+                return TODO;
+            }
+            location = locationManager.getLastKnownLocation(bestProvider);
             //  String time = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS").format(location.getTime());
             if (location.getProvider().equals(android.location.LocationManager.GPS_PROVIDER)) {
                 formattedDate = df.format(location.getTime());
@@ -608,11 +642,14 @@ public class markattendanceActivity extends Fragment implements OnMapReadyCallba
     }
 
 
+
+
     private class AsyncTaskRunnerSecond extends AsyncTask<String, String, String> {
 
         private String resp;
         ProgressDialog progressDialog;
 
+        @RequiresApi(api = Build.VERSION_CODES.M)
         @Override
         protected String doInBackground(String... params) {
             publishProgress("Sleeping..."); // Calls onProgressUpdate()
@@ -1313,6 +1350,7 @@ public class markattendanceActivity extends Fragment implements OnMapReadyCallba
 
     public Integer GetServiceURL()//////CHANGE INTO COMMON FUNCTION LATTER
     {
+        Registration=0;
         String MacValue="";
         int res =1;
         try {
@@ -1412,7 +1450,7 @@ public class markattendanceActivity extends Fragment implements OnMapReadyCallba
         ActivityManager manager = (ActivityManager) getActivity().getSystemService(ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
         {
-            if ("com.nordicsemi.nrfUARTv2.LocationUpdateservice"
+            if ("com.electronia.mElsmart.LocationUpdateservice"
                     .equals(service.service.getClassName()))
             {
                 return true;
@@ -1426,7 +1464,7 @@ public class markattendanceActivity extends Fragment implements OnMapReadyCallba
         ActivityManager manager = (ActivityManager) getActivity().getSystemService(ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
         {
-            if ("com.nordicsemi.nrfUARTv2.GeofenceLogService"
+            if ("com.electronia.mElsmart.GeofenceLogService"
                     .equals(service.service.getClassName()))
             {
                 return true;
@@ -1440,7 +1478,7 @@ public class markattendanceActivity extends Fragment implements OnMapReadyCallba
         ActivityManager manager = (ActivityManager)  getActivity().getSystemService(ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
         {
-            if ("com.nordicsemi.nrfUARTv2.LocationMonitoringService"
+            if ("com.electronia.mElsmart.LocationMonitoringService"
                     .equals(service.service.getClassName()))
             {
                 return true;

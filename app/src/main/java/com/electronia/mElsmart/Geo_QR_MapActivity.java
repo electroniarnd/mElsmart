@@ -86,6 +86,7 @@ public class Geo_QR_MapActivity extends AppCompatActivity implements OnMapReadyC
 
     {
         private static final String TAG ="Geo_QR_MapActivity" ;
+        private static final String TODO ="" ;
         GoogleMap map;
         SupportMapFragment mapFragment;
 
@@ -386,7 +387,8 @@ public class Geo_QR_MapActivity extends AppCompatActivity implements OnMapReadyC
 
 
 
-        public String SaveLog(String BadgeNo,int punchtype,int geoid) {
+        @RequiresApi(api = Build.VERSION_CODES.M)
+        public String SaveLog(String BadgeNo, int punchtype, int geoid) {
 
             String msg = "", s = "", lang = "", number = "", urlar = "", rest = "Success",json="";
             Date dt = new Date();
@@ -401,7 +403,19 @@ public class Geo_QR_MapActivity extends AppCompatActivity implements OnMapReadyC
             String formatDate = "";// = dfDate.format(dt.getTime());
             try {
                 lang= Locale.getDefault().getDisplayLanguage();
-
+                Criteria criteria = new Criteria();
+                bestProvider = locationManager.getBestProvider(criteria, false);
+                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    Activity#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for Activity#requestPermissions for more details.
+                    return TODO;
+                }
+                location = locationManager.getLastKnownLocation(bestProvider);
                 //  String time = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS").format(location.getTime());
                 if (location.getProvider().equals(android.location.LocationManager.GPS_PROVIDER)) {
                     formattedDate = df.format(location.getTime());

@@ -141,23 +141,27 @@ public class LeaveRequest extends AppCompatActivity {
 
 
 
-                            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+                            SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
                             Date dtFromDate = sdf.parse(edtFromDate.getText().toString());
                             Date stToDate = sdf.parse(edtToDate.getText().toString());
 
 
                             if (dtFromDate.after(stToDate)) {
-                                Toast.makeText(LeaveRequest.this, getResources().getString(R.string.Please_enter_IN_Time), Toast.LENGTH_LONG).show();
+                                Toast.makeText(LeaveRequest.this, getResources().getString(R.string.Please_enter_valid_Date), Toast.LENGTH_LONG).show();
                                 return;
                             }
                             if (HourTime.isChecked()) {
-                                Hourly = "1";
                                 ErrorValue = edtTime.getText().toString();
-                                if (ErrorValue == null || ErrorValue.isEmpty() || ErrorValue.equals("null")) {
-                                    Toast.makeText(LeaveRequest.this, getResources().getString(R.string.Please_enter_IN_Time), Toast.LENGTH_LONG).show();
+                                if (ErrorValue.equals("00:00") ) {
+                                    Toast.makeText(LeaveRequest.this, getResources().getString(R.string.Please_enter_valid_Time), Toast.LENGTH_LONG).show();
                                     return;
                                 }
-                                else if(dtFromDate.after(stToDate) || dtFromDate.before(stToDate) )
+
+                                Hourly = "1";
+
+
+                                 if(dtFromDate.after(stToDate) || dtFromDate.before(stToDate) )
                                 {
                                     Toast.makeText(LeaveRequest.this, getResources().getString(R.string.From_Date_and_To_Date_shouldbe_same), Toast.LENGTH_LONG).show();
                                     return;

@@ -82,29 +82,29 @@
     <string name="CARD_BLACKLISTED">البطاقة محظورة</string>
     <string name="ACCESS_DENIED">تم رفض الدخول</string>
     <string name="CARD_EXPIRED">البطاقة منتهية</string>
-    <string name="ANTIPASS_BACK_ERROR">ANTIPASS BACK ERROR</string>
+    <string name="ANTIPASS_BACK_ERROR">خطأ عدم الرجوع</string>
     <string name="ACCESS_DURING_LOCK">الدخول أثناء القفل</string>
     <string name="ACCESS_DURING_HOLIDAY">الدخول أثناء العطل</string>
     <string name="ACCESS_DURING_LEAVE">الدخول أثناء الإجازة</string>
     <string name="PIN_FAIL">فشل الرقم السري</string>
     <string name="BIO_FAIL">فشل البصمة</string>
-    <string name="DURESS_CODE">DURESS CODE</string>
+    <string name="DURESS_CODE">كود الانذار </string>
     <string name="ACCESS_SCHEDULE">جدول العبور</string>
 
     <string name="ACCESS_SCORT">ACCESS SCORT</string>
     <string name="CARDTWING">CARDTWING</string>
     <string name="OK">حسناً</string>
-    <string name="title_activity_setting">Setting</string>
+    <string name="title_activity_setting">الإعدادات</string>
     <string name="title_activity_test">test</string>
 
 
 
-    <string name="SYSTEM_HALTED">SYSTEM HALTED</string>
+    <string name="SYSTEM_HALTED">توقف النظام</string>
     <string name="FPTIMEOUTERROR">FPTIME OUT ERROR</string>
-    <string name="NOTSUPPORTED">NOT SUPPORTED</string>
-    <string name="NOTENROLLED">NOT ENROLLED</string>
-    <string name="NOFINGERDETECT">NO FINGER DETECTED</string>
-    <string name="READER_ERROR">AREADER ERROR</string>
+    <string name="NOTSUPPORTED">غير مدعومة</string>
+    <string name="NOTENROLLED">غير مسجلة</string>
+    <string name="NOFINGERDETECT">لم يتم تحديد البصمة</string>
+    <string name="READER_ERROR">خطأ في القارئ</string>
 
 
 
@@ -222,7 +222,7 @@
     <string name="title_alert_no_intenet">No internet</string>
     <string name="msg_alert_no_internet">Please make sure that you have active internet connection.</string>
     <string name="msg_location_service_started">Location Tracking Started</string>
-    <string name="settings">settings</string>
+    <string name="settings">الإعدادات</string>
     <string name="permission_denied_explanation">You have not granted location permission. So the service cannot be started.</string>
     <string name="permission_rationale">Please grant location permission to start the service</string>
     <string name="btn_label_refresh">Refresh</string>
@@ -272,20 +272,20 @@
     </string-array>
 
 
-    <string name="title_activity_map_tracking">MapTracking</string>
-    <string name="title_activity_task__details">Task_Details</string>
-    <string name="title_activity_task_history">TaskHistory</string>
-    <string name="title_activity_task_on_map">TaskOnMap</string>
-    <string name="title_activity_markattendance">Mark Attendance</string>
+    <string name="title_activity_map_tracking">Map Tracking</string>
+    <string name="title_activity_task__details">Task Details</string>
+    <string name="title_activity_task_history">Task History</string>
+    <string name="title_activity_task_on_map">Task On Map</string>
+    <string name="title_activity_markattendance">Geofence</string>
     <string name="title_activity_mainpage">Punch Type</string>
     <string name="title_activity_registration_page">ElGuard</string>
-    <string name="geofence">GeoFence</string>
-    <string name="title_activity_setting_geo">settingGeo</string>
-    <string name="title_activity_setting__qr">setting_QR</string>
+    <string name="geofence">Geofence</string>
+    <string name="title_activity_setting_geo">Setting Geo</string>
+    <string name="title_activity_setting__qr">Setting QR</string>
     <string name="title_activity_geo__qr">Geofence With QR Code</string>
 
 
-    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_main2">Main Activity</string>
     <string name="title_attendance">Attendance</string>
     <string name="title_project">Project</string>
     <string name="title_manual_punch">Manual Punch</string>
@@ -296,10 +296,10 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_activity_logs">logs</string>
-    <string name="title_defaults">Defalts</string>
+    <string name="title_defaults">Defalt</string>
     <string name="title_activity_mprequest">Manual Punch Request</string>
     <string name="title_activity_leave_request">Leave Request</string>
-    <string name="title_activity_sign_up">SIGNUP</string>
+    <string name="title_activity_sign_up">SIGN UP</string>
 
     <string name="Local_Database_Error">Local Database Error</string>
     <string name="Badge_No_not_found">Badge Number not found</string>
@@ -312,7 +312,7 @@
     <string name="Updated_Successfully">Updated Successfully</string>
     <string name="Error_Connection_with_Server">Error:Connection with Server</string>
     <string name="Loading"> Loading...</string>
-    <string name="Please_Wait"> Please Wait</string>
+    <string name="Please_Wait"> Please Wait...</string>
     <string name="Please_enter_from_date">Please enter from date</string>
     <string name="Please_enter_To_date">Please enter to date</string>
     <string name="Error_in_reading_local_database">Error in reading local database</string>
@@ -324,73 +324,73 @@
     <string name="user_not_authorized_for_leave">User not authorized for leave</string>
     <string name="Leave_already_exist">Leave already exist</string>
     <string name="Ble_Registration_Failed">Ble Registration Failed:</string>
-    <string name="Geofence_Registration_Failed">Geofence Registration Failed:</string>
-    <string name="QR_Code_Registration_failed">QR Code RegisTration Failed:</string>
-    <string name="Profile_Photo_Error">Profile Photo Error:</string>
-    <string name="Server_database_update_failed">Server database update failed</string>
-    <string name="Already_Updated"> Already Updated</string>
-    <string name="Updating_Failed"> Update Failed</string>
-    <string name="Updating_failed_with_some_error">Updating failed with some error</string>
-    <string name="Error_in_inserting_local_database">Error in inserting local database</string>
-    <string name="Server_Offline">Server Offline</string>
-    <string name="Please_wait">Please wait for defined time and try again for server</string>
-    <string name="Other_server_connection_error">Other server connection error</string>
-    <string name="Network_Connection_Error">Network Connection Error</string>
-    <string name="Re_Register_for_Eacs_System">Need to be Re-Register for Eacs System</string>
+
+
+    <string name="Geofence_Registration_Failed">فشل تسجيل  المنطقة الجغرافية</string>
+    <string name="QR_Code_Registration_failed">فشل تسجيل رمزQR</string>
+    <string name="Profile_Photo_Error">خطأ في صورة الملف الشخصي:</string>
+    <string name="Server_database_update_failed">فشل تحديث قاعدة بيانات الخادم</string>
+    <string name="Already_Updated">محدّث بالفعل </string>
+    <string name="Updating_Failed">فشل التحديث </string>
+    <string name="Updating_failed_with_some_error">فشل التحديث مع بعض الأخطاء</string>
+    <string name="Error_in_inserting_local_database">خطأ في إدراج قاعدة البيانات المحلية</string>
+    <string name="Server_Offline">خادم غير متصل</string>
+    <string name="Please_wait">يرجى الانتظار لوقت محدد والمحاولة مرة أخرى للخادم</string>
+    <string name="Other_server_connection_error">خطأ في اتصال الخادم الآخر</string>
+    <string name="Network_Connection_Error">خطأ في اتصال الشبكة</string>
+    <string name="Re_Register_for_Eacs_System">تحتاج إلى أن تكون إعادة تسجيل لنظام EACS</string>
     <string name="Registration_Error">Registration Error</string>
-    <string name= "Updating_Registration">Updating Registration....</string>
-    <string name= "Please_Wait1">Please Wait</string>
+    <string name= "Updating_Registration">تحديث التسجيل...</string>
+    <string name= "Please_Wait1">فضلاً الإنتظار</string>
     <string name= "BLE">BLE</string>
     <string name= "Geo">Geo</string>
     <string name= "QR">QR</string>
     <string name= "Geo_QR">Geo_QR</string>
     <string name= "MP">MP</string>
-    <string name= "NA">NA</string>
-    <string name= "Processing">Processing</string>
-    <string name= "ble_not_available">ble not available</string>
-    <string name= "leave_request">Leave Request</string>
-    <string name= "Manual_Punch_Request">Manual Punch Request</string>
-    <string name= "ble_enable_problem">BLE Enable Problem</string>
-    <string name= "BLE_registration_data_file_does_not_exist">BLE Registration data file does not exist</string>
-    <string name= "not_Authorized">You are not authorized</string>
-    <string name= "Device_support_UART">Device does not support UART. Disconnecting</string>
-    <string name= "Problem_in_BLE_turning_ON"> Problem in BLE Turning ON</string>
-    <string name= "Error_in_reading_Mac_value"> Error in reading  MAC value</string>
-    <string name= "Error_in_writing_Mac_value"> Error in writing  MAC</string>
-    <string name= "Log_Write_Error">Log Write Error</string>
+    <string name= "NA">لايمكن تطبيقه</string>
+    <string name= "Processing">معالجة</string>
+    <string name= "ble_not_available">BLE غير متوافر</string>
+    <string name= "leave_request">طلب الإجازة</string>
+    <string name= "Manual_Punch_Request">طلب البصمة اليدوي</string>
+    <string name= "ble_enable_problem">BLE فشل تمكين</string>
+    <string name= "BLE_registration_data_file_does_not_exist">BLE   ملف بيانات التسجيل غير موجود</string>
+    <string name= "not_Authorized">أنك غير مخول</string>
+    <string name= "Device_support_UART">الجهاز لا يدعم UART. تم الفصل</string>
+    <string name= "Problem_in_BLE_turning_ON"> مشكلة في تشغيل BLE</string>
+    <string name= "Error_in_reading_Mac_value"> خطأ في قرائة قيم MAC</string>
+    <string name= "Error_in_writing_Mac_value">خطأ في كتابة MAC</string>
+    <string name= "Log_Write_Error">  فشل الدخول في قاعدة البيانات المحلية</string>
     <string name= "Permission_denied_to_read_your_External_storage">Log Write Error</string>
-    <string name= "Version">Version:</string>
+    <string name= "Version">الإصدار :</string>
     <string name= "mElsmartabt">mElsmart 2.0</string>
-    <string name= "Contact_Us">Contact Us</string>
-    <string name= "Address">"Husain Building \n King Abdul Aziz Street \n
-                     P.O. Box 180, Al-Khobar 31952 \n
-                     Kingdom of Saudi Arabia \n
-                     Phone:+966 13 894 4216 |  Fax:+966 13 894 9991 \n
-                     info@electronia.com | sales@electronia.com"</string>
+    <string name= "Contact_Us">تواصل معنا </string>
+    <string name= "Address">"مبنى حسين /شارع الملك عبدالعزيز/ص.ب .180 الخبر الرمز البريدي 31952 /المملكة العربية السعودية /هاتف :+966 13 8944216/فاكس :+966 138949991 /إيميل info@electronia.com | sales@electronia.co"</string>
 
-    <string name= "Website">Website:</string>
-    <string name= "QR_Code_not_found">QR Code not found</string>
-    <string name= "QR_Code_not_matching">QR Code not matching</string>
-    <string name= "No_Result_Found">No Result Found</string>
-    <string name= "Log_Saved_OffLine">Log Saved OffLine</string>
-    <string name= "OFFLINE">OFFLINE</string>
-    <string name= "ONLINE">OFFLINE</string>
-    <string name= "Data_deleted">Data deleted</string>
-    <string name= "Fail_to_Delete">Fail to Delete</string>
-    <string name= "List_View_Clicked">List View Clicked:</string>
-    <string name= "Delete">Delete</string>
-    <string name= "goefence_not_found_for_this_employee">Goefence not found for this employee</string>
-    <string name= "you_are_inside">You are inside:</string>
-    <string name= "you_are_outside">You are outside:</string>
-    <string name= "Building">Building</string>
-    <string name= "Log_did_not_save_offline">Error:Log did not save Offline</string>
-    <string name= "Gps_and_Network">Gps and Network both are not  enable</string>
-    <string name= "assigned_any_geofence">You are not assigned any Geofence</string>
-    <string name= "your_location_not_found">Your location  not found</string>
-    <string name= "No">S.No</string>
-    <string name= "Date">Date</string>
-    <string name= "Terminal_No">Terminal No</string>
-    <string name= "Direction">Direction</string>
+    <string name= "Website">صفحة الإنترنت </string>
+    <string name= "QR_Code_not_found">رمز QR غير موجود</string>
+    <string name= "QR_Code_not_matching">رمز QR غير متطابق</string>
+    <string name= "No_Result_Found">لم يتم العثور على نتائج</string>
+    <string name= "Log_Saved_OffLine">تم حفظ الدخول وهو غير متصل بالشبكة</string>
+    <string name= "OFFLINE">غير متصل</string>
+    <string name= "ONLINE">عبر الانترنت</string>
+    <string name= "Data_deleted">نجحت عملية الحذف</string>
+    <string name= "Fail_to_Delete">فشلت عملية الحذف</string>
+    <string name= "List_View_Clicked">عرض قائمة النقر:</string>
+    <string name= "Delete">مسح</string>
+    <string name= "goefence_not_found_for_this_employee">المنطقة الجغرافية غيرم عينة لهذا الموظف </string>
+    <string name= "you_are_inside">انت بالداخل </string>
+    <string name= "you_are_outside">انت بالخارج</string>
+    <string name= "Building">مبنى</string>
+    <string name= "Log_did_not_save_offline">خطأ :الدخول لا يحفظ وهو غير متصل بالشبكة</string>
+    <string name= "Gps_and_Network">GPS والشبكة كلاهما غير ممكن</string>
+    <string name= "assigned_any_geofence">م يتم تعيين أي منطقة جغرافية</string>
+    <string name= "your_location_not_found">موقعك غير موجود</string>
+    <string name= "No">الرقم التسلسلي</string>
+    <string name= "Date">التاريخ</string>
+
+
+    <string name= "Terminal_No">رقم القارئ</string>
+    <string name= "Direction">الإتجاه</string>
     <string name= "MAC_Address"> MAC Address</string>
     <string name= "device_name"> Device Name</string>
     <string name= "Last_punch_not_found"> Last Punch Not found</string>
@@ -411,8 +411,6 @@
     <string name= "Enter_URL">Please Enter URL </string>
     <string name= "Geofence_not_found"> Geofence not found </string>
     <string name= "No_Record_Found"> No Record Found. Please enter Correct Badge Number. </string>
-
-
     <string name="title_activity_project_details">Project Details</string>
     <string name="Please_Select_From_Date">Please Select From Date</string>
     <string name="Please_Select_To_Date">Please Select To Date</string>
@@ -440,7 +438,8 @@
     <string name= "QR_Geo">QR Geo</string>
     <string name= "MR">MR</string>
     <string name= "QR__Code_Geo_Registration_failed">QR Code+Geofence Registration failed</string>
-    QR_Code_Registration_failed
+    <string name= "Please_enter_valid_Time">Please enter valid time</string>
+    <string name= "Please_enter_valid_Date">From date should before end date</string>
 
 
 

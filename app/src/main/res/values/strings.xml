@@ -443,11 +443,14 @@
     <string name="Task_Details"> Task Details</string>
     <string name="Task_History"> Task History</string>
     <string name="Task_on_Map"> Task on Map</string>
-    <string name="Assigned_Employee">Assigned Employee</string>
+    <string name="Assigned_Employee">Employee</string>
     <string name="title_activity_geo__qr__map">Geo_QR_MapActivity</string>
     <string name= "QR_Geo">QR Geo</string>
     <string name= "MR">MR</string>
     <string name= "QR__Code_Geo_Registration_failed">QR Code+Geofence Registration failed</string>
+    <string name= "Please_enter_valid_Time">Please enter valid time</string>
+    <string name= "Please_enter_valid_Date">From date should before end date</string>
+
 
 
 

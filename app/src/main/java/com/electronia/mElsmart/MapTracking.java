@@ -53,8 +53,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class MapTracking  extends AppCompatActivity implements OnMapReadyCallback {
@@ -174,13 +176,27 @@ public class MapTracking  extends AppCompatActivity implements OnMapReadyCallbac
         btnGetLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (FromDate == null || FromDate.isEmpty() || FromDate.equals("null")) {
+
+                    Toast.makeText(MapTracking.this,getResources().getString(R.string.Please_enter_from_date),Toast.LENGTH_LONG).show();
+                    return ;
+
+                }
+                if (ToDate == null || ToDate.isEmpty() || ToDate.equals("null")) {
+
+                    Toast.makeText(MapTracking.this,getResources().getString(R.string.Please_Select_To_Date),Toast.LENGTH_LONG).show();
+                    return ;
+                }
                 //    tvw.setText("Selected Date: "+ eText.getText());
                 MapTracking.AsyncTaskRunner runner = new MapTracking.AsyncTaskRunner();
                 runner.execute("1",FromDate,ToDate);
             }
         });
 
-
+        String CurrentDate = new SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(new Date());
+        MapTracking.AsyncTaskRunner runner = new MapTracking.AsyncTaskRunner();
+        runner.execute("0",CurrentDate,CurrentDate);
 
     }
 
@@ -354,15 +370,7 @@ public class MapTracking  extends AppCompatActivity implements OnMapReadyCallbac
                     rest=getResources().getString(R.string.Internet_Connection_not_found);
                     return getResources().getString(R.string.Internet_Connection_not_found);
                 }
-                if (FrmDate == null || FrmDate.isEmpty() || FrmDate.equals("null")) {
 
-                    return getResources().getString(R.string.Please_enter_from_date);
-
-                }
-                if (Todate == null || Todate.isEmpty() || Todate.equals("null")) {
-
-                    return getResources().getString(R.string.Please_enter_To_date);
-                }
                 lang= Locale.getDefault().getDisplayLanguage();
 
                 if(!lang.equals("English"))
