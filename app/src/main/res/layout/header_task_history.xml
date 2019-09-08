@@ -19,7 +19,8 @@
             android:background="#c0c0c0"
             android:gravity="left"
             android:padding="10sp"
-            android:text="Place/Status"
+            android:textSize="@dimen/button_tab_size"
+            android:text="@string/Place_Status"
             android:textStyle="bold"></TextView>
 
 
@@ -31,7 +32,8 @@
             android:background="#c0c0c0"
             android:gravity="left"
             android:padding="10sp"
-            android:text="Date/Updated By"
+            android:textSize="@dimen/button_tab_size"
+            android:text="@string/Date_Updated_By"
             android:textStyle="bold"></TextView>
 
 

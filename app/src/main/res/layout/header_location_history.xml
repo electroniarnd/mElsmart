@@ -19,6 +19,7 @@
             android:background="#c0c0c0"
             android:gravity="left"
             android:padding="10sp"
+            android:textSize="@dimen/button_tab_size"
             android:paddingLeft="0sp"
             android:text="@string/Place"
             android:textStyle="bold"></TextView>
@@ -32,6 +33,7 @@
             android:background="#c0c0c0"
             android:gravity="left"
             android:padding="10sp"
+            android:textSize="@dimen/button_tab_size"
             android:text="@string/DateTime"
             android:textStyle="bold"></TextView>
 

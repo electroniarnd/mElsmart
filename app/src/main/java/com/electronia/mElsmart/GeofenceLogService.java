@@ -55,7 +55,7 @@ public class GeofenceLogService extends Service {
             StrictMode.setThreadPolicy(policy);
         }
         if(ReadTrackingValue()==1)
-            Toast.makeText(this,"Error in reading local Database",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,getResources().getString(R.string.Error_in_reading_local_database),Toast.LENGTH_LONG).show();
         ReadLog();
         stopSelf();
         return Service.START_STICKY;
@@ -144,6 +144,7 @@ public class GeofenceLogService extends Service {
             e.printStackTrace();
 //            Toast.makeText(getBaseContext(), e.getMessage(),
 //                    Toast.LENGTH_SHORT).show();
+            UpdateLogData(logid);
             Toast.makeText(this, "ERROR:"+e.getMessage(),Toast.LENGTH_LONG).show();
             return false;
         }

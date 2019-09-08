@@ -18,7 +18,8 @@
         <ImageView
             android:id="@+id/itemImage"
             android:layout_width="86dp"
-            android:layout_height="34dp"
+            android:layout_height="37dp"
+            android:paddingTop="4dp"
             android:layout_gravity="center_horizontal"
             android:scaleType="fitCenter"
             android:src="@drawable/tasks" />
@@ -31,7 +32,7 @@
             android:layout_below="@id/itemImage"
             android:gravity="center"
             android:padding="5dp"
-            android:text="Sample title"
+            android:textSize="@dimen/textview_small_size"
             android:textColor="@android:color/black" />
 
 

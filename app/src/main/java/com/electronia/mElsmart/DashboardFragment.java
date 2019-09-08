@@ -1,7 +1,5 @@
 package com.electronia.mElsmart;
 
-import android.app.ActivityManager;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -17,13 +15,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.electronia.mElsmart.Services.AutoRegistration;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.content.Context.ACTIVITY_SERVICE;
 import static com.electronia.mElsmart.MainActivity.TAG;
 
 public class DashboardFragment extends Fragment {

@@ -22,13 +22,12 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.app.Activity;
+import android.os.Handler;
 import android.os.StrictMode;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -51,7 +50,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.electronia.mElsmart.Common.UrlConnection;
-import com.electronia.mElsmart.Services.AutoRegistration;
+import com.electronia.mElsmart.Services.LogUpdateService;
+import com.electronia.mElsmart.Services.TestService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -251,29 +251,34 @@ public class markattendanceActivity extends Fragment implements OnMapReadyCallba
                 }
             }
         });
-        if (!checkServiceRunningGeoLog()) {
-            Thread thread = new Thread() {
-                @Override
-                public void run() {
-                    getActivity().startService(new Intent(getActivity(), GeofenceLogService.class));
-                }
-            };
-            thread.start();
-        }
+
+
         markattendanceActivity.AsyncTaskRunner runner = new markattendanceActivity.AsyncTaskRunner();
         runner.execute();
-        if (!checkServiceRunning()) {
 
-            Thread thread = new Thread() {
-                @Override
-                public void run() {
-                    getActivity().startService(new Intent(getActivity(), LocationUpdateservice.class));
-                }
-            };
-            thread.start();
+        if(urlconnection.checkConnection()) {
+            if (!checkServiceRunningGeoLog()) {
+                Thread thread = new Thread() {
+                    @Override
+                    public void run() {
+                        getActivity().startService(new Intent(getActivity(), LogUpdateService.class));
+                    }
+                };
+                thread.start();
+            }
+
+            if (!checkServiceRunning()) {
+
+                Thread thread = new Thread() {
+                    @Override
+                    public void run() {
+                        getActivity().startService(new Intent(getActivity(), LocationUpdateservice.class));
+                    }
+                };
+                thread.start();
+            }
+
         }
-
-
         if (!AutoUpdationActivity()) {
 
             // getActivity().startService(new Intent(getActivity(), AutoRegistration.class));
@@ -754,7 +759,7 @@ public class markattendanceActivity extends Fragment implements OnMapReadyCallba
     public Integer WriteLogData(String Badgeno, String dt, String time,String formattedDate,String formattedDate1, int punchtype, int geofenceid, int sent)//////CHANGE INTO COMMON FUNCTION LATTER
     {
         int res = 0;
-        String Punchtpe = "Geo";
+        String Punchtpe = getResources().getString(R.string.Geo);
         try {
             database = db.getWritableDatabase();
             database.execSQL("INSERT INTO tblLogs(BadgeNo,date,time,direction,GeoID,PunchType,sent,Ter,datetosent,timetosent)VALUES('" + BadgeNo + "','" + dt + "','" + time + "'," + punchtype + "," + geofenceid + ",'" + Punchtpe + "'," + sent + ",'" + building + "','" + formattedDate + "','" + formattedDate1 + "')");
@@ -969,9 +974,22 @@ public class markattendanceActivity extends Fragment implements OnMapReadyCallba
         if (punchtype == 1) {
             SoundIt(1);
             txtLastPunch.setText(getResources().getString(R.string.IN));
-            if(!checkLocationMonitoringServiceRunning()) {
-                getActivity().startService(new Intent(getActivity(), LocationMonitoringService.class));
-            }
+
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // Do something after 5s = 5000ms
+                    if(urlconnection.checkConnection()) {
+                        if (!checkLocationMonitoringServiceRunning()) {
+                            getActivity().startService(new Intent(getActivity(), LocationMonitoringService.class));
+                        }
+                    }
+                }
+            }, 5000);
+
+
+
         }
         else {
             SoundIt(0);
@@ -997,6 +1015,7 @@ public class markattendanceActivity extends Fragment implements OnMapReadyCallba
                 txtGeoname.setText("");
 
                 mPopupWindow.dismiss();
+
             }
         });
         mRelativeLayout.post(new Runnable() {
@@ -1326,15 +1345,16 @@ public class markattendanceActivity extends Fragment implements OnMapReadyCallba
     @Override
     public void onResume() {
         super.onResume();
-
-        if (!checkServiceRunningGeoLog()) {
-            Thread thread = new Thread() {
-                @Override
-                public void run() {
-                    getActivity().startService(new Intent(getActivity(), GeofenceLogService.class));
-                }
-            };
-            thread.start();
+        if(urlconnection.checkConnection()) {
+            if (!checkServiceRunningGeoLog()) {
+                Thread thread = new Thread() {
+                    @Override
+                    public void run() {
+                        getActivity().startService(new Intent(getActivity(), LogUpdateService.class));
+                    }
+                };
+                thread.start();
+            }
         }
 
         Log.d(TAG, "onResume");
@@ -1464,7 +1484,7 @@ public class markattendanceActivity extends Fragment implements OnMapReadyCallba
         ActivityManager manager = (ActivityManager) getActivity().getSystemService(ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
         {
-            if ("com.electronia.mElsmart.GeofenceLogService"
+            if ("com.electronia.mElsmart.Services.LogUpdateService"
                     .equals(service.service.getClassName()))
             {
                 return true;

@@ -233,7 +233,7 @@ public class TaskHistory extends Activity
         public String WriteMACAddress(String json1)//////CHANGE INTO COMMON FUNCTION LATTER
         {
             Integer result=0;
-
+            String requiredDate="";
             String Place="",rest="Success";
             SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss",Locale.ENGLISH);
         //    SimpleDateFormat format = new SimpleDateFormat("EE MMM dd HH:mm:ss z yyyy",
@@ -252,9 +252,17 @@ public class TaskHistory extends Activity
 
                    // date1 = format.parse(urlValue[3].replaceAll("[^' ':/\\w\\[\\]]", ""));
                     String ss = urlValue[3].replaceAll("[^' ':/\\w\\[\\]]", "");
-                    date1 = format.parse(ss);
-                    DateFormat df = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
-                    String requiredDate = df.format(date1).toString();
+                   try {
+                       date1 = format.parse(ss);
+                       DateFormat df = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a");
+                       requiredDate = df.format(date1).toString();
+                   }
+                   catch (Exception ex)
+                   {
+
+
+                   }
+
 
 
                     if (urlValue.length > 0) {

@@ -42,32 +42,30 @@
         android:theme="@android:style/Theme.Holo.Light"
         android:usesCleartextTraffic="true">
         <service
-            android:name=".Services.TestService"
-            android:enabled="true"
-            android:exported="true"></service>
+            android:name=".Services.LogUpdateService"
+            android:exported="false"></service>
         <service
-            android:name=".Services.AutoRegistration"
+            android:name=".Services.TestService"
             android:enabled="true"
             android:exported="true" />
 
         <activity
             android:name=".Geo_QR_MapActivity"
-            android:label="@string/title_activity_geo__qr__map"
+            android:label="@string/QR_Geo"
             android:theme="@style/NoActionBarTheme" />
         <activity
             android:name=".ProjectDetails"
             android:label="@string/title_activity_project_details"
+            android:screenOrientation="portrait"
             android:theme="@style/NoActionBarTheme" />
         <activity
             android:name=".SignUp"
             android:label="@string/title_activity_registration_page"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBarTheme">
-
-        </activity>
+            android:theme="@style/NoActionBarTheme"></activity>
         <activity
             android:name=".LeaveRequest"
-            android:label="Leave Request"
+            android:label="@string/leave_request"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBarTheme" />
         <activity
@@ -201,15 +199,13 @@
 
         <activity
             android:name=".Main2Activity"
-            android:label="@string/title_activity_main2"
+            android:label="@string/title_activity_registration_page"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBarTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
     </application>
 

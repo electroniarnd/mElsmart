@@ -92,14 +92,17 @@ public class MPRequest extends AppCompatActivity {
                                 IN_Time=((sHour)<10?("0"+(sHour)):(sHour)) + "." + ((sMinute<10)? ("0"+(sMinute)):sMinute);
                                 edtFromTime.setText(((sHour)<10?("0"+(sHour)):(sHour)) + ":" + ((sMinute<10)? ("0"+(sMinute)):sMinute));
                             }
-                        }, hour, minutes, true);
+                        }, hour, minutes, false);
 
                 Timepicker.show();
+
             }
         });
 
 
-        edtToTime.setOnClickListener(new View.OnClickListener() {
+
+
+                edtToTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Calendar cldr = Calendar.getInstance();
@@ -113,7 +116,7 @@ public class MPRequest extends AppCompatActivity {
                                 Out_Time=((sHour)<10?("0"+(sHour)):(sHour)) + "." + ((sMinute<10)? ("0"+(sMinute)):sMinute);
                                 edtToTime.setText(((sHour)<10?("0"+(sHour)):(sHour)) + ":" + ((sMinute<10)? ("0"+(sMinute)):sMinute));
                             }
-                        }, hour, minutes, true);
+                        }, hour, minutes, false);
                 Timepicker.show();
             }
         });

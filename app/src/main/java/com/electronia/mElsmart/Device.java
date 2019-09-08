@@ -74,6 +74,7 @@ public class Device extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View v,
                                     final int position, long id) {
                 Log.i("List View Clicked", "**********");
+                displayData();
                // Toast.makeText(Device.this, getResources().getString(R.string.List_View_Clicked) + position, Toast.LENGTH_LONG).show();
             }
         });

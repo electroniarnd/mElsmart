@@ -51,6 +51,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.electronia.mElsmart.Common.UrlConnection;
+import com.electronia.mElsmart.Services.LogUpdateService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -92,6 +93,7 @@ public class Geo_QR extends Fragment
 {
     private static final String TAG ="markattendanceActivity" ;
     private static final int BARCODE_READER_REQUEST_CODE = 1;
+
     GoogleMap map;
 
     //  LatLng portLatLong,portLatLong1,portLatLong2,portLatLong3;
@@ -161,7 +163,7 @@ public class Geo_QR extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.activity_barcodemain, container, false);
+        view = inflater.inflate(R.layout.activity_geo__qr, container, false);
         return view;
     }
 
@@ -169,8 +171,12 @@ public class Geo_QR extends Fragment
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        check_in_button = (Button) view.findViewById(R.id.scan_barcode_button);
+        check_in_button = (Button) view.findViewById(R.id.scan_barcode_button1);
         urlconnection = new UrlConnection(getActivity().getApplicationContext());
+        in = MediaPlayer.create(getActivity(), R.raw.in);
+        out = MediaPlayer.create(getActivity(), R.raw.out);
+        error = MediaPlayer.create(getActivity(), R.raw.error);
+        qrcode = MediaPlayer.create(getActivity(), R.raw.qrcode);
         db =new Controllerdb(getContext());
         if(GetServiceURL()==1) {
             Toast.makeText(getActivity(), getResources().getString(R.string.Error_in_reading_local_database), Toast.LENGTH_LONG).show();
@@ -188,17 +194,7 @@ public class Geo_QR extends Fragment
         }
 
 
-        if(Geofence()==1)
-        {
-            if(countGeofence==0) {
-                Toast.makeText(getActivity(), getResources().getString(R.string.goefence_not_found_for_this_employee), Toast.LENGTH_LONG);
-                check_in_button.setEnabled(false);
-            }
-        }
-        else
-        {
-            Toast.makeText(getActivity(),getResources().getString(R.string.Error_in_reading_local_database),Toast.LENGTH_LONG);
-        }
+
         if(ReadSysSetting()==0) {//check System Setting
             Toast.makeText(getActivity(),getResources().getString(R.string.Error_in_reading_local_database), Toast.LENGTH_LONG).show();//check_Setting();
             return;
@@ -217,6 +213,36 @@ public class Geo_QR extends Fragment
             @Override
             public void onClick(View v) {
 
+
+
+                countQR=0;
+                if (QrCode() == 1) {
+                    if (countQR == 0) {
+                        Toast.makeText(getActivity(), getResources().getString(R.string.QR_Code_not_found), Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                } else {
+                    Toast.makeText(getActivity(), getResources().getString(R.string.Error_in_reading_local_database), Toast.LENGTH_LONG);
+                    return;
+                }
+
+                countGeofence=0;
+                if(Geofence()==1)
+                {
+
+
+
+                    if(countGeofence==0) {
+                        Toast.makeText(getActivity(), getResources().getString(R.string.goefence_not_found_for_this_employee), Toast.LENGTH_LONG);
+                      //  check_in_button.setEnabled(false);
+                        return;
+                    }
+                }
+                else
+                {
+                    Toast.makeText(getActivity(),getResources().getString(R.string.Error_in_reading_local_database),Toast.LENGTH_LONG);
+                }
+
                     Intent intent = new Intent(getActivity().getApplicationContext(), barcodecaptureactivity.class);
                     startActivityForResult(intent, BARCODE_READER_REQUEST_CODE);
 
@@ -224,7 +250,28 @@ public class Geo_QR extends Fragment
             }
         });
     }
+    public Integer QrCode()//////CHANGE INTO COMMON FUNCTION LATTER
+    {
+        String MacValue="";
+        int res =0;
+        try {
+            database = db.getReadableDatabase();
+            Cursor cursor = database.rawQuery("SELECT * FROM  QRCode_Permission", null);
+            if (cursor.moveToFirst()) {
+                do {
+                    countQR++;
 
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            res =1;
+        }
+        catch (Exception ex) {
+            res=-0;
+            Log.d(TAG, ex.getMessage());
+        }
+        return res;
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -313,7 +360,17 @@ public class Geo_QR extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-
+        if(urlconnection.checkConnection()) {
+            if (!checkServiceRunningGeoLog()) {
+                Thread thread = new Thread() {
+                    @Override
+                    public void run() {
+                        getActivity().startService(new Intent(getActivity(), LogUpdateService.class));
+                    }
+                };
+                thread.start();
+            }
+        }
         Log.d(TAG, "onResume");
 
 
@@ -404,6 +461,8 @@ public class Geo_QR extends Fragment
 
                         {
                             Toast.makeText(getActivity(),getResources().getString(R.string.QR_Code_not_matching),Toast.LENGTH_LONG).show();
+                            //scanResult.setTextColor(Color.RED);
+                            SoundIt(2);
                         }
                     } else {
                         Toast.makeText(getActivity(),getResources().getString(R.string.No_Result_Found),Toast.LENGTH_LONG).show();
@@ -427,6 +486,24 @@ public class Geo_QR extends Fragment
                 break;
         }
     }
+
+
+    private void SoundIt(int index) {
+        switch (index) {
+            case 0:
+                out.start();
+                break;
+            case 1:
+                in.start();
+                break;
+            case 2:
+                qrcode.start();
+                break;
+
+        }
+
+    }
+
 
     public Integer ReadQRCode(String QRCodeValue)//////CHANGE INTO COMMON FUNCTION LATTER
     {
@@ -458,5 +535,19 @@ public class Geo_QR extends Fragment
         }
         return res;
     }
+
+    public boolean checkServiceRunningGeoLog(){
+        ActivityManager manager = (ActivityManager) getActivity().getSystemService(ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
+        {
+            if ("com.electronia.mElsmart.Services.LogUpdateService"
+                    .equals(service.service.getClassName()))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
 

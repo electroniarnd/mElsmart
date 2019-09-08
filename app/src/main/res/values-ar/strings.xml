@@ -53,7 +53,7 @@
     <string name="title_activity_registration">نشاط التسجيل</string>
     <string name="title_activity_about">عن النشاط</string>
     <string name="action_settings">عن</string>
-    <string name="Connected">-Connected</string>
+    <string name="Connected">متصل </string>
     <string name="button_label_on">\u2713</string>
     <string name="button_label_off">مغلق</string>
     <string name="title_activity_tracking">Tracking</string>
@@ -113,7 +113,7 @@
     <string name="connecting">يتم الإتصال</string>
     <string name="Registration_data_file_does_not_exist">ملف بيانات التسجيل غير موجود</string>
     <string name="Registration_does_not_exist">التسجيل غير موجود</string>
-    <string name="onResume_BT_not_enabled_yet">onResume - BT not enabled yet</string>
+    <string name="onResume_BT_not_enabled_yet">لم يتم تنشيط BT بعد</string>
     <string name="onResume">إعادة</string>
     <string name="onRestart">إعادة بدء</string>
     <string name="onPause">إيقاف مؤقت</string>
@@ -199,7 +199,7 @@
 
     <string name="title_activity_device">جهاز</string>
     <string name="title_activity_barcode_capture">تم التقاط الباركود</string>
-    <string name="title_activity_barcodemain">QR Code</string>
+    <string name="title_activity_barcodemain">رمز الإستجابة السريعة</string>
     <string name="title_activity_barcodecaptureactivity">نشاط التقاط الباركود </string>
 
 
@@ -213,22 +213,22 @@
     <string name="Punch_Date">تاريخ التبصيم</string>
     <string name="Punch_Time">وقت التبصيم</string>
     <string name="Last_Punch">اخر بصمة</string>
-    <string name="title_task">Task</string>
+    <string name="title_task">مهمه على الخريطة </string>
     <string name="Settings">الإعدادات</string>
     <string name="Registered_Terminal">القارىء المسجل</string>
-    <string name="Cust_Mismatch">Customer Mismatch</string>
-    <string name="General_Errr">General Error</string>
+    <string name="Cust_Mismatch">عدم تطابق العملاء</string>
+    <string name="General_Errr">خطأ عام </string>
 
-    <string name="title_alert_no_intenet">No internet</string>
-    <string name="msg_alert_no_internet">Please make sure that you have active internet connection.</string>
-    <string name="msg_location_service_started">Location Tracking Started</string>
+    <string name="title_alert_no_intenet">لايوجد إنترنت</string>
+    <string name="msg_alert_no_internet">الرجاء التأكد من وجود اتصال انترنت نشط</string>
+    <string name="msg_location_service_started">بدء تتبع الموقع</string>
     <string name="settings">الإعدادات</string>
-    <string name="permission_denied_explanation">You have not granted location permission. So the service cannot be started.</string>
-    <string name="permission_rationale">Please grant location permission to start the service</string>
-    <string name="btn_label_refresh">Refresh</string>
-    <string name="Upload">Upload</string>
+    <string name="permission_denied_explanation">لم تمنح اذن الموقع . لذا لا يمكن بدأ الخدمة</string>
+    <string name="permission_rationale">الرجاء منح إذن الموقع الخدمة لبدأ الخدمة </string>
+    <string name="btn_label_refresh">تحديث</string>
+    <string name="Upload">رفع</string>
 
-    <string name="no_google_playservice_available">No Google Playservice found. Please install it.</string>
+    <string name="no_google_playservice_available">لم يتم العثور على خدمة Google Play . الرجاء تثبيته .</string>
 
     <string name="Complete">Complete</string>
 
@@ -243,9 +243,9 @@
     <string name="CustomSelectorSample">Custom Selector Sample</string>
 
 
-    <string name="title_activity_projects">Projects</string>
-    <string name="title_activity_task">Task</string>
-    <string name="title_activity_location_history">Location History</string>
+    <string name="title_activity_projects">مشاريع</string>
+    <string name="title_activity_task">مهمه على الخريطة </string>
+    <string name="title_activity_location_history">تاريخ الموقع</string>
     <array name="sample_list">
 
         <item>@string/IndeterminateProgressSample</item>
@@ -261,69 +261,85 @@
     </array>
 
     <string-array name="spinner_task">
-        <item>Initiated</item>
-        <item>Started</item>
-        <item>Progress</item>
-        <item>Suspended</item>
-        <item>Resumed</item>
-        <item>Transfered</item>
-        <item>Finished</item>
+        <item>بداء</item>
+
+        <item>بدأ</item>
+        <item>تقدم</item>
+        <item>معلق</item>
+        <item>استئناف</item>
+        <item>تم نقلها</item>
+        <item>تم الإنتهاء منه</item>
 
     </string-array>
 
 
-    <string name="title_activity_map_tracking">Map Tracking</string>
-    <string name="title_activity_task__details">Task Details</string>
-    <string name="title_activity_task_history">Task History</string>
-    <string name="title_activity_task_on_map">Task On Map</string>
-    <string name="title_activity_markattendance">Geofence</string>
-    <string name="title_activity_mainpage">Punch Type</string>
+
+
+
+    <string name="Initiated">بداء</string>
+    <string name="Assigned"> تعيين</string>
+
+    <string name="Started">بدأ</string>
+    <string name="Progress">تقدم</string>
+    <string name="Suspended">معلق</string>
+    <string name="Resumed">استئناف</string>
+    <string name="Transfered">تم نقلها</string>
+    <string name="Finished">تم الإنتهاء منه</string>
+
+
+
+    <string name="title_activity_map_tracking">تتبع الخرائط</string>
+    <string name="title_activity_task__details">تفاصيل المهمه</string>
+    <string name="title_activity_task_history">تاريخ المهمه</string>
+    <string name="title_activity_task_on_map">مهمه على الخريطة </string>
+    <string name="title_activity_markattendance">السور الجغرافي </string>
+    <string name="title_activity_mainpage">نوع البصمة </string>
     <string name="title_activity_registration_page">ElGuard</string>
-    <string name="geofence">Geofence</string>
-    <string name="title_activity_setting_geo">Setting Geo</string>
-    <string name="title_activity_setting__qr">Setting QR</string>
-    <string name="title_activity_geo__qr">Geofence With QR Code</string>
+    <string name="geofence">السور الجغرافي  </string>
+    <string name="title_activity_setting_geo">اعداد السور الجغرافي</string>
+    <string name="title_activity_setting__qr">اعداد رمز الإستجابة السريعة</string>
+    <string name="title_activity_geo__qr">السور الجغرافي مع رمز الإستجابة السريعة</string>
 
 
-    <string name="title_activity_main2">Main Activity</string>
-    <string name="title_attendance">Attendance</string>
-    <string name="title_project">Project</string>
-    <string name="title_manual_punch">Manual Punch</string>
+    <string name="title_activity_main2">النشاط الرئيسي</string>
+    <string name="title_attendance">الحضور</string>
+    <string name="title_project">مشروع</string>
+    <string name="title_manual_punch">بصمة يدوية</string>
 
-    <string name="title_profile">Profile</string>
-    <string name="show">Show</string>
+    <string name="title_profile">ملف شخصي</string>
+    <string name="show">عرض</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="title_activity_logs">logs</string>
-    <string name="title_defaults">Defalt</string>
-    <string name="title_activity_mprequest">Manual Punch Request</string>
-    <string name="title_activity_leave_request">Leave Request</string>
-    <string name="title_activity_sign_up">SIGN UP</string>
+    <string name="navigation_drawer_open">فتح درج التنقل</string>
+    <string name="navigation_drawer_close">إغلاق درج التنقل</string>
+    <string name="title_activity_logs">السجلات </string>
+    <string name="title_defaults">افتراضي</string>
+    <string name="title_activity_mprequest">طلب بصمة يدوياً</string>
+    <string name="title_activity_leave_request">طلب إجازة</string>
+    <string name="title_activity_sign_up">التسجيل </string>
 
-    <string name="Local_Database_Error">Local Database Error</string>
-    <string name="Badge_No_not_found">Badge Number not found</string>
-    <string name="Internet_Connection_not_found">Internet Connection not found</string>
-    <string name="Please_enter_Date">Please Enter Date</string>
-    <string name="Please_enter_IN_Time">Please Enter IN Time</string>
-    <string name="Please_enter_OUT_Time">Please Enter OUT Time</string>
+    <string name="Local_Database_Error">خطاء في قاعدة البيانات المحلية </string>
+    <string name="Badge_No_not_found">لم يتم العثور على رقم الشارة </string>
+    <string name="Internet_Connection_not_found">لم يتم العثور على إتصال الإنترنت </string>
+    <string name="Please_enter_Date">يرجى إدخال وقت التاريخ</string>
+    <string name="Please_enter_IN_Time">يرجى إدخال وقت الدخول</string>
+    <string name="Please_enter_OUT_Time">يرجى إدخال وقت الخروج </string>
     <string name="Please_check_IN_or_OUT_Checkbox">الرجاء التحقق من خانه تسجيل الدخول / الخروج</string>
-    <string name="Error_in_Date_or_Time">Error in Date or Time</string>
-    <string name="Updated_Successfully">Updated Successfully</string>
-    <string name="Error_Connection_with_Server">Error:Connection with Server</string>
-    <string name="Loading"> Loading...</string>
-    <string name="Please_Wait"> Please Wait...</string>
-    <string name="Please_enter_from_date">Please enter from date</string>
-    <string name="Please_enter_To_date">Please enter to date</string>
-    <string name="Error_in_reading_local_database">Error in reading local database</string>
-    <string name="Leave_Description_Error">Leave Description Error:</string>
-    <string name="Error_in_Leave_Description_database">Error in Leave Description database</string>
-    <string name="Leave_description_not_found">Leave description not found</string>
-    <string name="From_Date_and_To_Date_shouldbe_same">From Date and To Date should be same</string>
-    <string name="user_not_authorized_for_manual_punch">User not authorized for manual punch</string>
-    <string name="user_not_authorized_for_leave">User not authorized for leave</string>
-    <string name="Leave_already_exist">Leave already exist</string>
-    <string name="Ble_Registration_Failed">Ble Registration Failed:</string>
+    <string name="Error_in_Date_or_Time">خطاء في التاريخ او الوقت</string>
+    <string name="Updated_Successfully">تم التحميل بنجاح </string>
+    <string name="Error_Connection_with_Server">خطاء: الإتصال مع الخادم</string>
+    <string name="Loading">جاري التحميل ...</string>
+    <string name="Please_Wait"> يرجى الإنتظار ...</string>
+    <string name="Please_enter_from_date">يرجى إدخال تاريخ البدء</string>
+    <string name="Please_enter_To_date">يرجى إدخال تاريخ الإنتهاء</string>
+    <string name="Error_in_reading_local_database">خطاء في قراءة قاعدة البيانات المحلية</string>
+    <string name="Leave_Description_Error">خطاء في وصف الإجازة:</string>
+    <string name="Error_in_Leave_Description_database">  خطأ في قاعدة بيانات وصف الإجازة</string>
+    <string name="Leave_description_not_found">لم يتم العثورعلى وصف الإجازة </string>
+    <string name="From_Date_and_To_Date_shouldbe_same">تاريخ البدء وتاريخ الإنتهاء يجب ان يكون مماثل </string>
+    <string name="user_not_authorized_for_manual_punch">المستخدم غير مصرح له بالتسجيل اليدوي</string>
+    <string name="user_not_authorized_for_leave">المستخدم غير مصرح له بالإجازة</string>
+    <string name="Leave_already_exist">الإجازة موجودة سابقاً</string>
+    <string name="Ble_Registration_Failed">فشل تسجيل البلوتوث منخفض الطاقة:</string>
 
 
     <string name="Geofence_Registration_Failed">فشل تسجيل  المنطقة الجغرافية</string>
@@ -364,7 +380,12 @@
     <string name= "Version">الإصدار :</string>
     <string name= "mElsmartabt">mElsmart 2.0</string>
     <string name= "Contact_Us">تواصل معنا </string>
-    <string name= "Address">"مبنى حسين /شارع الملك عبدالعزيز/ص.ب .180 الخبر الرمز البريدي 31952 /المملكة العربية السعودية /هاتف :+966 13 8944216/فاكس :+966 138949991 /إيميل info@electronia.com | sales@electronia.co"</string>
+    <string name= "Address"> مبنى حسين
+        شارع الملك عبدالعزيز
+        \n ص.ب .180 الخبر الرمز البريدي 31952
+       \n  المملكة العربية السعودية
+       \n  هاتف :+966 13 8944216 فاكس :+966 138949991
+       \n إيميل info@electronia.com | sales@electronia.com"</string>
 
     <string name= "Website">صفحة الإنترنت </string>
     <string name= "QR_Code_not_found">رمز QR غير موجود</string>
@@ -391,68 +412,60 @@
 
     <string name= "Terminal_No">رقم القارئ</string>
     <string name= "Direction">الإتجاه</string>
-    <string name= "MAC_Address"> MAC Address</string>
-    <string name= "device_name"> Device Name</string>
-    <string name= "Last_punch_not_found"> Last Punch Not found</string>
-    <string name= "Manual_Punch_Detail"> Manual Punch Detail</string>
-    <string name= "IN_Time">IN Time</string>
-    <string name= "OUT_Time">OUT Time</string>
-    <string name= "From_Date">From Date</string>
-    <string name= "Remarks">Remarks</string>
-    <string name= "Send">Send</string>
-    <string name= "Leave_Detail">Leave Detail</string>
-    <string name= "Leave_Type">Leave Type</string>
-    <string name= "To_Date">To Date</string>
-    <string name= "Hourly_Leave"> Hourly Leave</string>
-    <string name= "Submit_Request">Submit Request</string>
-    <string name= "no_geofence_record_found">No Geofence Record Found</string>
-    <string name= "no_QR_record_found">No QR record found</string>
-    <string name= "Enter_BadgeNo">Please Enter Badge Number </string>
-    <string name= "Enter_URL">Please Enter URL </string>
-    <string name= "Geofence_not_found"> Geofence not found </string>
-    <string name= "No_Record_Found"> No Record Found. Please enter Correct Badge Number. </string>
-    <string name="title_activity_project_details">Project Details</string>
-    <string name="Please_Select_From_Date">Please Select From Date</string>
-    <string name="Please_Select_To_Date">Please Select To Date</string>
-    <string name="Connection_with_Server"> Error:Connection with Server</string>
-    <string name="Place"> Place</string>
-    <string name="DateTime">DateTime</string>
-    <string name="Service_Not_Available"> Service Not Available</string>
-    <string name="Invalid_Latitude_or_Longitude_Used"> Invalid Latitude or Longitude Used</string>
-    <string name="Tracking_data_is_not_found">Tracking data is not found</string>
-    <string name="No_Record">  No Record Found</string>
-    <string name="Data_Saved_locally">No Internet Connection Found. Data Saved locally</string>
-    <string name="Save_Successfully">Save Successfully</string>
-    <string name="Sending_Pending_Task">Sending Pending Task...</string>
-    <string name="Update">Update</string>
-    <string name="Task_Name">Task Name</string>
-    <string name="Start_Date">Start Date</string>
-    <string name="End_date">End date</string>
-    <string name="Plan">Plan</string>
-    <string name="Customer_Feedback">Customer Feedback</string>
-    <string name="Comments">Comments</string>
-    <string name="Task_Details"> Task Details</string>
-    <string name="Task_History"> Task History</string>
-    <string name="Task_on_Map"> Task on Map</string>
-    <string name="Assigned_Employee">Assigned Employee</string>
-    <string name= "QR_Geo">QR Geo</string>
+    <string name= "MAC_Address"> عنوان ماك</string>
+    <string name= "device_name">إسم الجهاز</string>
+    <string name= "Last_punch_not_found">آخر تسجيل غير موجود</string>
+    <string name= "Manual_Punch_Detail">معلومات التسجيل اليدوي </string>
+    <string name= "IN_Time">وقت الدخول</string>
+    <string name= "OUT_Time">وقت الخروج </string>
+    <string name= "From_Date">من التاريخ</string>
+    <string name= "Remarks">ملاحظات</string>
+    <string name= "Send">إرسال</string>
+    <string name= "Leave_Detail">تفاصيل الإجازة</string>
+    <string name= "Leave_Type">نوع الإجازة </string>
+    <string name= "To_Date">إلى تاريخ </string>
+    <string name= "Hourly_Leave">الإجازة بالساعة</string>
+    <string name= "Submit_Request">تقديم الطلب </string>
+    <string name= "no_geofence_record_found">لم يتم العثور على سجل السور الجغرافي </string>
+    <string name= "no_QR_record_found">لم يتم العثور على رمز الإستجابة السريعة </string>
+    <string name= "Enter_BadgeNo">يرجى إدخال رقم الشارة </string>
+    <string name= "Enter_URL">يرجى إدخال الرابط </string>
+    <string name= "Geofence_not_found">لم يتم العثور على السور الجغرافي </string>
+    <string name= "No_Record_Found"> لم يتم العثور على السجل. يرجى إدخال رقم الشارة الصحيح. </string>
+    <string name="title_activity_project_details">بيانات المشروع </string>
+    <string name="Please_Select_From_Date">يرجى إختيار التاريخ من</string>
+    <string name="Please_Select_To_Date">يرجى إختيار التاريخ إلى</string>
+    <string name="Connection_with_Server"> خطأ: الإتصال مع الخادم</string>
+    <string name="Place"> المكان</string>
+    <string name="DateTime">الوقت والتاريخ</string>
+    <string name="Service_Not_Available"> لاتوجد خدمة </string>
+    <string name="Invalid_Latitude_or_Longitude_Used"> خط العرض أو خط الطول المستخدم غير صالح</string>
+    <string name="Tracking_data_is_not_found">لم يتم العثور على بيانات التتبع</string>
+    <string name="No_Record">  لم يتم العثور على السجل </string>
+    <string name="Data_Saved_locally">لم يتم العثور على إتصال إنترنت. تم حفظ البيانات محلياً.</string>
+    <string name="Save_Successfully">تم الحفظ بنجاح</string>
+    <string name="Sending_Pending_Task">جارٍ إرسال المهمة المعلقة ...</string>
+    <string name="Update">تحديث </string>
+    <string name="Task_Name">إسم المهمه</string>
+    <string name="Start_Date">تاريخ البدء</string>
+    <string name="End_date">تاريخ الإنتهاء</string>
+    <string name="Plan">الخطة</string>
+    <string name="Customer_Feedback">ملاحظات العملاء</string>
+    <string name="Comments">التعليقات</string>
+    <string name="Task_Details">تفاصيل المهمه</string>
+    <string name="Task_History">تاريخ المهمه</string>
+    <string name="Task_on_Map">المهمه على الخريطة</string>
+    <string name="Assigned_Employee">المهمه</string>
+    <string name= "QR_Geo">الإستجابة السريعة الجغرافية</string>
     <string name= "MR">MR</string>
-    <string name= "QR__Code_Geo_Registration_failed">QR Code+Geofence Registration failed</string>
-    <string name= "Please_enter_valid_Time">Please enter valid time</string>
-    <string name= "Please_enter_valid_Date">From date should before end date</string>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    <string name= "QR__Code_Geo_Registration_failed">فشل تسجيل رمز الإستجابة السريعة+ السور الجغرافي </string>
+    <string name= "Please_enter_valid_Time">يرجى إدخال وقت صحيح </string>
+    <string name= "Please_enter_valid_Date"> تاريخ البدء يجب ان يكون قبل تاريخ الانتهاء</string>
+    <string name= "Registration_updated_successfully">Registration updated successfully</string>
+    <string name= "Location_permission_should_be_granted_for_BLE_scan">Location permission should be granted for BLE scan</string>
+    <string name= "Task">مهمه على الخريطة </string>
+    <string name= "Place_Status"> Place/Status</string>
+    <string name= "Date_Updated_By">Date/Updated By</string>
+    <string name= "Biometric">Biometric</string>
 </resources>
 

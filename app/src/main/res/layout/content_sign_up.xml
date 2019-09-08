@@ -60,7 +60,7 @@
             android:gravity="center_vertical"
             android:hint="http://212.12.167.242:6002"
             android:inputType="textPersonName"
-
+            android:textDirection="anyRtl"
             android:padding="10dp"
             android:textColor="@color/colorPrimary"
             android:textColorHint="@color/colorPrimary"

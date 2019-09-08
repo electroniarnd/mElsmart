@@ -17,6 +17,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.app.Activity;
+import android.os.Handler;
 import android.os.StrictMode;
 
 import androidx.annotation.NonNull;
@@ -42,6 +43,7 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.electronia.mElsmart.Common.UrlConnection;
+import com.electronia.mElsmart.Services.LogUpdateService;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.electronia.mElsmart.barcode.barcodecaptureactivity;
@@ -168,6 +170,16 @@ public class barcodemain extends Fragment {
         scanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (QrCode() == 1) {
+                    if (countQR == 0) {
+                        Toast.makeText(getActivity(), getResources().getString(R.string.QR_Code_not_found), Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                } else {
+                    Toast.makeText(getActivity(), getResources().getString(R.string.Error_in_reading_local_database), Toast.LENGTH_LONG);
+                    return;
+                }
+
                 Intent intent = new Intent(getActivity().getApplicationContext(), barcodecaptureactivity.class);
                 startActivityForResult(intent, BARCODE_READER_REQUEST_CODE);
             }
@@ -182,35 +194,101 @@ public class barcodemain extends Fragment {
         mRelativeLayout = (RelativeLayout) view.findViewById(R.id.rl);
         scanResult.setTextColor(Color.BLACK);
 
+        if(urlconnection.checkConnection()) {
+            if (!checkServiceRunningGeoLog()) {
+                Thread thread = new Thread() {
+                    @Override
+                    public void run() {
+                        getActivity().startService(new Intent(getActivity(), LogUpdateService.class));
+                    }
+                };
+                thread.start();
+            }
 
-        if (!checkServiceRunningGeoLog()) {
-            Thread thread = new Thread() {
-                @Override
-                public void run() {
-                    getActivity().startService(new Intent(getActivity(), GeofenceLogService.class));
-                }
-            };
-            thread.start();
+            if (!checkServiceRunning()) {
+
+
+                Thread thread = new Thread() {
+                    @Override
+                    public void run() {
+                        getActivity().startService(new Intent(getActivity(), LocationUpdateservice.class));
+                    }
+                };
+                thread.start();
+
+
+            }
         }
 
-        if (!checkServiceRunning()) {
+        scanResult.setText("");
+    }
 
 
-            Thread thread = new Thread() {
-                @Override
-                public void run() {
-                    getActivity().startService(new Intent(getActivity(), LocationUpdateservice.class));
-                }
-            };
-            thread.start();
 
-
-        }
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(this.getClass().getSimpleName() , "onStart()");
+     //   scanResult.setText("");
     }
 
 
 
 
+
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d(TAG,  "onDestroyView()");
+    }
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.d(TAG, "onDetach()");
+    }
+    @Override
+    public void onStop() {
+        Log.d(TAG, "onStop");
+        super.onStop();
+
+    }
+
+    @Override
+    public void onPause() {
+        Log.d(TAG, "onPause");
+        super.onPause();
+
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(urlconnection.checkConnection()) {
+            if (!checkServiceRunningGeoLog()) {
+                Thread thread = new Thread() {
+                    @Override
+                    public void run() {
+                        getActivity().startService(new Intent(getActivity(), LogUpdateService.class));
+                    }
+                };
+                thread.start();
+            }
+        }
+
+      //  scanResult.setText("");
+        Log.d(TAG, "onResume");
+
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+    }
 
 
 
@@ -358,9 +436,21 @@ public class barcodemain extends Fragment {
         txtPunchTime.setText(formattedDate2);
         if(punchtype==1) {
             txtLastPunch.setText(getResources().getString(R.string.IN));
-            if(!isMyServiceRunning(LocationMonitoringService.class)) {
-                getActivity().startService(new Intent(getActivity(), LocationMonitoringService.class));
-            }
+
+
+
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // Do something after 5s = 5000ms
+                    if(urlconnection.checkConnection()) {
+                        if (!isMyServiceRunning(LocationMonitoringService.class)) {
+                            getActivity().startService(new Intent(getActivity(), LocationMonitoringService.class));
+                        }
+                    }
+                }
+            }, 5000);
         }
         else {
             txtLastPunch.setText(getResources().getString(R.string.OUT));
@@ -435,7 +525,7 @@ public class barcodemain extends Fragment {
         txtBadgeNo.setText("");
         txtPunchDate.setText("");
         txtPunchTime.setText("");
-
+        scanResult.setText("");
         txtLastPunch.setText("");
 
         txtLogStatus.setText("");
@@ -794,7 +884,7 @@ public class barcodemain extends Fragment {
         ActivityManager manager = (ActivityManager) getActivity().getSystemService(ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
         {
-            if ("com.nordicsemi.nrfUARTv2.LocationUpdateservice"
+            if ("com.electronia.mElsmart.LocationUpdateservice"
                     .equals(service.service.getClassName()))
             {
                 return true;
@@ -808,7 +898,7 @@ public class barcodemain extends Fragment {
         ActivityManager manager = (ActivityManager) getActivity().getSystemService(ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
         {
-            if ("com.nordicsemi.nrfUARTv2.LocationMonitoringService"
+            if ("com.electronia.mElsmart.LocationMonitoringService"
                     .equals(service.service.getClassName()))
             {
                 return true;
@@ -833,7 +923,7 @@ public class barcodemain extends Fragment {
         ActivityManager manager = (ActivityManager) getActivity().getSystemService(ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
         {
-            if ("com.nordicsemi.nrfUARTv2.GeofenceLogService"
+            if ("com.electronia.mElsmart.Services.LogUpdateService"
                     .equals(service.service.getClassName()))
             {
                 return true;

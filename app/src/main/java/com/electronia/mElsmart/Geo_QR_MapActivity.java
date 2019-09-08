@@ -25,6 +25,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 import com.electronia.mElsmart.Common.UrlConnection;
+import com.electronia.mElsmart.Services.LogUpdateService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -47,6 +48,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import android.os.Handler;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.Gravity;
@@ -148,51 +150,44 @@ public class Geo_QR_MapActivity extends AppCompatActivity implements OnMapReadyC
         Toolbar toolbar = findViewById(R.id.toolbar);
         mRelativeLayout = (RelativeLayout) findViewById(R.id.rl);
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
 
-
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-        if(GetServiceURL()==1) {
+        if (GetServiceURL() == 1) {
             Toast.makeText(this, "Error in reading local Database", Toast.LENGTH_LONG).show();
             return;
-        }
-        else
-        {
-            if(Registration==0)
-            {
+        } else {
+            if (Registration == 0) {
                 Toast.makeText(this, "Registration not found", Toast.LENGTH_LONG).show();
                 Intent Registration = new Intent(Geo_QR_MapActivity.this, SignUp.class);
                 startActivity(Registration);
                 return;
             }
         }
-        if(Geofence()==1)
-        {
-            if(countGeofence==0) {
+        if (Geofence() == 1) {
+            if (countGeofence == 0) {
                 Toast.makeText(this, "Goefence not found for this employee", Toast.LENGTH_LONG);
 
             }
+        } else {
+            Toast.makeText(this, "Error in reading local database", Toast.LENGTH_LONG);
         }
-        else
-        {
-            Toast.makeText(this,"Error in reading local database",Toast.LENGTH_LONG);
-        }
-        if(ReadSysSetting()==0) {//check System Setting
+        if (ReadSysSetting() == 0) {//check System Setting
             Toast.makeText(this, "Error in Reading system_setting", Toast.LENGTH_LONG).show();//check_Setting();
             return;
         }
         in = MediaPlayer.create(this, R.raw.in);
-        out =MediaPlayer.create(this, R.raw.out);
-        Geo= MediaPlayer.create(this, R.raw.geo);
+        out = MediaPlayer.create(this, R.raw.out);
+        Geo = MediaPlayer.create(this, R.raw.geo);
         urlconnection = new UrlConnection(getApplicationContext());
 
-       // Geo_QR_MapActivity.AsyncTaskRunner runner = new Geo_QR_MapActivity.AsyncTaskRunner();
-      //  runner.execute();
+        // Geo_QR_MapActivity.AsyncTaskRunner runner = new Geo_QR_MapActivity.AsyncTaskRunner();
+        //  runner.execute();
 
 
         ButterKnife.bind(this);
@@ -207,17 +202,13 @@ public class Geo_QR_MapActivity extends AppCompatActivity implements OnMapReadyC
                 InputMethodManager inputMethodManager = (InputMethodManager)
                         view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 // Hide the soft keyboard
-                inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),0);
+                inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
         });
 
 
-
-
-
-
-        if( RaadGeoFence() !=1)
-            Toast.makeText(this,"Problem in Reading Grofence",Toast.LENGTH_LONG).show();
+        if (RaadGeoFence() != 1)
+            Toast.makeText(this, "Problem in Reading Grofence", Toast.LENGTH_LONG).show();
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         mapFragment.getMapAsync(this);
@@ -227,27 +218,29 @@ public class Geo_QR_MapActivity extends AppCompatActivity implements OnMapReadyC
         // Get the widgets reference from XML layout
 
 
+        if (urlconnection.checkConnection()) {
 
-        if(!checkServiceRunningGeoLog()) {
-            Thread thread = new Thread() {
-                @Override
-                public void run() {
-                   Intent startServiceIntent = new Intent(Geo_QR_MapActivity.this, GeofenceLogService.class);
-                     startService(startServiceIntent);
-                }
-            };
-            thread.start();
-        }
+            if (!checkServiceRunningGeoLog()) {
+                Thread thread = new Thread() {
+                    @Override
+                    public void run() {
+                        Intent startServiceIntent = new Intent(Geo_QR_MapActivity.this, LogUpdateService.class);
+                        startService(startServiceIntent);
+                    }
+                };
+                thread.start();
+            }
 
-        if(!checkServiceRunning()) {
-            Thread thread = new Thread() {
-                @Override
-                public void run() {
-                    Intent startServiceIntent = new Intent(Geo_QR_MapActivity.this, LocationUpdateservice.class);
-                startService(startServiceIntent);
-                }
-            };
-            thread.start();
+            if (!checkServiceRunning()) {
+                Thread thread = new Thread() {
+                    @Override
+                    public void run() {
+                        Intent startServiceIntent = new Intent(Geo_QR_MapActivity.this, LocationUpdateservice.class);
+                        startService(startServiceIntent);
+                    }
+                };
+                thread.start();
+            }
         }
     }
 
@@ -508,6 +501,7 @@ public class Geo_QR_MapActivity extends AppCompatActivity implements OnMapReadyC
             private String resp;
             ProgressDialog progressDialog;
 
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             protected String doInBackground(String... params) {
                 publishProgress("Sleeping..."); // Calls onProgressUpdate()
@@ -602,7 +596,7 @@ public class Geo_QR_MapActivity extends AppCompatActivity implements OnMapReadyC
         public Integer WriteLogData(String Badgeno, String dt, String time,String formattedDate,String formattedDate1, int punchtype, int geofenceid, int sent)//////CHANGE INTO COMMON FUNCTION LATTER
         {
             int res = 0;
-            String Punchtpe = "Geo";
+            String Punchtpe = getResources().getString(R.string.QR_Geo);
             try {
                 database = db.getWritableDatabase();
                 database.execSQL("INSERT INTO tblLogs(BadgeNo,date,time,direction,GeoID,PunchType,sent,Ter,datetosent,timetosent)VALUES('" + BadgeNo + "','" + dt + "','" + time + "'," + punchtype + "," + geofenceid + ",'" + Punchtpe + "'," + sent + ",'" + building + "','" + formattedDate + "','" + formattedDate1 + "')");
@@ -829,10 +823,10 @@ public class Geo_QR_MapActivity extends AppCompatActivity implements OnMapReadyC
 
         private void SoundIt(int index) {
             switch (index) {
-                case 1:
+                case 0:
                     out.start();
                     break;
-                case 0:
+                case 1:
                     in.start();
                     break;
                 case 2:
@@ -886,17 +880,27 @@ public class Geo_QR_MapActivity extends AppCompatActivity implements OnMapReadyC
             txtBadgeNo.setText(BadgeNo);
             txtPunchDate.setText(formattedDate);
             txtPunchTime.setText(formattedDate2);
-            if (punchtype == 0) {
-                SoundIt(0);
-                txtLastPunch.setText("IN");
-                if(!checkLocationMonitoringServiceRunning()) {
-                    Geo_QR_MapActivity.AsyncTaskRunnerLocMonitoring runner = new Geo_QR_MapActivity.AsyncTaskRunnerLocMonitoring();
-                    runner.execute();
-                }
+            if (punchtype == 1) {
+                SoundIt(1);
+                txtLastPunch.setText(getResources().getString(R.string.IN));
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Do something after 5s = 5000ms
+                        if (urlconnection.checkConnection()) {
+                            if (!checkLocationMonitoringServiceRunning()) {
+                                Geo_QR_MapActivity.AsyncTaskRunnerLocMonitoring runner = new Geo_QR_MapActivity.AsyncTaskRunnerLocMonitoring();
+                                runner.execute();
+                            }
+                        }
+
+                    }
+                }, 5000);
             }
             else {
-                SoundIt(1);
-                txtLastPunch.setText("OUT");
+                SoundIt(0);
+                txtLastPunch.setText(getResources().getString(R.string.OUT));
                 stopService(new Intent(this, LocationMonitoringService.class));
             }
             txtLogStatus.setText(LogType);
@@ -916,7 +920,7 @@ public class Geo_QR_MapActivity extends AppCompatActivity implements OnMapReadyC
 
                     txtLogStatus.setText("");
                     txtGeoname.setText("");
-
+                    finish();
                     mPopupWindow.dismiss();
                 }
             });
@@ -1259,7 +1263,7 @@ public class Geo_QR_MapActivity extends AppCompatActivity implements OnMapReadyC
             ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
             for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
             {
-                if ("com.nordicsemi.nrfUARTv2.LocationUpdateservice"
+                if ("com.electronia.mElsmart.LocationUpdateservice"
                         .equals(service.service.getClassName()))
                 {
                     return true;
@@ -1273,7 +1277,7 @@ public class Geo_QR_MapActivity extends AppCompatActivity implements OnMapReadyC
             ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
             for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
             {
-                if ("com.nordicsemi.nrfUARTv2.GeofenceLogService"
+                if ("com.electronia.mElsmart.Services.LogUpdateService"
                         .equals(service.service.getClassName()))
                 {
                     return true;
@@ -1287,7 +1291,7 @@ public class Geo_QR_MapActivity extends AppCompatActivity implements OnMapReadyC
             ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
             for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
             {
-                if ("com.nordicsemi.nrfUARTv2.LocationMonitoringService"
+                if ("com.electronia.mElsmart.LocationMonitoringService"
                         .equals(service.service.getClassName()))
                 {
                     return true;

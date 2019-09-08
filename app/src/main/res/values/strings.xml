@@ -98,7 +98,7 @@
     <string name="BIOMETRIC_ERROR_CLEAR">BIOMETRIC ERROR CLEAR</string>
     <string name="DATE_TIME_ALARM_SET">DATE TIME ALARM SET</string>
     <string name="DATE_TIME_ALARM_CLEAR">DATE TIME ALARM CLEAR</string>
-    <string name="Punched_Successfully">- Punched Successfully </string>
+    <string name="Punched_Successfully">Punched Successfully </string>
     <string name="IN">IN</string>
     <string name="OUT">OUT</string>
     <string name="CARD_BLACKLISTED">CARD BLACKLISTED</string>
@@ -289,6 +289,18 @@
         <item>Transfered</item>
         <item>Finished</item>
     </string-array>
+
+
+
+    <string name="Initiated">Initiated</string>
+    <string name="Assigned"> Assigned</string>
+    <string name="Started">Started</string>
+    <string name="Progress">Progress</string>
+    <string name="Suspended">Suspended</string>
+    <string name="Resumed">Resumed</string>
+    <string name="Transfered">Transfered </string>
+    <string name="Finished">Finished</string>
+
     <string name="title_activity_markattendance">Mark Attendance</string>
     <string name="title_activity_mainpage">Punch Type</string>
     <string name="title_activity_registration_page">ElGuard</string>
@@ -299,9 +311,9 @@
     <string name="title_activity_main2">Main2Activity</string>
 
 
-    <string name="title_project">Project</string>
+    <string name="title_project">Projects</string>
     <string name="title_attendance">Attendance</string>
-    <string name="title_manual_punch">Project</string>
+    <string name="title_manual_punch">Projects</string>
     <string name="title_task">Task</string>
     <string name="title_profile">Profile</string>
     <string name="show">Show</string>
@@ -443,13 +455,23 @@
     <string name="Task_Details"> Task Details</string>
     <string name="Task_History"> Task History</string>
     <string name="Task_on_Map"> Task on Map</string>
-    <string name="Assigned_Employee">Employee</string>
+    <string name="Assigned_Employee">Tracking</string>
     <string name="title_activity_geo__qr__map">Geo_QR_MapActivity</string>
-    <string name= "QR_Geo">QR Geo</string>
+    <string name= "QR_Geo">QR+Geo</string>
     <string name= "MR">MR</string>
     <string name= "QR__Code_Geo_Registration_failed">QR Code+Geofence Registration failed</string>
     <string name= "Please_enter_valid_Time">Please enter valid time</string>
     <string name= "Please_enter_valid_Date">From date should before end date</string>
+    <string name= "Registration_updated_successfully">Registration updated successfully</string>
+    <string name= "Location_permission_should_be_granted_for_BLE_scan">Location permission should be granted for BLE scan</string>
+    <string name= "Task">Task</string>
+    <string name= "Place_Status"> Place/Status</string>
+    <string name= "Date_Updated_By">Date/Updated By</string>
+    <string name= "Biometric">Biometric</string>
+
+
+
+
 
 
 

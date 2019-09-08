@@ -35,8 +35,10 @@ import java.nio.channels.FileChannel;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -60,6 +62,8 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.location.Criteria;
+import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -76,11 +80,14 @@ import android.provider.Settings;
 
 import androidx.annotation.NonNull;
 
+import com.electronia.mElsmart.Common.UrlConnection;
+import com.electronia.mElsmart.Services.TestService;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -109,6 +116,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.electronia.mElsmart.circularbuttom.CircularProgressButton;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.Context.ACTIVITY_SERVICE;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
@@ -227,7 +235,8 @@ public class MainActivity extends Fragment {
     public byte[] tmpBuff1;
     TelephonyManager telephonyManager;
     private static final int PERMISSION_REQUEST_CODE = 1;
-
+    UrlConnection urlconnection;
+    private BackReciver backReciver;
     public static MainActivity newInstance() {
         MainActivity fragment = new MainActivity();
         return fragment;
@@ -295,7 +304,13 @@ public class MainActivity extends Fragment {
         return view;
     }
 
+    private void registebackReceiver(){
+        backReciver = new BackReciver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(TestService.BACK_INFO);
 
+        getActivity().registerReceiver(backReciver, intentFilter);
+    }
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -310,10 +325,17 @@ public class MainActivity extends Fragment {
         ErrorMessage = (TextView) view.findViewById(R.id.ErrorMessage);
         mRelativeLayout = (LinearLayout) view.findViewById(R.id.linearLayout2);
         txtregistered = (TextView) view.findViewById(R.id.txtregistered);
-        requestPermissions();
-
+        checkAndRequestPermissions();//  requestPermissions();
+        urlconnection = new UrlConnection(getActivity().getApplicationContext());
        // count = telephonyManager.getDeviceId().length();
        // TXvalue1 = telephonyManager.getDeviceId().getBytes();
+
+        try{
+            registebackReceiver();
+        } catch (Exception e){
+            // already registered
+        }
+
 
 
         count =  Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID).length();
@@ -768,9 +790,29 @@ public class MainActivity extends Fragment {
         //  if (mBtAdapter.isEnabled()) {
         //   mBtAdapter.disable();
         // }
+
+       // getActivity().unregisterReceiver(backReciver);
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
 
+        try{
+            getActivity().unregisterReceiver(backReciver);
+
+          //  in.release();
+          //  out.release();// = MediaPlayer.create(getActivity(), R.raw.out);
+          //  error.release(); ///= MediaPlayer.create(getActivity(), R.raw.error);
+           // Card_Expired.release();/// = MediaPlayer.create(getActivity(), R.raw.cardexpired);
+           // Blacklisted.release();/// = MediaPlayer.create(getActivity(), R.raw.blacklisted);
+           // AntiPassBackError.release();/// = MediaPlayer.create(getActivity(), R.raw.antipassback);
+           // Access_Denied.release();// = MediaPlayer.create(getActivity(), R.raw.accessdenied);
+        } catch (Exception e){
+            // already unregistered
+        }
+
+    }
     @Override
     public void onResume() {
         super.onResume();
@@ -781,8 +823,23 @@ public class MainActivity extends Fragment {
         ///      startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
         ///  }
 
+        try{
+            registebackReceiver();
+        } catch (Exception e){
+            // already registered
+        }
+    }
+    @Override
+    public void onPause() {
+
+
+        //called after unregistering
+        super.onPause();
+
+     // getActivity().unregisterReceiver(backReciver);
 
     }
+
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -1414,8 +1471,23 @@ public class MainActivity extends Fragment {
                             mAlreadyStartedService = false;
                         } else {
 
-                            MainActivity.AsyncTaskRunner runner = new MainActivity.AsyncTaskRunner();
-                            runner.execute();
+
+                            final Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // Do something after 5s = 5000ms
+                                    if(urlconnection.checkConnection()) {
+                                        if (!isMyServiceRunning(LocationMonitoringService.class)) {
+                                            getActivity().startService(new Intent(getActivity(), LocationMonitoringService.class));
+                                            mAlreadyStartedService = true;
+                                        }
+                                    }
+                                }
+                            }, 5000);
+
+
+
 
 
                         }
@@ -1862,6 +1934,7 @@ public class MainActivity extends Fragment {
                 } while (cursor.moveToNext());
             }
             cursor.close();
+
             res = 1;
         } catch (Exception ex) {
             res = 0;
@@ -2087,7 +2160,7 @@ public class MainActivity extends Fragment {
         if (checkPermissions()) { //Yes permissions are granted by the user. Go to the next step.
             startStep3();
         } else {  //No user has not granted the permissions yet. Request now.
-            requestPermissions();
+            checkAndRequestPermissions();// requestPermissions();
         }
         return true;
     }
@@ -2119,7 +2192,7 @@ public class MainActivity extends Fragment {
                                 //Everything is there to start the service.
                                 startStep3();
                             } else if (!checkPermissions()) {
-                                requestPermissions();
+                                checkAndRequestPermissions();// requestPermissions();
                             }
 
                         }
@@ -2144,12 +2217,22 @@ public class MainActivity extends Fragment {
             if (!isMyServiceRunning(LocationMonitoringService.class)) {
                 // Intent intent = new Intent(MainActivity.this, LocationMonitoringService.class);
 
-                getActivity().startService(new Intent(getActivity(), LocationMonitoringService.class));
+             //   getActivity().startService(new Intent(getActivity(), LocationMonitoringService.class));
                 // startService(intent);
 
                 mAlreadyStartedService = true;
             }
             //Ends................................................
+        }
+    }
+
+    private class BackReciver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            String cbinfo = intent.getStringExtra("backinfo");
+            //tv.setText(cbinfo);
+            Toast.makeText(getActivity(),cbinfo,Toast.LENGTH_LONG).show();
         }
     }
 
@@ -2196,12 +2279,11 @@ public class MainActivity extends Fragment {
     private void requestPermissions() {
 
         boolean shouldProvideRationale =
-                ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                        android.Manifest.permission.ACCESS_FINE_LOCATION);
+                ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),android.Manifest.permission.ACCESS_FINE_LOCATION);
 
         boolean shouldProvideRationale2 =
                 ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                        Manifest.permission.ACCESS_COARSE_LOCATION);
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION);
 
 
         // Provide an additional rationale to the img_user. This would happen if the img_user denied the
@@ -2214,7 +2296,7 @@ public class MainActivity extends Fragment {
                         public void onClick(View view) {
                             // Request permission
                             ActivityCompat.requestPermissions(getActivity(),
-                                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION},
                                     REQUEST_PERMISSIONS_REQUEST_CODE);
                         }
                     });
@@ -2224,12 +2306,30 @@ public class MainActivity extends Fragment {
             // sets the permission in a given state or the img_user denied the permission
             // previously and checked "Never ask again".
             ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION},
                     REQUEST_PERMISSIONS_REQUEST_CODE);
         }
     }
 
 
+    private boolean checkAndRequestPermissions() {
+        int location_permission = ContextCompat.checkSelfPermission(getActivity(), ACCESS_FINE_LOCATION);
+
+        List<String> listPermissionsNeeded = new ArrayList<>();
+
+        if (location_permission != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(ACCESS_FINE_LOCATION);
+        } else {
+
+
+        }
+        if (!listPermissionsNeeded.isEmpty()) {
+            Toast.makeText(this.getActivity(),getResources().getString(R.string.Location_permission_should_be_granted_for_BLE_scan),Toast.LENGTH_LONG).show();
+            requestPermissions(listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_PERMISSIONS_REQUEST_CODE);
+            return false;
+        }
+        return true;
+    }
 
 
 
@@ -2281,7 +2381,7 @@ public class MainActivity extends Fragment {
                 } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     Log.i(TAG, "Permission granted, updates requested, starting location updates");
-                    startStep3();
+                 //   startStep3();
 
                 } else {
                     showSnackbar(R.string.permission_denied_explanation,

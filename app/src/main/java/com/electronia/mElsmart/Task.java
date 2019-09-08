@@ -76,14 +76,14 @@ public class Task  extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        OtprationName.put( 41,"Initiated");
-       OtprationName.put( 42,"Assigned");
-        OtprationName.put( 43,"Started");
-        OtprationName.put( 44,"Progress");
-        OtprationName.put( 45,"Suspended");
-        OtprationName.put( 46,"Resumed");
-        OtprationName.put( 47,"Transfered");
-        OtprationName.put( 48,"Finished");
+        OtprationName.put( 41,getResources().getString(R.string.Initiated));
+       OtprationName.put( 42,getResources().getString(R.string.Assigned));
+        OtprationName.put( 43,getResources().getString(R.string.Started));
+        OtprationName.put( 44,getResources().getString(R.string.Progress));
+        OtprationName.put( 45,getResources().getString(R.string.Suspended));
+        OtprationName.put( 46,getResources().getString(R.string.Resumed));
+        OtprationName.put( 47,getResources().getString(R.string.Transfered));
+        OtprationName.put( 48,getResources().getString(R.string.Finished));
         setContentView(R.layout.activity_task);
         start=(Button) findViewById(R.id.btnstart);
         spinner = (Spinner) findViewById(R.id.spinner);
@@ -95,14 +95,14 @@ public class Task  extends Activity {
         txtcomment=(EditText) findViewById(R.id.txtcomment);
         urlconnection = new UrlConnection(getApplicationContext());
 
-                colors[0]= "Initiated";
-                colors[1]= "Assigned";
-                colors[2]= "Started";
-                colors[3]=  "Progress";
-                colors[4]= "Suspended";
-                colors[5]= "Resumed";
-                colors[6]=  "Transfered";
-                colors[7]= "Finished";
+                colors[0]= getResources().getString(R.string.Initiated);
+                colors[1]= getResources().getString(R.string.Assigned);
+                colors[2]= getResources().getString(R.string.Started);
+                colors[3]= getResources().getString(R.string.Progress);
+                colors[4]= getResources().getString(R.string.Suspended);
+                colors[5]= getResources().getString(R.string.Resumed);
+                colors[6]=  getResources().getString(R.string.Transfered);
+                colors[7]= getResources().getString(R.string.Finished);
 
         if(GetServiceURL()==1) {
             Toast.makeText(this, getResources().getString(R.string.Error_in_reading_local_database), Toast.LENGTH_LONG).show();
@@ -198,18 +198,37 @@ public class Task  extends Activity {
        int  res=0;
        Integer Status=0;
         String Value="";
+        String Fromdate="";
         Date date1 = null;
-        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+      //  SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
         if(taskid.length>1) {
             try {
                 db = controllerdb.getReadableDatabase();
                 Cursor cursor = db.rawQuery("SELECT * FROM  Tasks where Task_Id= " + taskid[0] , null);
+                SimpleDateFormat format ;// = new SimpleDateFormat("dd-MMM-yyyy hh:mm a");
+                String formattedDate = "";//df.format(dt.getTime());
 
+
+
+                SimpleDateFormat formatOld = new SimpleDateFormat( "dd/MM/yyyy hh:mm:ss");
+                Date newDate;// = formatOld.parse(formattedDate);
+
+                format = new SimpleDateFormat("dd-MMM-yyyy hh:mm a");
+
+
+
+               // String date = format.format(Date.parse("Your date string"));
                 if (cursor.moveToFirst()) {
                     do {
                         txttasks.setText(cursor.getString(cursor.getColumnIndex("Task_Name")));
-                        txtstartdate.setText(cursor.getString(cursor.getColumnIndex("Date_Expected_Start")).replaceAll("[^' ':/\\w\\[\\]]", ""));
-                        txtenddate.setText(cursor.getString(cursor.getColumnIndex("Date_Expected_End")).replaceAll("[^' ':/\\w\\[\\]]", ""));
+                         formattedDate =cursor.getString(cursor.getColumnIndex("Date_Expected_Start")).replaceAll("[^' ':/\\w\\[\\]]", "");
+                        newDate = formatOld.parse(formattedDate);
+                        Fromdate= format.format(newDate);
+                        txtstartdate.setText(Fromdate);
+                        formattedDate =cursor.getString(cursor.getColumnIndex("Date_Expected_End")).replaceAll("[^' ':/\\w\\[\\]]", "");
+                        newDate = formatOld.parse(formattedDate);
+                        Fromdate= format.format(newDate);
+                        txtenddate.setText(Fromdate);
                         txtplan.setText(cursor.getString(cursor.getColumnIndex("Plan1")));
                         Status = Integer.valueOf(cursor.getString(cursor.getColumnIndex("Status1")));
                     } while (cursor.moveToNext());
@@ -222,6 +241,7 @@ public class Task  extends Activity {
             } catch (Exception ex) {
                 res = 0;
                 Log.d(TAG, ex.getMessage());
+                Toast.makeText(this,getResources().getString(R.string.Error),Toast.LENGTH_LONG).show();
             }
         }
         return res;
@@ -600,7 +620,7 @@ public class Task  extends Activity {
                 });
             } catch (Exception e) {
                 e.printStackTrace();
-                resp = e.getMessage();
+                resp = e.getMessage() ;
             }
             return resp;
         }

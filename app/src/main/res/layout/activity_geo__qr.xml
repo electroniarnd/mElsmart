@@ -1,48 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
+<RelativeLayout
 
-    <RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/backimage"
+    tools:context="com.electronia.mElsmart.barcodemain"
 
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        tools:context="com.electronia.mElsmart.Geo_QR"
-        android:orientation="vertical"
-        android:background="@drawable/backimage"
-        android:id="@+id/rl">
+    android:orientation="vertical"
+    android:id="@+id/rl">
+
+    <com.electronia.mElsmart.circularbuttom.CircularProgressButton
+        android:id="@+id/scan_barcode_button1"
+        android:layout_width="215dp"
+        android:layout_height="215dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="63dp"
+        android:textColor="@color/cpb_white"
+        android:textSize="40sp"
+        app:cpb_cornerRadius="148dp"
+        app:cpb_iconError="@drawable/ic_action_cancel"
+        app:cpb_textIdle="@string/Punch"
+        app:cpb_textProgress="@string/Processing"></com.electronia.mElsmart.circularbuttom.CircularProgressButton>
 
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/map_frame"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.electronia.mElsmart.Geo_QR"/>
-    <LinearLayout
-        android:layout_alignParentBottom="true"
+    <TextView
+        android:id="@+id/result_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/scan_barcode_button"
+        android:layout_marginTop="23dp"
+        android:freezesText="true"
         android:gravity="center"
-        android:weightSum="2">
-
-        <Button
-            android:id="@+id/check_in_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:background="@color/Green"
-            android:text="@string/Punch"
-            android:textColor="@android:color/background_light" />
-
-
-
-    </LinearLayout>
+        android:text=""
+        android:textSize="22sp" />
 
 
 </RelativeLayout>

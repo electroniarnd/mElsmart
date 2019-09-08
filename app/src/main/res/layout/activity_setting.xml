@@ -73,7 +73,7 @@
         android:layout_height="19dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Auto Punch"
+        android:text="@string/AutoPunch"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout2" />
@@ -84,7 +84,7 @@
         android:layout_height="29dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
-        android:text="Vibration"
+        android:text="@string/VibrationValue"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtstartdate" />
@@ -95,7 +95,7 @@
         android:layout_height="30dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
-        android:text="Biometric"
+        android:text="@string/Biometric"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtenddate" />

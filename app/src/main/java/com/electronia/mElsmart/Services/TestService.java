@@ -1,5 +1,6 @@
 package com.electronia.mElsmart.Services;
 
+import android.app.IntentService;
 import android.app.Service;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -11,6 +12,8 @@ import android.os.StrictMode;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import com.electronia.mElsmart.Common.UrlConnection;
 import com.electronia.mElsmart.Controllerdb;
@@ -25,7 +28,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Locale;
 
-public class TestService extends Service {
+public class TestService extends IntentService {
 
     private static final String TAG ="AutoRegistrationService" ;
     int counter=0;
@@ -46,13 +49,53 @@ public class TestService extends Service {
     final String serial = Build.SERIAL;
     private static final String Datafile = "mytextfile.txt";
     private static  String ResultValue="";
+   public final static String BACK_INFO = "back_info";
     public TestService() {
+        super("AutoRegistrationService");
     }
 
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    @Override
+    protected void onHandleIntent(@Nullable Intent intent) {
+        urlconnection = new UrlConnection(getApplicationContext());
+        String message="";
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
+
+        IMEI  = Settings.Secure.getString(this.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        Count=0;
+        if( ReadSystemValue()==0)
+            Toast.makeText(this,getResources().getString(R.string.Error_in_reading_local_database),Toast.LENGTH_LONG).show();
+        ResultValue=   Auto_Registration();
+        if(ResultValue.contains("Already_Updated"))
+            message= getResources().getString(R.string.Already_Updated) ;//Toast.makeText(this,R.string.Already_Updated,Toast.LENGTH_LONG).show();
+        else  if (ResultValue.equals("") || ResultValue.equals(null))
+        {
+            message= getResources().getString(R.string.Registration_updated_successfully) ;// Toast.makeText(this,R.string.Registration_updated_successfully,Toast.LENGTH_LONG).show();
+        }
+        else
+        {
+            message= ResultValue;// getResources().getString(R.string.Registration_updated_successfully) ;//  Toast.makeText(this,ResultValue,Toast.LENGTH_LONG).show();
+        }
+
+        sendInfoToClient(message);
+        stopSelf();
+    }
+
+
+    private void sendInfoToClient(String msg){
+        Intent intent = new Intent();
+        intent.setAction(BACK_INFO);
+        intent.putExtra("backinfo",msg);
+        sendBroadcast(intent);
     }
 
     @Override
@@ -63,25 +106,6 @@ public class TestService extends Service {
     }
 
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-     urlconnection = new UrlConnection(getApplicationContext());
-        if (android.os.Build.VERSION.SDK_INT > 9) {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-        }
-
-       IMEI  = Settings.Secure.getString(this.getContentResolver(),
-             Settings.Secure.ANDROID_ID);
-        Count=0;
-       if( ReadSystemValue()==1)
-            Toast.makeText(this,getResources().getString(R.string.Error_in_reading_local_database),Toast.LENGTH_LONG).show();
-        ResultValue=   Auto_Registration();
-        if(ResultValue.contains("Already_Updated"))
-        Toast.makeText(this,R.string.Already_Updated,Toast.LENGTH_LONG).show();
-        stopSelf();
-        return Service.START_STICKY;
-    }
 
     @Override
     public void onDestroy() {
@@ -97,7 +121,7 @@ public class TestService extends Service {
         int res = 0;
         try {
             database = db.getReadableDatabase();
-            Cursor cursor = database.rawQuery("SELECT BLE,Geofence,QRCode,Employee_Id,BadgeNo,url,GeoQR  From   Registration", null);
+            Cursor cursor = database.rawQuery("SELECT BLE,Geofence,QRCode,Employee_Id,BadgeNo,url,GeoQR,SysType  From   Registration", null);
             if (cursor.moveToFirst()) {
                 do {
                     Count++;

@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.app.Activity;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.electronia.mElsmart.Services.AutoRegistration;
+import com.electronia.mElsmart.Common.UrlConnection;
 import com.electronia.mElsmart.Services.TestService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -34,9 +34,6 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.widget.Toolbar;
-import com.electronia.mElsmart.R;
-
-import java.util.Calendar;
 
 import static com.electronia.mElsmart.MainActivity.TAG;
 
@@ -52,7 +49,7 @@ public class Main2Activity extends AppCompatActivity {
     public TextView BadgeNo,Name,txtLastPunch;
     private static String ServiceURL = "";//+"/ElguardianService/Service1.svc/" +
     private static int Registration = 0;
-
+    UrlConnection urlconnection;
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -68,11 +65,11 @@ public class Main2Activity extends AppCompatActivity {
                 case R.id.navigation_home:
                     viewPager.setCurrentItem(1);
                     return true;
-                case R.id.navigation_notifications:
-                    viewPager.setCurrentItem(2);
-                    return true;
+               // case R.id.navigation_notifications:
+                 //   viewPager.setCurrentItem(2);
+                    //return true;
                 case R.id.navigation_Profile:
-                    viewPager.setCurrentItem(3);
+                    viewPager.setCurrentItem(2);
                     return true;
 
 
@@ -149,7 +146,7 @@ public class Main2Activity extends AppCompatActivity {
         setContentView(R.layout.activity_main2);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        urlconnection = new UrlConnection(getApplicationContext());
         if (GetServiceURL() == 1) {
             Toast.makeText(this, getResources().getString(R.string.Error_in_reading_local_database), Toast.LENGTH_LONG).show();
             return;
@@ -197,8 +194,43 @@ public class Main2Activity extends AppCompatActivity {
             imageview.setImageResource(R.mipmap.ic_launcher_round);
         }
 
+       try
+       {
+    if(urlconnection.checkConnection()) {
 
-        }
+
+
+
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Do something after 5s = 5000ms
+                if (!AutoUpdationActivity()) {
+                    startService(new Intent(Main2Activity.this, TestService.class));
+                }
+            }
+        }, 20000);
+
+
+
+
+
+
+
+
+
+      }
+
+      }
+        catch(Exception ex)
+        {
+            Toast.makeText(this,"Service Error",Toast.LENGTH_LONG).show();
+
+         }
+
+    }
 
     private void initTitle() {
         toolbar.post(new Runnable() {
@@ -209,11 +241,7 @@ public class Main2Activity extends AppCompatActivity {
         });
 
 
-        if (!AutoUpdationActivity()) {
 
-           // startService(new Intent(this, TestService.class));
-
-        }
     }
 
 
@@ -230,14 +258,7 @@ public class Main2Activity extends AppCompatActivity {
                     .setPositiveButton(R.string.popup_yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
-
-
-
-
-                                    finish();
-
-
+                            finish();
                         }
                     })
                     .setNegativeButton(R.string.popup_no, null)
@@ -248,9 +269,7 @@ public class Main2Activity extends AppCompatActivity {
 
     private void bindNavigationDrawer() {
 
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -264,7 +283,6 @@ public class Main2Activity extends AppCompatActivity {
         };
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -327,11 +345,11 @@ public class Main2Activity extends AppCompatActivity {
                     return DashboardFragment.newInstance();
                 case 1:
                     return Projects.newInstance();
+               // case 2:
+                //    return NotificationFragment.newInstance();
                 case 2:
-                    return NotificationFragment.newInstance();
-                case 3:
                     return RegistrationActivity.newInstance();
-                case 4:
+                case 3:
                     return Fragment_log.newInstance();
             }
             return null;
@@ -339,7 +357,7 @@ public class Main2Activity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 5;
+            return 4;
         }
     }
 

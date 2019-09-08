@@ -25,7 +25,7 @@
 
             android:text="Sample title"
             android:textColor="@color/Green"
-            android:textSize="@dimen/dimen_16_dp" />
+            android:textSize="@dimen/button_tab_size" />
 
 
     </RelativeLayout>

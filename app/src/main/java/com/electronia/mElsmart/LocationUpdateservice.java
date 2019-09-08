@@ -1,5 +1,6 @@
 package com.electronia.mElsmart;
 
+import android.app.IntentService;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +13,8 @@ import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+
 import com.electronia.mElsmart.Common.UrlConnection;
 
 import java.io.BufferedInputStream;
@@ -21,7 +24,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Locale;
 
-public class LocationUpdateservice extends Service {
+public class LocationUpdateservice extends IntentService {
     private static final String TAG ="Location Update Service" ;
     int counter=0;
    // private static String EMPLOYEE_SERVICE_URI = "http://212.12.167.242:6002/Service1.svc";
@@ -31,6 +34,10 @@ public class LocationUpdateservice extends Service {
     private static String ServiceURL="";
     UrlConnection urlconnection;
     public LocationUpdateservice() {
+
+            super("LocationUpdateservice");
+
+
     }
 
     @Override
@@ -38,16 +45,9 @@ public class LocationUpdateservice extends Service {
         // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
     }
-    @Override
-    public void onCreate() {
-       //Toast.makeText(this, "Invoke background service onCreate method.", Toast.LENGTH_LONG).show();
-        super.onCreate();
-
-    }
-
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    protected void onHandleIntent(@Nullable Intent intent) {
         urlconnection = new UrlConnection(getApplicationContext());
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -57,8 +57,17 @@ public class LocationUpdateservice extends Service {
         GetServiceURL();
         SendSavedData();
         stopSelf();
-        return Service.START_STICKY;
     }
+
+    @Override
+    public void onCreate() {
+       //Toast.makeText(this, "Invoke background service onCreate method.", Toast.LENGTH_LONG).show();
+        super.onCreate();
+
+    }
+
+
+
 
     @Override
     public void onDestroy() {
@@ -139,7 +148,8 @@ public class LocationUpdateservice extends Service {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(this, "Network Connection Error", Toast.LENGTH_LONG).show();
+            UpdateLogData(Id);
+            Toast.makeText(this, getResources().getString(R.string.Error), Toast.LENGTH_LONG).show();
             return false;
         }
         return true;

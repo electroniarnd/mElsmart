@@ -1,7 +1,6 @@
 package com.electronia.mElsmart;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -12,22 +11,17 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 
 import com.electronia.mElsmart.Common.UrlConnection;
-import com.electronia.mElsmart.Services.AutoRegistration;
-import com.electronia.mElsmart.Services.TestService;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
 
 import android.os.StrictMode;
 import android.provider.Settings;
@@ -37,15 +31,11 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -58,17 +48,9 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.channels.FileChannel;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
-import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static com.electronia.mElsmart.RegistrationActivity.TAG;
 
 public class SignUp extends AppCompatActivity {
     private static final String TAG = "SignUP";
@@ -131,6 +113,7 @@ public class SignUp extends AppCompatActivity {
             }
         });
         Count=0;
+       // EditText.TEXT_DIRECTION_RTL
       ///  if( ReadSystemValue() == 1) {
           ///  if (Count > 0) {
             ///    edtBadgeNo.setText(BadgeNo);
@@ -756,6 +739,7 @@ public class SignUp extends AppCompatActivity {
             for (int i = 0; i < len; i += 2) {
                 data1[i / 2] = (byte) ((Character.digit(json1.charAt(i), 16) << 4) + Character.digit(json1.charAt(i + 1), 16));
             }
+
             FileOutputStream fileout = openFileOutput(Datafile, MODE_PRIVATE);
             fileout.write(data1);
             fileout.close();
@@ -1152,6 +1136,27 @@ public class SignUp extends AppCompatActivity {
         return false;
     }
 
+    @Override
+    public void onBackPressed() {
+
+            new AlertDialog.Builder(this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle(R.string.popup_title)
+                    .setMessage(R.string.popup_message)
+                    .setPositiveButton(R.string.popup_yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+
+                                moveTaskToBack(true); // exist app
+
+                                finish();
+                        }
+                    })
+                    .setNegativeButton(R.string.popup_no, null)
+                    .show();
+
+    }
 
 
 

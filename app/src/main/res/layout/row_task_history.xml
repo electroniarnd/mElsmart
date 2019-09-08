@@ -8,9 +8,10 @@
         android:id="@+id/txtPlace"
         android:layout_width="@android:dimen/thumbnail_width"
         android:layout_height="wrap_content"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:text="Marshmallow"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/black" />
 
@@ -19,10 +20,10 @@
         android:id="@+id/txtStatusTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/txtPlace"
-        android:text="Status:"
         android:textColor="?android:attr/colorFocusedHighlight" />
 
 
@@ -30,9 +31,10 @@
         android:id="@+id/txtBadgeNoTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
         android:layout_alignStart="@+id/txtDatetimeTask"
         android:layout_below="@+id/txtDatetimeTask"
-        android:text="BadgeNo"
         android:textColor="?android:attr/colorFocusedHighlight" />
 
 
@@ -40,11 +42,11 @@
         android:id="@+id/txtDatetimeTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
         android:layout_alignBaseline="@+id/txtPlace"
         android:layout_alignBottom="@+id/txtPlace"
         android:layout_alignParentEnd="true"
-
-        android:text="DateTime"
         android:textColor="@android:color/black" />
 
 </RelativeLayout>

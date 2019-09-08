@@ -3,6 +3,7 @@ package com.electronia.mElsmart;
 import android.app.ActionBar;
 import android.app.TabActivity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -28,8 +29,9 @@ public class ProjectDetails  extends  TabActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        mTitle.setText(getResources().getString(R.string.title_task));
-
+       // mTitle.setText(getResources().getString(R.string.title_task));
+        toolbar.setTitle(getResources().getString(R.string.Task));
+        toolbar.setTitleTextColor(Color.WHITE);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp); // your drawable
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

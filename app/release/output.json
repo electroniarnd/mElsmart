@@ -1,1 +1,1 @@
-[{"outputType":{"type":"APK"},"apkInfo":{"type":"MAIN","splits":[],"versionCode":43},"path":"Elsmart Mobile App-release.apk","properties":{"packageId":"com.nordicsemi.nrfUARTv2","split":"","minSdkVersion":"21"}}]
+[{"outputType":{"type":"APK"},"apkInfo":{"type":"MAIN","splits":[],"versionCode":43,"versionName":"2.0","enabled":true,"outputFile":"Elsmart Mobile App-release.apk","fullName":"release","baseName":"release"},"path":"Elsmart Mobile App-release.apk","properties":{}}]

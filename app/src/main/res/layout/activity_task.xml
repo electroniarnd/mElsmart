@@ -11,7 +11,7 @@
         android:id="@+id/btnstart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="16dp"
         android:text="@string/Update"
         android:textSize="@dimen/button_tab_size"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="@string/Task_Name"
         android:textSize="@dimen/textview_small_size"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="148dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:textSize="@dimen/textview_small_size"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -116,7 +116,7 @@
     <TextView
         android:id="@+id/txtplan"
         android:layout_width="330dp"
-        android:layout_height="80dp"
+        android:layout_height="70dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="18dp"
         android:layout_marginEnd="16dp"
@@ -130,7 +130,7 @@
     <EditText
         android:id="@+id/txtcomment"
         android:layout_width="330dp"
-        android:layout_height="80dp"
+        android:layout_height="70dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="18dp"
         android:layout_marginEnd="16dp"
@@ -161,7 +161,7 @@
     <EditText
         android:id="@+id/editfedback"
         android:layout_width="330dp"
-        android:layout_height="80dp"
+        android:layout_height="70dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/shape"

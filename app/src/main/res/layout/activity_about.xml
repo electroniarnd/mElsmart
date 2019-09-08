@@ -43,6 +43,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginTop="51dp"
         android:text="@string/mElsmartabt"
+        android:textSize="@dimen/button_tab_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/txtwebsite"
         app:layout_constraintTop_toBottomOf="@+id/txtcontactus"
@@ -68,7 +69,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginBottom="10dp"
         android:text="@string/Contact_Us"
-        android:textSize="14sp"
+        android:textSize="@dimen/button_tab_size"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/txtcontactus"
         app:layout_constraintStart_toStartOf="parent"
@@ -77,12 +78,16 @@
 
     <TextView
         android:id="@+id/txtcontactus"
-        android:layout_width="385dp"
-        android:layout_height="123dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="160dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="172dp"
         android:text="@string/Address"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:textSize="@dimen/button_tab_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -91,8 +96,9 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="14dp"
         android:layout_marginStart="16dp"
+        android:textSize="@dimen/button_tab_size"
         android:text="@string/Website"
-        android:textSize="14sp"
+
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/txtabout"
         app:layout_constraintStart_toStartOf="parent" />

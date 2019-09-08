@@ -119,6 +119,7 @@ public class ListAdapter extends BaseAdapter {
         listViewHolder.ivProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 SendSavedData(products.ProductPrice);
                 byte[] recordImage=  databasehelper.GetEmpPhoto(products.ProductPrice);
 
