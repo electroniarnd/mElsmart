@@ -800,18 +800,23 @@ public class TestService extends IntentService {
 
     public Integer ReadTrackingValue()//////CHANGE INTO COMMON FUNCTION LATTER
     {
-        String MacValue = "";
+        String IMEIValue = "";
         int res = 0;
         try {
             database = db.getReadableDatabase();
             Cursor cursor = database.rawQuery("SELECT * FROM  Registration", null);
             if (cursor.moveToFirst()) {
                 do {
-                    IMEI=cursor.getString(cursor.getColumnIndex("IMEI"));
+                    IMEIValue=cursor.getString(cursor.getColumnIndex("IMEI"));
                 } while (cursor.moveToNext());
             }
             cursor.close();
             res = 0;
+
+            if(IMEIValue != null && !IMEIValue.isEmpty())
+            {
+                IMEI=IMEIValue;
+            }
         } catch (Exception ex) {
             res = -1;
             Log.d(TAG, ex.getMessage());

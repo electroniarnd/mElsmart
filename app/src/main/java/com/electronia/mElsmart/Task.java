@@ -302,10 +302,10 @@ public class Task  extends Activity {
                 //////String empid=TaskValue[1];
                 ////////Bundle sendBundle = new Bundle();
                ////////// sendBundle.putString("EmpID",empid);
-               //////////// Intent intent = new Intent(Task.this, Projects.class);
+             //Intent intent = new Intent(Task.this, Projects.class);
                ////////// intent.putExtras(sendBundle);;
-               ///////////// startActivity(intent);
-               ///////////// finish();
+           //startActivity(intent);
+             finish();
             }
         });
         AlertDialog alert = builder.create();

@@ -239,7 +239,7 @@ public class MainActivity extends Fragment {
     private static final int REQUEST_ID_IMEI_PERMISSIONS = 5;
     UrlConnection urlconnection;
     private BackReciver backReciver;
-    public static String IMEI = "000000000000000";
+    public  String IMEI;// = "000000000000000";
 
     public static MainActivity newInstance() {
         MainActivity fragment = new MainActivity();
@@ -332,6 +332,7 @@ public class MainActivity extends Fragment {
         ErrorMessage = (TextView) view.findViewById(R.id.ErrorMessage);
         mRelativeLayout = (LinearLayout) view.findViewById(R.id.linearLayout2);
         txtregistered = (TextView) view.findViewById(R.id.txtregistered);
+        IMEI = "000000000000000";
         checkAndRequestPermissions();//  requestPermissions();
         urlconnection = new UrlConnection(getActivity().getApplicationContext());
         // count = telephonyManager.getDeviceId().length();
@@ -1983,20 +1984,24 @@ public class MainActivity extends Fragment {
 
     public Integer ReadTrackingValue()//////CHANGE INTO COMMON FUNCTION LATTER
     {
-        String MacValue = "";
+        String IMEIValue = "";
         int res = 0;
         try {
             database = db.getReadableDatabase();
             Cursor cursor = database.rawQuery("SELECT * FROM  Registration", null);
             if (cursor.moveToFirst()) {
                 do {
-                    IMEI=cursor.getString(cursor.getColumnIndex("IMEI"));
+                    IMEIValue=cursor.getString(cursor.getColumnIndex("IMEI"));
                     Tracking = Integer.valueOf(cursor.getString(cursor.getColumnIndex("Tracking")));
 
                 } while (cursor.moveToNext());
             }
             cursor.close();
             res = 0;
+            if(IMEIValue != null && !IMEIValue.isEmpty())
+            {
+                IMEI=IMEIValue;
+            }
         } catch (Exception ex) {
             res = -1;
             Log.d(TAG, ex.getMessage());
