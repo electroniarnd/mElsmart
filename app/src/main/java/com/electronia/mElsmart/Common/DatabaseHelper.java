@@ -46,6 +46,41 @@ public class DatabaseHelper {
 
 
 
+    public Integer dbDeleteGeofence()
+    {
+        Integer res=0;
+        try {
+            database = db.getWritableDatabase();
+            database.execSQL("Delete from Geofence");
+            res=1;
+        }
+        catch (Exception ex) {
+            res=0;
+            Log.d(TAG, ex.getMessage());
+        }
+        return res;
+
+    }
+
+
+    public Integer dbDeleteQR()
+    {
+        Integer res=0;
+        try {
+            database = db.getWritableDatabase();
+            database.execSQL("Delete from QRCode_Permission");
+            res=1;
+        }
+        catch (Exception ex) {
+            res=0;
+            Log.d(TAG, ex.getMessage());
+        }
+        return res;
+
+    }
+
+
+
 
 
 }

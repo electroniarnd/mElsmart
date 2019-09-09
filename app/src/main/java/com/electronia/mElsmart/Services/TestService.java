@@ -15,9 +15,11 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.electronia.mElsmart.Common.DatabaseHelper;
 import com.electronia.mElsmart.Common.UrlConnection;
 import com.electronia.mElsmart.Controllerdb;
 import com.electronia.mElsmart.R;
+import com.electronia.mElsmart.SignUp;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -38,12 +40,13 @@ public class TestService extends IntentService {
     SQLiteDatabase database;
     static String ServiceURL="";
     UrlConnection urlconnection;
+    DatabaseHelper dbHelper;
     private static int BLE = 0;
     private static int QRCode = 0;
     private static int Geofence = 0,Employee_Id=0,GeoQR=0,Count=0;
     private static String msg = "",BadgeNo="",url="";
     private static final String fileRegistrationVerify = "BadgeIMEI.txt";
-    private String IMEI;
+    private String IMEI="000000000000000";
     private String sys="";
     final String model = Build.MODEL;
     final String serial = Build.SERIAL;
@@ -63,14 +66,15 @@ public class TestService extends IntentService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         urlconnection = new UrlConnection(getApplicationContext());
+        dbHelper = new DatabaseHelper(getApplicationContext());
         String message="";
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-
-        IMEI  = Settings.Secure.getString(this.getContentResolver(),
-                Settings.Secure.ANDROID_ID);
+        ReadTrackingValue();
+       // IMEI  = Settings.Secure.getString(this.getContentResolver(),
+              ///  Settings.Secure.ANDROID_ID);
         Count=0;
         if( ReadSystemValue()==0)
             Toast.makeText(this,getResources().getString(R.string.Error_in_reading_local_database),Toast.LENGTH_LONG).show();
@@ -146,7 +150,7 @@ public class TestService extends IntentService {
 
     private String Auto_Registration()
     {
-        String result = "", DisplayResult = "";
+        String result = "", DisplayResult = "",  UpdateValue="";
         int res = 0;
         try {
             if (!urlconnection.checkConnection()) {
@@ -154,6 +158,14 @@ public class TestService extends IntentService {
             }
             result = connectionurlSecData();
             if (result.equals("Success")) {
+
+                dbHelper.dbDeleteGeofence();
+                dbHelper.dbDeleteQR();
+
+                UpdateValue = UpdateStatus(38);
+                if (!UpdateValue.equals("Success")) {
+                    Toast.makeText(this, getResources().getString(R.string.Server_database_update_failed), Toast.LENGTH_LONG).show();
+                }
                 if (ReadSystemValue() == 1) {
                     if (BLE == 1) {
                         result = connectionurl();
@@ -238,8 +250,12 @@ public class TestService extends IntentService {
                     DisplayResult = "\n"+getResources().getString(R.string.Error_in_reading_local_database);// "Error in reading local database";
                     return DisplayResult;
                 }
-                if (DisplayResult.equals("") || DisplayResult.equals(null))
+                if (DisplayResult.equals("") || DisplayResult.equals(null)) {
+
                     return "";
+
+                }
+
                 else {
                     return DisplayResult;
                 }
@@ -758,6 +774,51 @@ public class TestService extends IntentService {
         }
         return res;
     }
+
+
+
+    public String UpdateStatus(Integer OpeartionStatus) {
+        String msg = "", urlar = "", result = "", json="",s="",EMPLOYEE_SERVICE_URI="";;
+        try {
+            urlar= url;
+            s = urlar + "/ElguardianService/Service1.svc/UpdateOperationNo/" + "/'" + BadgeNo +"'/'" + IMEI + "'/'" + model + "'/'" + serial + "'/" +OpeartionStatus;
+            EMPLOYEE_SERVICE_URI = s.replace(' ', '-');
+            URL url = new URL(EMPLOYEE_SERVICE_URI);
+            json = urlconnection.ServerConnection(EMPLOYEE_SERVICE_URI);
+            if (json.contains("`") || json.contains("^"))
+            {
+                return ErrorValue(json);
+            }
+            int lnth = json.length();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+        return "Success";
+    }
+
+
+    public Integer ReadTrackingValue()//////CHANGE INTO COMMON FUNCTION LATTER
+    {
+        String MacValue = "";
+        int res = 0;
+        try {
+            database = db.getReadableDatabase();
+            Cursor cursor = database.rawQuery("SELECT * FROM  Registration", null);
+            if (cursor.moveToFirst()) {
+                do {
+                    IMEI=cursor.getString(cursor.getColumnIndex("IMEI"));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            res = 0;
+        } catch (Exception ex) {
+            res = -1;
+            Log.d(TAG, ex.getMessage());
+        }
+        return res;
+    }
+
 
 
 

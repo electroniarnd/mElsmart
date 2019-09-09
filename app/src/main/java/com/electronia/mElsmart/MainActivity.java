@@ -117,6 +117,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.electronia.mElsmart.circularbuttom.CircularProgressButton;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.content.Context.ACTIVITY_SERVICE;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
@@ -230,13 +231,16 @@ public class MainActivity extends Fragment {
     public int rxFrameSize = 0;
     private short rxprIndex = 0;
     int count = 0;
-    public byte[] TXvalue1=new byte[15];
-    public byte[] TXvalue2=new byte[15];
+    public byte[] TXvalue1 = new byte[15];
+    public byte[] TXvalue2 = new byte[15];
     public byte[] tmpBuff1;
     TelephonyManager telephonyManager;
     private static final int PERMISSION_REQUEST_CODE = 1;
+    private static final int REQUEST_ID_IMEI_PERMISSIONS = 5;
     UrlConnection urlconnection;
     private BackReciver backReciver;
+    public static String IMEI = "000000000000000";
+
     public static MainActivity newInstance() {
         MainActivity fragment = new MainActivity();
         return fragment;
@@ -304,13 +308,16 @@ public class MainActivity extends Fragment {
         return view;
     }
 
-    private void registebackReceiver(){
+    private void registebackReceiver() {
         backReciver = new BackReciver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(TestService.BACK_INFO);
 
         getActivity().registerReceiver(backReciver, intentFilter);
     }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -327,31 +334,38 @@ public class MainActivity extends Fragment {
         txtregistered = (TextView) view.findViewById(R.id.txtregistered);
         checkAndRequestPermissions();//  requestPermissions();
         urlconnection = new UrlConnection(getActivity().getApplicationContext());
-       // count = telephonyManager.getDeviceId().length();
-       // TXvalue1 = telephonyManager.getDeviceId().getBytes();
+        // count = telephonyManager.getDeviceId().length();
+        // TXvalue1 = telephonyManager.getDeviceId().getBytes();
 
-        try{
+        try {
             registebackReceiver();
-        } catch (Exception e){
+        } catch (Exception e) {
             // already registered
         }
+        if (!(ReadTrackingValue() == 0)) {
+            Toast.makeText(getActivity(), getResources().getString(R.string.Local_Database_Error), Toast.LENGTH_LONG).show();
+        }
+
+        //  getActivity().onBackPressed();
+
+        //checkAndRequestPermissionsIMEI();
 
 
+        //  count = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID).length();
+        //  TXvalue2 = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID).getBytes();
+        ///  if (TXvalue2.length >= 15)
+        ///     TXvalue1 = Arrays.copyOfRange(TXvalue2, 0, 15);
+        /// else {
+        //   int lenth = 0;
+        ///    lenth = TXvalue1.length;
+        ///   lenth = lenth - 1;
+        ///   for (int i = TXvalue2.length - 1; i >= 0; i--) {
+        ///      TXvalue1[lenth] = TXvalue2[i];
+        ///     lenth--;
+        ///  }
+        // }
 
-        count =  Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID).length();
-        TXvalue2 = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID).getBytes();
-       if(TXvalue2.length>=15)
-        TXvalue1 = Arrays.copyOfRange(TXvalue2,0,15);
-       else
-       {
-           int lenth=0;
-           lenth=TXvalue1.length;
-           lenth=lenth-1;
-          for (int i = TXvalue2.length-1; i >=0; i--) {
-               TXvalue1[lenth] = TXvalue2[i];
-              lenth--;
-           }
-       }
+        TXvalue1=IMEI.getBytes();
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             if (getActivity().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
                 Log.d("permission", "permission denied to get IMEI - requesting it");
@@ -361,7 +375,7 @@ public class MainActivity extends Fragment {
         }
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBtAdapter == null) {
-            Toast.makeText(getActivity(),getResources().getString(R.string.ble_not_available), Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.ble_not_available), Toast.LENGTH_LONG).show();
             getActivity().finish();
             return;
         }
@@ -412,7 +426,7 @@ public class MainActivity extends Fragment {
 
         } else {
             txtregistered.setText(getResources().getString(R.string.UnRegistered));
-            popup( getResources().getString(R.string.Registration_does_not_exist));
+            popup(getResources().getString(R.string.Registration_does_not_exist));
             Intent Registration = new Intent(getActivity(), SignUp.class);
             startActivity(Registration);
             // return;
@@ -483,7 +497,7 @@ public class MainActivity extends Fragment {
                     txtdate.setText("");
                     ErrorMessage.setText("");
                 } else {
-                    if ( btnConnectDisconnect.getProgress()==0) {
+                    if (btnConnectDisconnect.getProgress() == 0) {
                         if (isRunning == false) {
                             cTimer = new CountDownTimer(8000, 1000) {
                                 public void onTick(long millisUntilFinished) {
@@ -562,7 +576,9 @@ public class MainActivity extends Fragment {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+
+
+
 
 
     @Override
@@ -616,7 +632,6 @@ public class MainActivity extends Fragment {
 
         return super.onOptionsItemSelected(item);
     }
-
 
 
     //UART service connected/disconnected
@@ -791,28 +806,29 @@ public class MainActivity extends Fragment {
         //   mBtAdapter.disable();
         // }
 
-       // getActivity().unregisterReceiver(backReciver);
+        // getActivity().unregisterReceiver(backReciver);
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        try{
+        try {
             getActivity().unregisterReceiver(backReciver);
 
-          //  in.release();
-          //  out.release();// = MediaPlayer.create(getActivity(), R.raw.out);
-          //  error.release(); ///= MediaPlayer.create(getActivity(), R.raw.error);
-           // Card_Expired.release();/// = MediaPlayer.create(getActivity(), R.raw.cardexpired);
-           // Blacklisted.release();/// = MediaPlayer.create(getActivity(), R.raw.blacklisted);
-           // AntiPassBackError.release();/// = MediaPlayer.create(getActivity(), R.raw.antipassback);
-           // Access_Denied.release();// = MediaPlayer.create(getActivity(), R.raw.accessdenied);
-        } catch (Exception e){
+            //  in.release();
+            //  out.release();// = MediaPlayer.create(getActivity(), R.raw.out);
+            //  error.release(); ///= MediaPlayer.create(getActivity(), R.raw.error);
+            // Card_Expired.release();/// = MediaPlayer.create(getActivity(), R.raw.cardexpired);
+            // Blacklisted.release();/// = MediaPlayer.create(getActivity(), R.raw.blacklisted);
+            // AntiPassBackError.release();/// = MediaPlayer.create(getActivity(), R.raw.antipassback);
+            // Access_Denied.release();// = MediaPlayer.create(getActivity(), R.raw.accessdenied);
+        } catch (Exception e) {
             // already unregistered
         }
 
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -823,12 +839,13 @@ public class MainActivity extends Fragment {
         ///      startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
         ///  }
 
-        try{
+        try {
             registebackReceiver();
-        } catch (Exception e){
+        } catch (Exception e) {
             // already registered
         }
     }
+
     @Override
     public void onPause() {
 
@@ -836,7 +853,7 @@ public class MainActivity extends Fragment {
         //called after unregistering
         super.onPause();
 
-     // getActivity().unregisterReceiver(backReciver);
+        // getActivity().unregisterReceiver(backReciver);
 
     }
 
@@ -874,7 +891,7 @@ public class MainActivity extends Fragment {
                     mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(deviceAddress);
 
                     Log.d(TAG, "... onActivityResultdevice.address==" + mDevice + "mserviceValue" + mService);
-                    ((TextView) view.findViewById(R.id.deviceName)).setText(mDevice.getName() +"-"+getResources().getString( R.string.connecting) );
+                    ((TextView) view.findViewById(R.id.deviceName)).setText(mDevice.getName() + "-" + getResources().getString(R.string.connecting));
                     mService.connect(deviceAddress);
                 }
 
@@ -882,13 +899,13 @@ public class MainActivity extends Fragment {
             case REQUEST_ENABLE_BT:
                 // When the request to enable Bluetooth returns
                 if (resultCode == Activity.RESULT_OK) {
-                    Toast.makeText(getActivity(),getResources().getString( R.string.Bluetooth_has_turned_on), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.Bluetooth_has_turned_on), Toast.LENGTH_SHORT).show();
 
 
                 } else {
                     // User did not enable Bluetooth or an error occurred
                     Log.d(TAG, "BT not enabled");
-                    Toast.makeText(getActivity(),  getResources().getString( R.string.Problem_in_BLE_turning_ON), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.Problem_in_BLE_turning_ON), Toast.LENGTH_SHORT).show();
                     getActivity().finish();
                 }
                 break;
@@ -1453,7 +1470,7 @@ public class MainActivity extends Fragment {
                         s = "IN";
                         s = getResources().getString(R.string.IN);
                         dir = 1;
-                        btnConnectDisconnect.setCompleteText(getResources().getString(R.string.IN)+" " + tickvalue);
+                        btnConnectDisconnect.setCompleteText(getResources().getString(R.string.IN) + " " + tickvalue);
 
 
                         if ((direction & 0x0C) == 0x08) ////////////////// if ((direction & 0x20) == 0x20)
@@ -1466,7 +1483,7 @@ public class MainActivity extends Fragment {
                             dir = 0;
                             s = getResources().getString(R.string.OUT);
                             soundcode = 0;
-                            btnConnectDisconnect.setCompleteText(getResources().getString(R.string.OUT)+" " + tickvalue);
+                            btnConnectDisconnect.setCompleteText(getResources().getString(R.string.OUT) + " " + tickvalue);
                             getActivity().stopService(new Intent(getActivity(), LocationMonitoringService.class));
                             mAlreadyStartedService = false;
                         } else {
@@ -1477,7 +1494,7 @@ public class MainActivity extends Fragment {
                                 @Override
                                 public void run() {
                                     // Do something after 5s = 5000ms
-                                    if(urlconnection.checkConnection()) {
+                                    if (urlconnection.checkConnection()) {
                                         if (!isMyServiceRunning(LocationMonitoringService.class)) {
                                             getActivity().startService(new Intent(getActivity(), LocationMonitoringService.class));
                                             mAlreadyStartedService = true;
@@ -1485,9 +1502,6 @@ public class MainActivity extends Fragment {
                                     }
                                 }
                             }, 5000);
-
-
-
 
 
                         }
@@ -1509,7 +1523,7 @@ public class MainActivity extends Fragment {
                             Toast.makeText(getActivity(), getResources().getString(R.string.Error_in_reading_Mac_value), Toast.LENGTH_LONG).show();
                         else if (ReadMACValue(mDevice.getAddress()) == 0) {
                             if (WriteMACAddress() == 0)
-                                Toast.makeText(getActivity(),  getResources().getString(R.string.Error_in_writing_Mac_value), Toast.LENGTH_LONG).show();
+                                Toast.makeText(getActivity(), getResources().getString(R.string.Error_in_writing_Mac_value), Toast.LENGTH_LONG).show();
                         }
                         if (WriteLog(badgeno, FullName, dir, empID) == 0)
                             Toast.makeText(getActivity(), getResources().getString(R.string.Log_Write_Error), Toast.LENGTH_LONG).show();
@@ -1976,6 +1990,7 @@ public class MainActivity extends Fragment {
             Cursor cursor = database.rawQuery("SELECT * FROM  Registration", null);
             if (cursor.moveToFirst()) {
                 do {
+                    IMEI=cursor.getString(cursor.getColumnIndex("IMEI"));
                     Tracking = Integer.valueOf(cursor.getString(cursor.getColumnIndex("Tracking")));
 
                 } while (cursor.moveToNext());
@@ -2115,7 +2130,7 @@ public class MainActivity extends Fragment {
             startStep2(null);
 
         } else {
-            Toast.makeText(getActivity(),getResources().getString(R.string.no_google_playservice_available)
+            Toast.makeText(getActivity(), getResources().getString(R.string.no_google_playservice_available)
                     , Toast.LENGTH_LONG).show();
         }
     }
@@ -2217,7 +2232,7 @@ public class MainActivity extends Fragment {
             if (!isMyServiceRunning(LocationMonitoringService.class)) {
                 // Intent intent = new Intent(MainActivity.this, LocationMonitoringService.class);
 
-             //   getActivity().startService(new Intent(getActivity(), LocationMonitoringService.class));
+                //   getActivity().startService(new Intent(getActivity(), LocationMonitoringService.class));
                 // startService(intent);
 
                 mAlreadyStartedService = true;
@@ -2232,7 +2247,7 @@ public class MainActivity extends Fragment {
 
             String cbinfo = intent.getStringExtra("backinfo");
             //tv.setText(cbinfo);
-            Toast.makeText(getActivity(),cbinfo,Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), cbinfo, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -2279,7 +2294,7 @@ public class MainActivity extends Fragment {
     private void requestPermissions() {
 
         boolean shouldProvideRationale =
-                ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),android.Manifest.permission.ACCESS_FINE_LOCATION);
+                ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION);
 
         boolean shouldProvideRationale2 =
                 ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
@@ -2324,13 +2339,12 @@ public class MainActivity extends Fragment {
 
         }
         if (!listPermissionsNeeded.isEmpty()) {
-            Toast.makeText(this.getActivity(),getResources().getString(R.string.Location_permission_should_be_granted_for_BLE_scan),Toast.LENGTH_LONG).show();
+            Toast.makeText(this.getActivity(), getResources().getString(R.string.Location_permission_should_be_granted_for_BLE_scan), Toast.LENGTH_LONG).show();
             requestPermissions(listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_PERMISSIONS_REQUEST_CODE);
             return false;
         }
         return true;
     }
-
 
 
     /**
@@ -2352,6 +2366,7 @@ public class MainActivity extends Fragment {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -2371,7 +2386,7 @@ public class MainActivity extends Fragment {
                     Toast.makeText(getActivity(), getResources().getString(R.string.Permission_denied_to_read_your_External_storage), Toast.LENGTH_SHORT).show();
                 }
 
-            break;
+                break;
 
             case 34:
                 if (grantResults.length <= 0) {
@@ -2381,7 +2396,7 @@ public class MainActivity extends Fragment {
                 } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     Log.i(TAG, "Permission granted, updates requested, starting location updates");
-                 //   startStep3();
+                    //   startStep3();
 
                 } else {
                     showSnackbar(R.string.permission_denied_explanation,
@@ -2400,6 +2415,12 @@ public class MainActivity extends Fragment {
                                 }
                             });
                 }
+
+
+
+
+
+
             }
         }
 

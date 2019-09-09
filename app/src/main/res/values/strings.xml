@@ -468,6 +468,10 @@
     <string name= "Place_Status"> Place/Status</string>
     <string name= "Date_Updated_By">Date/Updated By</string>
     <string name= "Biometric">Biometric</string>
+    <string name= "Permission_Denied_You_cannot_access_Phone_Read">Permission Denied, You cannot access Phone Read</string>
+    <string name= "Permission_Granted"> Permission Granted, Now you can access Storage data and Phone Read</string>
+
+
 
 
 
