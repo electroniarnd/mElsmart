@@ -18,8 +18,11 @@ import android.os.Bundle;
 import com.electronia.mElsmart.Common.UrlConnection;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.text.Html;
 import android.text.InputType;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -79,7 +82,8 @@ public class LocationHistory extends AppCompatActivity
         EmpID =  intent.getStringExtra("EmpID");
         urlconnection = new UrlConnection(getApplicationContext());
 
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(Html.fromHtml("<font color='#ffffff'>"+getResources().getString(R.string.title_activity_location_history)+"</font>"));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -180,7 +184,13 @@ public class LocationHistory extends AppCompatActivity
     }
 
 
-
+        @Override
+        public boolean onOptionsItemSelected(MenuItem menuItem) {
+            if (menuItem.getItemId() == android.R.id.home) {
+                finish();
+            }
+            return super.onOptionsItemSelected(menuItem);
+        }
 
         public String SaveTasks(String datavalue,String FrmDate,String Todate ) {
 

@@ -452,9 +452,9 @@
     <string name="Plan">Plan</string>
     <string name="Customer_Feedback">Customer Feedback</string>
     <string name="Comments">Comments</string>
-    <string name="Task_Details"> Task Details</string>
-    <string name="Task_History"> Task History</string>
-    <string name="Task_on_Map"> Task on Map</string>
+    <string name="Task_Details">Details</string>
+    <string name="Task_History">History</string>
+    <string name="Task_on_Map">On Map</string>
     <string name="Assigned_Employee">Tracking</string>
     <string name="title_activity_geo__qr__map">Geo_QR_MapActivity</string>
     <string name= "QR_Geo">QR+Geo</string>
@@ -463,7 +463,7 @@
     <string name= "Please_enter_valid_Time">Please enter valid time</string>
     <string name= "Please_enter_valid_Date">From date should before end date</string>
     <string name= "Registration_updated_successfully">Registration updated successfully</string>
-    <string name= "Location_permission_should_be_granted_for_BLE_scan">Location permission should be granted for BLE scan</string>
+    <string name= "Location_permission_should_be_granted_for_BLE_scan">Location permission must be grant for BLE scan</string>
     <string name= "Task">Task</string>
     <string name= "Place_Status"> Place/Status</string>
     <string name= "Date_Updated_By">Date/Updated By</string>

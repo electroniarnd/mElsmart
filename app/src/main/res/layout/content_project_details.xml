@@ -10,7 +10,7 @@
         <TabWidget
             android:id="@android:id/tabs"
             android:layout_width="fill_parent"
-            android:textSize="@dimen/textview_small_size"
+            android:textSize="8sp"
             android:layout_height="wrap_content" />
         <FrameLayout
             android:id="@android:id/tabcontent"

@@ -13,11 +13,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginStart="16dp"
-        android:layout_marginBottom="54dp"
+
+        android:layout_marginBottom="8dp"
         android:ems="10"
         android:hint="@string/From_Date"
         android:textSize="@dimen/textview_small_size"
-        app:layout_constraintBottom_toTopOf="@+id/list"
+        app:layout_constraintBottom_toTopOf="@+id/include"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -51,6 +52,7 @@
         android:id="@+id/list"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:layout_marginTop="35dp"
         android:textSize="@dimen/textview_small_size"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/include"
@@ -61,7 +63,7 @@
         layout="@layout/header_location_history"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginTop="55dp"
+        android:layout_marginTop="48dp"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

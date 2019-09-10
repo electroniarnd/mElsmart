@@ -25,13 +25,13 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="89be36bd-cd4f-49db-822a-ae3fd8dd8326">
-        <schema name="main" object-types="index, constraint, column, dataset trigger, table" />
+        <schema name="main" object-types="table, view" />
       </connection>
       <connection connection-id="f53a31e1-dcfe-4231-9518-2d7b8739ab72">
-        <schema name="main" object-types="view, table" />
+        <schema name="main" object-types="table, view" />
       </connection>
       <connection connection-id="2b2ce990-ab46-4ce6-81c5-cda8d7d57963">
-        <schema name="main" object-types="index, constraint, column, view, dataset trigger, table" />
+        <schema name="main" object-types="table, view" />
       </connection>
     </loaded-nodes>
   </component>

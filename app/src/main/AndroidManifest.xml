@@ -130,7 +130,7 @@
             android:name=".LocationHistory"
             android:label="@string/title_activity_location_history"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light" />
+            android:theme="@style/AppThemeLight" />
         <activity
             android:name=".Tracking"
             android:label="@string/title_activity_projects"
@@ -145,7 +145,7 @@
             android:name=".MapTracking"
             android:label="@string/title_activity_map_tracking"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+            android:theme="@style/AppThemeLight" />
         <activity
             android:name=".Task_Details"
             android:label="@string/title_activity_task__details"

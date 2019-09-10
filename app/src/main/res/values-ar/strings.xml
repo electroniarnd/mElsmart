@@ -213,7 +213,7 @@
     <string name="Punch_Date">تاريخ التبصيم</string>
     <string name="Punch_Time">وقت التبصيم</string>
     <string name="Last_Punch">اخر بصمة</string>
-    <string name="title_task">مهمه على الخريطة </string>
+    <string name="title_task">مهمة</string>
     <string name="Settings">الإعدادات</string>
     <string name="Registered_Terminal">القارىء المسجل</string>
     <string name="Cust_Mismatch">عدم تطابق العملاء</string>
@@ -244,7 +244,7 @@
 
 
     <string name="title_activity_projects">مشاريع</string>
-    <string name="title_activity_task">مهمه على الخريطة </string>
+    <string name="title_activity_task">مهمة</string>
     <string name="title_activity_location_history">تاريخ الموقع</string>
     <array name="sample_list">
 
@@ -452,18 +452,18 @@
     <string name="Plan">الخطة</string>
     <string name="Customer_Feedback">ملاحظات العملاء</string>
     <string name="Comments">التعليقات</string>
-    <string name="Task_Details">تفاصيل المهمه</string>
-    <string name="Task_History">تاريخ المهمه</string>
-    <string name="Task_on_Map">المهمه على الخريطة</string>
+    <string name="Task_Details">تفاصيل</string>
+    <string name="Task_History">التاريخ</string>
+    <string name="Task_on_Map">على الخريطة</string>
     <string name="Assigned_Employee">المهمه</string>
     <string name= "QR_Geo">الإستجابة السريعة الجغرافية</string>
     <string name= "MR">MR</string>
     <string name= "QR__Code_Geo_Registration_failed">فشل تسجيل رمز الإستجابة السريعة+ السور الجغرافي </string>
     <string name= "Please_enter_valid_Time">يرجى إدخال وقت صحيح </string>
     <string name= "Please_enter_valid_Date"> تاريخ البدء يجب ان يكون قبل تاريخ الانتهاء</string>
-    <string name= "Registration_updated_successfully">Registration updated successfully</string>
-    <string name= "Location_permission_should_be_granted_for_BLE_scan">Location permission should be granted for BLE scan</string>
-    <string name= "Task">مهمه على الخريطة </string>
+    <string name= "Registration_updated_successfully">تم تحديث التسجيل بنجاح</string>
+    <string name= "Location_permission_should_be_granted_for_BLE_scan">Location permission must be grant for BLE scan</string>
+    <string name= "Task">مهمة</string>
     <string name= "Place_Status"> Place/Status</string>
     <string name= "Date_Updated_By">Date/Updated By</string>
     <string name= "Biometric">Biometric</string>

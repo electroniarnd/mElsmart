@@ -1,5 +1,6 @@
 package com.electronia.mElsmart;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
@@ -23,8 +24,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompatSideChannelService;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.text.Html;
 import android.text.InputType;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -90,6 +94,9 @@ public class MapTracking  extends AppCompatActivity implements OnMapReadyCallbac
         edtTo.setInputType(InputType.TYPE_NULL);
         btnGetLocation=   (Button)findViewById(R.id.btnGetLocation);
         urlconnection = new UrlConnection(getApplicationContext());
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(Html.fromHtml("<font color='#ffffff'>"+getResources().getString(R.string.title_activity_map_tracking)+"</font>"));
       //  locationArrayList.add(new LatLng(-08.8265861,13.2274667));
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -199,6 +206,15 @@ public class MapTracking  extends AppCompatActivity implements OnMapReadyCallbac
         runner.execute("0",CurrentDate,CurrentDate);
 
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        if (menuItem.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(menuItem);
+    }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {

@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
+import android.widget.TabWidget;
 import android.widget.TextView;
 
 public class ProjectDetails  extends  TabActivity
@@ -84,6 +85,15 @@ public class ProjectDetails  extends  TabActivity
         tabHost.addTab(songspec); // Adding songs tab
         tabHost.addTab(videospec); // Adding videos tab
         tabHost.addTab(Task_Employee);
+
+
+        final TabWidget tw = (TabWidget)tabHost.findViewById(android.R.id.tabs);
+        for (int i = 0; i < tw.getChildCount(); ++i)
+        {
+            final View tabView = tw.getChildTabViewAt(i);
+            final TextView tv = (TextView)tabView.findViewById(android.R.id.title);
+            tv.setTextSize(12);
+        }
     }
 
 }
