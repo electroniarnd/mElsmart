@@ -456,7 +456,7 @@ public class MainActivity extends Fragment {
                 startActivityForResult(newIntent2, REQUEST_SELECT_DEVICE);
                 btnConnectDisconnect.setProgress(50);
                 if (isRunning == false) {
-                    cTimer = new CountDownTimer(8000, 1000) {
+                    cTimer = new CountDownTimer(12000, 1000) {
                         public void onTick(long millisUntilFinished) {
                             isRunning = true;
                         }
@@ -500,7 +500,7 @@ public class MainActivity extends Fragment {
                 } else {
                     if (btnConnectDisconnect.getProgress() == 0) {
                         if (isRunning == false) {
-                            cTimer = new CountDownTimer(8000, 1000) {
+                            cTimer = new CountDownTimer(12000, 1000) {
                                 public void onTick(long millisUntilFinished) {
                                     isRunning = true;
                                 }

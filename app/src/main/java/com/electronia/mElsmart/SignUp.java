@@ -1162,7 +1162,7 @@ public class SignUp extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int which) {
 
 
-                                moveTaskToBack(true); // exist app
+                            finishAffinity();//  moveTaskToBack(true); // exist app
 
                                 finish();
                         }

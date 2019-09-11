@@ -258,6 +258,7 @@ public class Main2Activity extends AppCompatActivity {
                     .setPositiveButton(R.string.popup_yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            finishAffinity();//  moveTaskToBack(true);
                             finish();
                         }
                     })
