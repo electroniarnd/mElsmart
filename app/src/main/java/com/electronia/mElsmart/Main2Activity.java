@@ -301,6 +301,11 @@ public class Main2Activity extends AppCompatActivity {
                     startActivity(new Intent(Main2Activity.this, Device.class));
 
                 }
+
+                else if (id == R.id.TerOperation) {
+                    startActivity(new Intent(Main2Activity.this, Terminal_OperationActivity.class));
+
+                }
                 DrawerLayout drawer = findViewById(R.id.drawer_layout);
                 drawer.closeDrawer(GravityCompat.START);
                 return true;

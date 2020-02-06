@@ -20,7 +20,8 @@
   ~ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   -->
 <resources>
-
+    <string name="ON">ON</string>
+    <string name="OFF">OFF</string>
     <string name="app_name">mElSmart</string>
     <string name="device">Device</string>
     <string name="no_device">Connect a device</string>
@@ -229,6 +230,8 @@
 
     <string name="Settings">Settings</string>
     <string name="Registered_Terminal">Registered Terminal</string>
+    <string name="Terminal_Operation">Terminal Operation</string>
+
     <string name="Cust_Mismatch">Customer Mismatch</string>
     <string name="General_Errr">General Error</string>
 
@@ -289,7 +292,6 @@
         <item>Transfered</item>
         <item>Finished</item>
     </string-array>
-
 
 
     <string name="Initiated">Initiated</string>
@@ -457,24 +459,29 @@
     <string name="Task_on_Map">On Map</string>
     <string name="Assigned_Employee">Tracking</string>
     <string name="title_activity_geo__qr__map">Geo_QR_MapActivity</string>
-    <string name= "QR_Geo">QR+Geo</string>
-    <string name= "MR">MR</string>
-    <string name= "QR__Code_Geo_Registration_failed">QR Code+Geofence Registration failed</string>
-    <string name= "Please_enter_valid_Time">Please enter valid time</string>
-    <string name= "Please_enter_valid_Date">From date should before end date</string>
-    <string name= "Registration_updated_successfully">Registration updated successfully</string>
-    <string name= "Location_permission_should_be_granted_for_BLE_scan">Location permission must be grant for BLE scan</string>
-    <string name= "Task">Task</string>
-    <string name= "Place_Status"> Place/Status</string>
-    <string name= "Date_Updated_By">Date/Updated By</string>
-    <string name= "Biometric">Biometric</string>
-    <string name= "Permission_Denied_You_cannot_access_Phone_Read">Permission Denied, You cannot access Phone Read</string>
-    <string name= "Permission_Granted"> Permission Granted, Now you can access Storage data and Phone Read</string>
-
-
-
-
-
+    <string name="QR_Geo">QR+Geo</string>
+    <string name="MR">MR</string>
+    <string name="QR__Code_Geo_Registration_failed">QR Code+Geofence Registration failed</string>
+    <string name="Please_enter_valid_Time">Please enter valid time</string>
+    <string name="Please_enter_valid_Date">From date should before end date</string>
+    <string name="Registration_updated_successfully">Registration updated successfully</string>
+    <string name="Location_permission_should_be_granted_for_BLE_scan">Location permission must be grant for BLE scan</string>
+    <string name="Task">Task</string>
+    <string name="Place_Status"> Place/Status</string>
+    <string name="Date_Updated_By">Date/Updated By</string>
+    <string name="Biometric">Biometric</string>
+    <string name="Permission_Denied_You_cannot_access_Phone_Read">Permission Denied, You cannot access Phone Read</string>
+    <string name="Permission_Granted"> Permission Granted, Now you can access Storage data and Phone Read</string>
+    <string name="title_activity_terminal__operation">Terminal List</string>
+    <string name="title_activity_terminal__control">Terminal Control</string>
+    <string name="Execute">Execute</string>
+    <string name="Relay1">Relay1</string>
+    <string name="Relay2">Relay2</string>
+    <string name="Relay3">Relay3</string>
+    <string name="Reset">Relay3</string>
+    <string name="Log_Count">Log Count</string>
+    <string name="refresh">Refresh</string>
+    <string name="Getting_Terminal_Data">Getting Terminal Data</string>
 
 
 

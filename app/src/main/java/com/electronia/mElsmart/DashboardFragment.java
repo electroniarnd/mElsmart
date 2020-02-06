@@ -152,7 +152,7 @@ public class DashboardFragment extends Fragment {
                 case 1:
                return markattendanceActivity.newInstance();
                 case 2:
-                    return barcodemain.newInstance();
+                   return barcodemain.newInstance();
                 case 3:
                     return Geo_QR.newInstance();
                 case 4:

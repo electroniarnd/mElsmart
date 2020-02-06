@@ -408,7 +408,7 @@
     <string name= "your_location_not_found">موقعك غير موجود</string>
     <string name= "No">الرقم التسلسلي</string>
     <string name= "Date">التاريخ</string>
-
+    <string name="Terminal_Operation">Terminal Operation</string>
 
     <string name= "Terminal_No">رقم القارئ</string>
     <string name= "Direction">الإتجاه</string>
@@ -469,5 +469,18 @@
     <string name= "Biometric">Biometric</string>
     <string name= "Permission_Denied_You_cannot_access_Phone_Read">Permission Denied, You cannot access Phone Read</string>
     <string name= "Permission_Granted"> Permission Granted, Now you can access Storage data and Phone Read</string>
+    <string name="ON">ON</string>
+    <string name="OFF">OFF</string>
+    <string name="Execute">Execute</string>
+    <string name="Relay1">Relay1</string>
+    <string name="Relay2">Relay2</string>
+    <string name="Relay3">Relay3</string>
+    <string name="Reset">Relay3</string>
+    <string name="title_activity_terminal__operation">Terminal List</string>
+    <string name="title_activity_terminal__control">Terminal Control</string>
+    <string name="Log_Count">Log Count</string>
+    <string name="refresh">Refresh</string>
+    <string name="Getting_Terminal_Data">Getting Terminal Data</string>
+
 </resources>
 

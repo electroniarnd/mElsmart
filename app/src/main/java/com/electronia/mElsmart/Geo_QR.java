@@ -91,7 +91,7 @@ import static android.content.Context.LOCATION_SERVICE;
 
 public class Geo_QR extends Fragment
 {
-    private static final String TAG ="markattendanceActivity" ;
+    private static final String TAG ="Geo_QR_Activity" ;
     private static final int BARCODE_READER_REQUEST_CODE = 1;
 
     GoogleMap map;

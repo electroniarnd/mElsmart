@@ -12,12 +12,14 @@
     <dimen name="cpb_stroke_width">4dp</dimen>
     <dimen name="dimen_8_dp">8dp</dimen>
     <dimen name="dimen_4_dp">4dp</dimen>
-    <dimen name="dimen_12_dp">12dp</dimen>
+    <dimen name="dimen_14_dp">14dp</dimen>
+
+
     <dimen name="textview_micro_size">12sp</dimen>
     <dimen name="textview_small_size">14sp</dimen>
     <dimen name="textview_middle_size">18sp</dimen>
     <dimen name="textview_large_size">22sp</dimen>
-
+    <dimen name="dimen_12_dp">12dp</dimen>
 
     <dimen name="page_title_size">20sp</dimen>
     <dimen name="list_item_size">16sp</dimen>

@@ -65,7 +65,7 @@ public class barcodemain extends Fragment {
     private static final int BARCODE_READER_REQUEST_CODE = 1;
     private TextView scanResult;
     private Button scanButton;
-    public static final String TAG = "ElsmarQR:MainActivity";
+    public static final String TAG = "BarCode_Activity";
     MediaPlayer in = null,out = null, qrcode=null, error = null,Access_Denied = null,Card_Expired = null,Blacklisted = null,AntiPassBackError = null;
     ArrayList<String> locationArray = new ArrayList<>();
     Controllerdb db;

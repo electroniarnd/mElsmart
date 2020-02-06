@@ -361,7 +361,7 @@ public class RegistrationActivity extends Fragment {
 
 
     public void cleardata() {
-      txttitle.setText("");
+        txttitle.setText("");
         txtdept.setText("");
         txtcardvalidfrom.setText("");
         txtcardiisuedfrom.setText("");
@@ -795,7 +795,8 @@ public class RegistrationActivity extends Fragment {
 
 
     public boolean checkLocationUpdateserviceRunning(){
-        ActivityManager manager = (ActivityManager) getActivity().getSystemService(ACTIVITY_SERVICE);
+        ActivityManager manager = (ActivityManager)
+                getActivity().getSystemService(ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
         {
             if (com.electronia.mElsmart.LocationUpdateservice.class

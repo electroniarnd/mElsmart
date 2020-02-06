@@ -89,7 +89,7 @@ import static android.content.Context.LOCATION_SERVICE;
 
 
 public class markattendanceActivity extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
-    private static final String TAG = "markattendanceActivity";
+    private static final String TAG = "Geofance_Activity";
     private static final String TODO ="" ;
     GoogleMap map;
     SupportMapFragment mapFragment;

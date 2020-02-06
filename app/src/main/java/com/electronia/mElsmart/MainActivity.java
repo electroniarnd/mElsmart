@@ -139,7 +139,7 @@ public class MainActivity extends Fragment {
     private static final int REQUEST_ENABLE_BT = 2;
     private static final int REQUEST_ENABLE_FT = 3;
     private static final int UART_PROFILE_READY = 10;
-    public static final String TAG = "nRFUART";
+    public static final String TAG = "BLEActivity";
     private static final int UART_PROFILE_CONNECTED = 20;
     private static final int UART_PROFILE_DISCONNECTED = 21;
     private static final int STATE_OFF = 10;
@@ -456,7 +456,7 @@ public class MainActivity extends Fragment {
                 startActivityForResult(newIntent2, REQUEST_SELECT_DEVICE);
                 btnConnectDisconnect.setProgress(50);
                 if (isRunning == false) {
-                    cTimer = new CountDownTimer(12000, 1000) {
+                    cTimer = new CountDownTimer(8000, 1000) {
                         public void onTick(long millisUntilFinished) {
                             isRunning = true;
                         }
@@ -500,7 +500,7 @@ public class MainActivity extends Fragment {
                 } else {
                     if (btnConnectDisconnect.getProgress() == 0) {
                         if (isRunning == false) {
-                            cTimer = new CountDownTimer(12000, 1000) {
+                            cTimer = new CountDownTimer(8000, 1000) {
                                 public void onTick(long millisUntilFinished) {
                                     isRunning = true;
                                 }
@@ -744,6 +744,7 @@ public class MainActivity extends Fragment {
             //*********************//
             if (action.equals(UartService.ACTION_DATA_AVAILABLE)) {
 
+
                 final byte[] txValue = intent.getByteArrayExtra(UartService.EXTRA_DATA);
                 // final  int[] txValue = intent.getIntArrayExtra(UartService.EXTRA_DATA);
                 getActivity().runOnUiThread(new Runnable() {
@@ -786,6 +787,7 @@ public class MainActivity extends Fragment {
 
     @Override
     public void onStart() {
+        Log.d(TAG, "onStart");
         super.onStart();
     }
 
@@ -813,7 +815,7 @@ public class MainActivity extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-
+        Log.d(TAG, "onStop");
         try {
             getActivity().unregisterReceiver(backReciver);
 
@@ -833,7 +835,7 @@ public class MainActivity extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //  Log.d(TAG, "onResume");
+    Log.d(TAG, "onResume");
         //// if (!mBtAdapter.isEnabled()) {
         ///      Log.i(TAG, "onResume - BT not enabled yet");
         ///      Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -850,7 +852,7 @@ public class MainActivity extends Fragment {
     @Override
     public void onPause() {
 
-
+        Log.d(TAG, "onPause");
         //called after unregistering
         super.onPause();
 
@@ -1121,8 +1123,11 @@ public class MainActivity extends Fragment {
                         rxFrameSize = rxBuff[2] & 0xff;
                         rxFrameSize |= (k << 8) & 0xff;
                     }
+
+
                     if (k == ETX && rxByteCnt == rxFrameSize + 3) {
                         if (validateRxFrame() == 0) {
+
                             //   Toast.makeText(this,rxFrameSize,Toast.LENGTH_LONG).show();
                             frameProcessState = WAITFrameProcess;
                             processAndActRxFrame();
